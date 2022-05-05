@@ -19,6 +19,14 @@
   },
   "homepage": "https://github.com/friggframework/frigg-template-app#readme",
   "dependencies": {
+    "@friggframework/assertions": "^1.0.0",
+    "@friggframework/core": "^0.1.2",
+    "@friggframework/database": "^1.0.2",
+    "@friggframework/errors": "^1.0.0",
+    "@friggframework/logs": "^1.0.2",
+    "@friggframework/models": "^1.0.8",
+    "lodash": "^4.17.15",
+    "mongoose": "^6.2.1",
     "commander": "^9.2.0"
   },
   "devDependencies": {
