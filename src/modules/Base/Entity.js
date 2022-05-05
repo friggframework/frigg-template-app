@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const { createModel, Entity: Parent } = require('@friggframework/models');
 
-const collectionName = '{{ apiModuleName }}';
+const collectionName = 'Base';
 const parentModelObject = new Parent();
 
 const _schema = new mongoose.Schema({});

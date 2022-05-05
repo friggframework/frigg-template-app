@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "module:generate": "plop",
-    "plop": "plop"
+    "module:generate": "plop --plopfile generator.js"
   },
   "repository": {
     "type": "git",
@@ -25,9 +24,12 @@
     "@friggframework/errors": "^1.0.0",
     "@friggframework/logs": "^1.0.2",
     "@friggframework/models": "^1.0.8",
+    "aws-sdk": "^2.1128.0",
+    "commander": "^9.2.0",
+    "glob": "^8.0.1",
     "lodash": "^4.17.15",
     "mongoose": "^6.2.1",
-    "commander": "^9.2.0"
+    "require-glob": "^4.0.0"
   },
   "devDependencies": {
     "plop": "^3.1.0"

@@ -1,16 +1,16 @@
-const ApiKeyBase = require('@friggframework/core/auth/ApiKeyBase');
+const OAuth2Base = require('@friggframework/core/auth/OAuth2Base');
 const { FetchError } = require('@friggframework/errors/FetchError');
 
-class TestAPI extends ApiKeyBase {
+class Test2API extends OAuth2Base {
     constructor(params) {
         super(params);
 
         this.baseUrl = '';
 
-        this.client_id = process.env.TEST_CLIENT_ID;
-        this.client_secret = process.env.TEST_CLIENT_SECRET;
-        this.redirect_uri = `${process.env.TEST_REDIRECT_URI}`;
-        this.scopes = process.env.TEST_SCOPE;
+        this.client_id = process.env.TEST2_CLIENT_ID;
+        this.client_secret = process.env.TEST2_CLIENT_SECRET;
+        this.redirect_uri = `${process.env.TEST2_REDIRECT_URI}`;
+        this.scopes = process.env.TEST2_SCOPE;
 
         this.URLs = {
             me: '/me',
@@ -49,4 +49,4 @@ class TestAPI extends ApiKeyBase {
     }
 }
 
-module.exports = TestAPI;
+module.exports = Test2API;

@@ -53,7 +53,12 @@ const config = (plop) => {
 			},
 			{
 				type: 'add',
-				path: 'src/modules/{{ pascalCase apiModuleName }}/README.md.hbs',
+				path: 'src/modules/{{ pascalCase apiModuleName }}/Options.js',
+				templateFile: 'src/templates/Options.js.hbs',
+			},
+			{
+				type: 'add',
+				path: 'src/modules/{{ pascalCase apiModuleName }}/README.md',
 				templateFile: 'src/templates/README.md.hbs',
 			},
 			{
