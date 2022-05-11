@@ -3,7 +3,17 @@ const Options = require('@friggframework/core/objects/integration/Options');
 const BaseManager = require('../modules/Base/Manager');
 const requireGlob = require('require-glob');
 
-const ModuleOptions = requireGlob('../modules/**/Options.js').then((modules) => modules);
+const ModuleOptions = requireGlob('../modules/**/Options.js').then((modules) => {
+	let object = {};
+	let key;
+
+	modules.forEach((option) => {
+		key = option.replace(/\.js$/, '');
+		object[key] = require(option.cwd);
+	});
+
+	return object;
+});
 
 class IntegrationConfigManager extends Parent {
 	constructor(params) {

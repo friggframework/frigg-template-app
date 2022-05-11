@@ -12,12 +12,7 @@ const {{ pascalCase apiModuleName }}Options = {
         detailsUrl: 'https://www.example.com/',
         icon: `${config.baseUrl}/assets/img/{{ dashCase apiModuleName }}.png`,
     },
-    hasUserConfig: () => {
-        if ({{ authStrategy }} === 'ApiBaseKey') {
-            return true;
-        }
-        return false;
-    },
+    hasUserConfig: {{ userConfig }}
 }
 
 module.exports = {{ pascalCase apiModuleName }}Options;

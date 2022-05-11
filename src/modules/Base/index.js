@@ -8,10 +8,10 @@ const IntegrationManager = require('./IntegrationManager');
 const Manager = require('./Manager');
 
 module.exports = {
-    Api,
-    Options,
-    Credential,
-    Entity,
-    IntegrationManager,
-    Manager,
+	Api,
+	Options,
+	Credential,
+	Entity,
+	IntegrationManager,
+	Manager,
 };

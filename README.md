@@ -2,7 +2,7 @@
 
 Allows you to generate Frigg Api Modules for development.
 
-# Generating a Api Module
+## Generating a Api Module
 
 ```bash
 npm install
@@ -13,7 +13,7 @@ npm run module:generate # frigg --module generate <ModuleName> --auth basic
 #   OAuth2
 ```
 
-# Creating an App
+## Creating an App
 
 ```bash
 npm run app:create # frigg --app create <AppName> --component default-horizontal
@@ -23,13 +23,13 @@ npm run app:create # frigg --app create <AppName> --component default-horizontal
 #   Default Vertical
 ```
 
-# Adding your Api Module
+## Adding your Api Module
 
 ```bash
-npm run module:add <ModuleName> # frigg --module add <ModuleName>
+npm run module:add --name=<ModuleName> # frigg --module add <ModuleName>
 ```
 
-# Serving your app
+## Serving your app
 
 ```bash
 npm run app:serve

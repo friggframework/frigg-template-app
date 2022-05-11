@@ -1,11 +1,14 @@
 {
-  "name": "frigg-template-app",
+  "name": "frigg",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "preferGlobal": true,
+  "bin": "src/cli/commands.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "module:generate": "plop --plopfile generator.js"
+    "module:generate": "plop --plopfile src/cli/generator.js",
+    "module:add": "plop --plopfile src/cli/insert.js module-add=$name"
   },
   "repository": {
     "type": "git",
@@ -25,13 +28,15 @@
     "@friggframework/logs": "^1.0.2",
     "@friggframework/models": "^1.0.8",
     "aws-sdk": "^2.1128.0",
+    "bcryptjs": "^2.4.3",
     "commander": "^9.2.0",
     "glob": "^8.0.1",
+    "inquirer": "^8.2.4",
     "lodash": "^4.17.15",
+    "minimist": "^1.2.6",
+    "moment": "^2.29.3",
     "mongoose": "^6.2.1",
+    "plop": "^2.7.6",
     "require-glob": "^4.0.0"
-  },
-  "devDependencies": {
-    "plop": "^3.1.0"
   }
 }
