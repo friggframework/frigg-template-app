@@ -13,12 +13,12 @@ const registerUserPrompts = [
 	{
 		type: 'input',
 		name: 'username',
-		message: 'New User Email Address',
+		message: 'Developer account email:',
 	},
 	{
 		type: 'password',
 		name: 'password',
-		message: 'New User Password:',
+		message: 'Developer account password:',
 	},
 ];
 
@@ -32,7 +32,7 @@ version                 -v           Checks the version of Frigg
 frigg user:register     -ur          Creates a new Frigg user
 frigg user:login        -ul          Logs in a Frigg user
 frigg module:generate   -mg          Generates a new Frigg API module 
-frigg app:create        -ac          Creates a new Frigg app
+frigg app:init          -ac          Initializes a new Frigg app
 frigg app:serve         -as          Serves a local instance of the Frigg app
 frigg app:build         -ab          Builds a serverless ready Frigg app
 	`
@@ -42,8 +42,7 @@ program
 	.command('user:register')
 	.description('Creates a new Frigg user')
 	.action(() => {
-		inquirer(registerUserPrompts).then((answers) => registerUser(answers));
-		console.log('User created');
+		inquirer.prompt(registerUserPrompts).then((answers) => registerUser(answers));
 	});
 
 program
@@ -60,10 +59,16 @@ program
 	});
 
 program
-	.command('app:create')
+	.command('app:init')
 	.description('Creates a new Frigg app')
 	.action(() => {
-		console.log('App created');
+		const argv = minimist(process.argv.slice(2));
+		const options = {
+			cwd: argv.cwd,
+			configPath: 'src/cli/initialize.js',
+			completion: argv.completion,
+		};
+		Plop.launch(options, run);
 	});
 
 program

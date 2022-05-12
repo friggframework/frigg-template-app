@@ -1,4 +1,4 @@
-const config = (plop) => {
+const generator = (plop) => {
 	plop.setGenerator('api-module', {
 		description: 'Generate a Frigg API Module.',
 
@@ -90,4 +90,4 @@ const config = (plop) => {
 	});
 };
 
-module.exports = config;
+module.exports = generator;

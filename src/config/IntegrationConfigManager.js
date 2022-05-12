@@ -3,6 +3,7 @@ const Options = require('@friggframework/core/objects/integration/Options');
 const BaseManager = require('../modules/Base/Manager');
 const requireGlob = require('require-glob');
 
+// readfiles including friggframework installed before this (check monorepo)
 const ModuleOptions = requireGlob('../modules/**/Options.js').then((modules) => {
 	let object = {};
 	let key;

@@ -7,8 +7,9 @@
   "bin": "src/cli/commands.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "module:generate": "plop --plopfile src/cli/generator.js",
-    "module:add": "plop --plopfile src/cli/insert.js module-add=$name"
+    "module:generate": "node src/cli/commands.js module:generate",
+    "app:init": "node src/cli/commands.js module:generate",
+    "user:register": "node src/cli/commands.js user:register"
   },
   "repository": {
     "type": "git",

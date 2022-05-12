@@ -13,6 +13,17 @@ npm run module:generate # frigg --module generate <ModuleName> --auth basic
 #   OAuth2
 ```
 
+## Registering a developer account
+
+```bash
+npm install
+npm run user:register # frigg --module generate <ModuleName> --auth basic
+# ? Developer account email: <UserEmail>
+# ? Developer account password: <UserEmail>
+# > Basic
+#   OAuth2
+```
+
 ## Creating an App
 
 ```bash
@@ -21,6 +32,10 @@ npm run app:create # frigg --app create <AppName> --component default-horizontal
 # ? Select a component layout:
 # > Default Horizontal
 #   Default Vertical
+
+cd frontend
+npm install
+npm run start
 ```
 
 ## Adding your Api Module
