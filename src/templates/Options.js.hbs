@@ -1,0 +1,18 @@
+const config = require('../../frigg.config');
+const BaseManager = require('../Base/BaseManager');
+const Manager = require('./{{ pascalCase apiModuleName }}Manager');
+
+const {{ pascalCase apiModuleName }}Options = {
+    module: Manager,
+    integrations: [BaseManager],
+    display: {
+        name: '{{ pascalCase apiModuleName }}',
+        description: 'Description',
+        category: 'Category',
+        detailsUrl: 'https://www.example.com/',
+        icon: `${config.baseUrl}/assets/img/{{ dashCase apiModuleName }}.png`,
+    },
+    hasUserConfig: {{ userConfig }}
+}
+
+module.exports = {{ pascalCase apiModuleName }}Options;
