@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import IntegrationHorizontal from './IntegrationHorizontal';
 import IntegrationVertical from './IntegrationVertical';
 import IntegrationSkeleton from './IntegrationSkeleton';
-import { setIntegrations } from '../actions/integrations';
-import IntegrationUtils from '../utils/IntegrationUtils';
-import API from '../api/api';
-import { logoutUser } from '../actions/logout';
-import { setAuthToken } from '../actions/auth';
-import config from '../frigg.config';
+import { setIntegrations } from '../../actions/integrations';
+import IntegrationUtils from '../../utils/IntegrationUtils';
+import API from '../../api/api';
+import { logoutUser } from '../../actions/logout';
+import { setAuthToken } from '../../actions/auth';
+import config from '../../frigg.config';
 
 class IntegrationList extends Component {
 	constructor(props) {
@@ -108,7 +108,10 @@ class IntegrationList extends Component {
 				{integrationUtils !== null ? (
 					displayedIntegrations
 				) : (
-					<div className="grid gap-6 lg:col-span-1 lg:grid-cols-1 xl:col-span-2 xl:grid-cols-2 2xl:col-span-3 2xl:grid-cols-3">
+					<div
+						data-testid="skeleton-list"
+						className="grid gap-6 lg:col-span-1 lg:grid-cols-1 xl:col-span-2 xl:grid-cols-2 2xl:col-span-3 2xl:grid-cols-3"
+					>
 						<IntegrationSkeleton layout={config.componentLayout} />
 						<IntegrationSkeleton layout={config.componentLayout} />
 						<IntegrationSkeleton layout={config.componentLayout} />

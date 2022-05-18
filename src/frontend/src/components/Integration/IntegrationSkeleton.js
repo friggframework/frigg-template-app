@@ -4,7 +4,7 @@ function IntegrationSkeleton({ layout }) {
 	return (
 		<>
 			{layout == 'default-horizontal' && (
-				<div className="flex p-4 bg-gray-200 rounded-lg shadow-xs animate-pulse">
+				<div data-testid="skeleton-horizontal" className="flex p-4 bg-gray-200 rounded-lg shadow-xs animate-pulse">
 					<div className="mr-4 w-20 h-20 bg-gray-400 rounded-lg overflow-hidden animate-pulse"></div>
 					<div>
 						<p className="h-6 w-20 bg-gray-400 animate-pulse"></p>
@@ -18,7 +18,10 @@ function IntegrationSkeleton({ layout }) {
 				</div>
 			)}
 			{layout == 'default-vertical' && (
-				<div className="flex flex-col items-center p-4 bg-gray-200 rounded-lg shadow-xs animate-pulse">
+				<div
+					data-testid="skeleton-vertical"
+					className="flex flex-col items-center p-4 bg-gray-200 rounded-lg shadow-xs animate-pulse"
+				>
 					<div className="w-[120px] h-[120px] mt-4 bg-gray-400 rounded-full  animate-pulse"></div>
 					<div className="mt-4 w-36 h-10 bg-gray-400 animate-pulse"></div>
 					<div className="mb-6 mt-2 w-16 h-6 bg-gray-400 animate-pulse"></div>

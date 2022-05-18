@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { showModalForm } from '../actions/modalForm';
-import { setIntegrations } from '../actions/integrations';
+import { showModalForm } from '../../actions/modalForm';
+import { setIntegrations } from '../../actions/integrations';
 import { ExclamationCircleIcon } from '@heroicons/react/outline';
-import Api from '../api/api';
-import ToggleSwitch from './ToggleSwitch';
+import Api from '../../api/api';
+import IntegrationDropdown from '../Integration/IntegrationDropdown';
 
-function IntegrationHorizontal(props) {
+function IntegrationVertical(props) {
 	const { name, description, category, icon } = props.data.display;
 
+	const [isLoading, setIsLoading] = useState(false);
 	const [isProcessing, setIsProcessing] = useState(false);
-	const [status, setStatus] = useState(false);
+	const [status, setStatus] = useState('');
 	const [installed, setInstalled] = useState([]);
 
 	const api = new Api();
@@ -77,27 +78,42 @@ function IntegrationHorizontal(props) {
 
 	return (
 		<>
-			<div className="flex flex-nowrap p-4 bg-white rounded-lg shadow-xs">
-				<img className="mr-3 w-[80px] h-[80px] rounded-lg" alt={name} src={icon} />
-				<div className="pr-1 overflow-hidden">
-					<p className="w-full text-lg font-semibold text-gray-700 truncate ...">{name}</p>
-					<p className="pt-2 text-sm font-medium text-gray-600">{description}</p>
-					{status && status === 'NEEDS_CONFIG' && (
-						<p className="inline-flex pt-2 text-xs font-medium text-red-300">
-							<ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
-						</p>
-					)}
+			<div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-xs">
+				<div className="flex w-full h-[24px]">
+					<div className="inline-flex relative mr-auto">
+						{status && status === 'NEEDS_CONFIG' && (
+							<p className="inline-flex text-xs font-medium text-red-300 text-center">
+								<ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
+							</p>
+						)}
+					</div>
+					<div className="inline-flex relative justify-end ml-auto">
+						{(status && status === 'ENABLED') ||
+							(status === 'NEEDS_CONFIG' && (
+								<IntegrationDropdown getSampleData={getSampleData} disconnectIntegration={disconnectMock} name={name} />
+							))}
+					</div>
 				</div>
-				<div className="ml-auto">
+				<img className="w-[120px] h-[120px] rounded-full" alt={name} src={icon} />
+				<div className="pr-1 pt-4 pb-4 overflow-hidden">
+					<p className="w-full text-2xl font-semibold text-gray-700 text-center truncate ...">{name}</p>
+					<p className="w-full pt-2 text-md font-medium text-gray-600 text-center">{description}</p>
+				</div>
+				<div className="items-center pb-3">
 					<div className="relative">
 						{(status && status === 'ENABLED') ||
 							(status === 'NEEDS_CONFIG' && (
-								<ToggleSwitch getSampleData={getSampleData} disconnectIntegration={disconnectMock} name={name} />
+								<button
+									onClick={disconnectMock}
+									className="w-full px-5 py-3 font-medium leading-5 text-center text-purple-600 transition-colors duration-150 rounded-lg border-2 border-purple-400 hover:border-purple-600 hover:bg-purple-600 hover:text-white focus:outline-none focus:shadow-outline-purple"
+								>
+									Disconnect
+								</button>
 							))}
 						{!status && (
 							<button
 								onClick={authorizeMock}
-								className="px-3 py-2 text-xs font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+								className="w-full px-5 py-3 font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
 							>
 								{isProcessing ? (
 									<svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
@@ -135,4 +151,4 @@ function mapStateToProps({ auth, integrations }) {
 	};
 }
 
-export default withRouter(connect(mapStateToProps)(IntegrationHorizontal));
+export default withRouter(connect(mapStateToProps)(IntegrationVertical));

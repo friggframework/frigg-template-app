@@ -137,6 +137,7 @@ class Login extends Component {
 							<label className="block text-sm">
 								<span className="text-gray-700">Email</span>
 								<input
+									data-testid="email-input"
 									className="block w-full mt-1 text-sm form-input rounded-lg"
 									defaultValue={this.state.defaultUsername}
 									type="text"
@@ -150,6 +151,7 @@ class Login extends Component {
 							<label className="block mt-4 text-sm">
 								<span className="text-gray-700">Password</span>
 								<input
+									data-testid="password-input"
 									className="block w-full mt-1 text-sm form-input rounded-lg"
 									defaultValue={this.state.defaultPassword}
 									type="password"
@@ -161,6 +163,7 @@ class Login extends Component {
 							</label>
 
 							<button
+								data-testid="login-button"
 								type="submit"
 								className="block w-full px-4 py-2 mt-8 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
 							>
