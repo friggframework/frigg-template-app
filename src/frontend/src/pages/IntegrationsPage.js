@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import IntegrationList from '../components/IntegrationList';
+import { List } from '../components/Integration';
 
 function IntegrationsPage(props) {
 	const [integrationType, setIntegrationType] = useState('Recently added');
@@ -48,7 +48,7 @@ function IntegrationsPage(props) {
 						))}
 					</ul>
 					<div className="grid gap-6 lg:col-span-1 lg:grid-cols-1 xl:col-span-2 xl:grid-cols-2 2xl:col-span-3 2xl:grid-cols-3 2xl:grid-rows-6">
-						<IntegrationList integrationType={integrationType} />
+						<List integrationType={integrationType} />
 					</div>
 				</div>
 			</div>
