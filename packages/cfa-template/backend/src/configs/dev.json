@@ -1,9 +1,6 @@
 {
     "AES_KEY": "Testing123456789Testing123456789",
     "AES_KEY_ID": "873c84b8-4ab6-4fff-8aff-da2d0aa55bc3",
-    "MONGO_URI": "mongodb+srv://demo-user:DyTyeCnygRU2WDzN@dev.cjaqu.mongodb.net/?retryWrites=true&w=majority",
-    "REDIRECT_URI": "https://localhost:3000/redirect",
-
-    "SALESFORCE_CLIENT_ID": "3MVG9l2zHsylwlpSBGMIZHgkTw7aaMNO31To1tH5pWmuNADknOTVKE7XgX2eQlGwJ1AZQmkk.xTXV72KvTbgv",
-    "SALESFORCE_CLIENT_SECRET": "FC6CD17F68BF2280D71CC71CEC85199D7FFE04677E072A77D959E5D04EE0649B"
+    "MONGO_URI": "",
+    "REDIRECT_URI": "https://localhost:3000/redirect"
 }
