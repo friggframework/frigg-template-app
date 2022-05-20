@@ -1,0 +1,25 @@
+{
+  "name": "cfa-template",
+  "version": "1.0.0",
+  "keywords": [
+    "frigg",
+    "create-frigg-app",
+    "template"
+  ],
+  "description": "The base template for Create Frigg App.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/friggframework/create-frigg-app.git",
+    "directory": "packages/cfa-template"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  },
+  "bugs": {
+    "url": "https://github.com/friggframework/create-frigg-app/issues"
+  },
+  "files": [
+    "template"
+  ]
+}

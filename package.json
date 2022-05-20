@@ -1,5 +1,5 @@
 {
-  "name": "frigg",
+  "name": "create-frigg-app",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/friggframework/frigg-template-app.git"
+    "url": "git+https://github.com/friggframework/create-frigg-app.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/friggframework/frigg-template-app/issues"
+    "url": "https://github.com/friggframework/create-frigg-app/issues"
   },
-  "homepage": "https://github.com/friggframework/frigg-template-app#readme",
+  "homepage": "https://github.com/friggframework/create-frigg-app#readme",
   "dependencies": {
     "@friggframework/assertions": "^1.0.0",
     "@friggframework/core": "^0.1.2",
