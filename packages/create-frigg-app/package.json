@@ -1,10 +1,10 @@
 {
   "name": "create-frigg-app",
-  "version": "1.0.0",
+  "version": "0.8.0",
   "keywords": [
     "frigg"
   ],
-  "description": "Create Frigg apps with no build configuration.",
+  "description": "Create Frigg Apps quickly. Largely Based on Create React App.",
   "repository": {
     "type": "git",
     "url": "https://github.com/friggframework/create-frigg-app.git",
@@ -20,8 +20,9 @@
   "files": [
     "index.js",
     "createFriggApp.js",
-    "init.js"
+    "friggInit.js"
   ],
+  "main": "exports.js",
   "bin": {
     "create-frigg-app": "./index.js"
   },

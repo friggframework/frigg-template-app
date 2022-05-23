@@ -1,6 +1,5 @@
-// @remove-file-on-eject
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) 2022-present, Left Hook, Inc.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -14,12 +13,13 @@ process.on('unhandledRejection', err => {
   throw err;
 });
 
-const fs = require('fs-extra');
 const path = require('path');
 const chalk = require('chalk');
 const execSync = require('child_process').execSync;
 const spawn = require('cross-spawn');
 const os = require('os');
+const fs = require('fs-extra');
+
 
 function isInGitRepository() {
   try {
@@ -86,6 +86,7 @@ module.exports = function (
   originalDirectory,
   templateName
 ) {
+  console.log(fs)
   const appPackage = require(path.join(appPath, 'package.json'));
   const useYarn = fs.existsSync(path.join(appPath, 'yarn.lock'));
 
@@ -98,15 +99,15 @@ module.exports = function (
     );
     console.error(
       `Please note that global installs of ${chalk.cyan(
-        'create-react-app'
+        'create-frigg-app'
       )} are no longer supported.`
     );
     console.error(
       `You can fix this by running ${chalk.cyan(
-        'npm uninstall -g create-react-app'
+        'npm uninstall -g create-frigg-app'
       )} or ${chalk.cyan(
-        'yarn global remove create-react-app'
-      )} before using ${chalk.cyan('create-react-app')} again.`
+        'yarn global remove create-frigg-app'
+      )} before using ${chalk.cyan('create-frigg-app')} again.`
     );
     return;
   }
@@ -255,21 +256,21 @@ module.exports = function (
   }
 
   // Install additional template dependencies, if present.
-  const dependenciesToInstall = Object.entries({
-    ...templatePackage.dependencies,
-    ...templatePackage.devDependencies,
-  });
-  if (dependenciesToInstall.length) {
-    args = args.concat(
-      dependenciesToInstall.map(([dependency, version]) => {
-        return `${dependency}@${version}`;
-      })
-    );
-  }
+  // const dependenciesToInstall = Object.entries({
+  //   ...templatePackage.dependencies,
+  //   ...templatePackage.devDependencies,
+  // });
+  // if (dependenciesToInstall.length) {
+  //   args = args.concat(
+  //     dependenciesToInstall.map(([dependency, version]) => {
+  //       return `${dependency}@${version}`;
+  //     })
+  //   );
+  // }
 
 
-  // Install template dependencies, and react and react-dom if missing.
-  if ((templateName) && args.length > 1) {
+  // Install template dependencies
+  if (templateName) {
     console.log();
     console.log(`Installing template dependencies using ${command}...`);
 
@@ -312,29 +313,14 @@ module.exports = function (
   const displayedCommand = useYarn ? 'yarn' : 'npm';
 
   console.log();
-  console.log(`Success! Created ${appName} at ${appPath}`);
-  console.log('Inside that directory, you can run several commands:');
+  console.log(`Woohoo! Created a Frigg application code named: ${appName} at ${appPath}`);
+  console.log('Inside that directory, you can run a few commands (more to be added over time):');
   console.log();
   console.log(chalk.cyan(`  ${displayedCommand} start`));
-  console.log('    Starts the development server.');
-  console.log();
-  console.log(
-    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}build`)
-  );
-  console.log('    Bundles the app into static files for production.');
+  console.log('    Starts the development frontend and backend.');
   console.log();
   console.log(chalk.cyan(`  ${displayedCommand} test`));
   console.log('    Starts the test runner.');
-  console.log();
-  console.log(
-    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}eject`)
-  );
-  console.log(
-    '    Removes this tool and copies build dependencies, configuration files'
-  );
-  console.log(
-    '    and scripts into the app directory. If you do this, you can’t go back!'
-  );
   console.log();
   console.log('We suggest that you begin by typing:');
   console.log();
@@ -349,5 +335,5 @@ module.exports = function (
     );
   }
   console.log();
-  console.log('Happy hacking!');
+  console.log('Happy integrating!');
 };

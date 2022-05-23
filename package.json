@@ -1,43 +1,11 @@
 {
-  "name": "create-frigg-app",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "preferGlobal": true,
-  "bin": "src/cli/commands.js",
+  "workspaces": [
+    "packages/*"
+  ],
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "module:generate": "node src/cli/commands.js module:generate",
-    "app:init": "node src/cli/commands.js module:generate",
-    "user:register": "node src/cli/commands.js user:register"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/friggframework/create-frigg-app.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/friggframework/create-frigg-app/issues"
-  },
-  "homepage": "https://github.com/friggframework/create-frigg-app#readme",
-  "dependencies": {
-    "@friggframework/assertions": "^1.0.0",
-    "@friggframework/core": "^0.1.2",
-    "@friggframework/database": "^1.0.2",
-    "@friggframework/errors": "^1.0.0",
-    "@friggframework/logs": "^1.0.2",
-    "@friggframework/models": "^1.0.8",
-    "aws-sdk": "^2.1128.0",
-    "bcryptjs": "^2.4.3",
-    "commander": "^9.2.0",
-    "glob": "^8.0.1",
-    "inquirer": "^8.2.4",
-    "lodash": "^4.17.15",
-    "minimist": "^1.2.6",
-    "moment": "^2.29.3",
-    "mongoose": "^6.2.1",
-    "plop": "^2.7.6",
-    "require-glob": "^4.0.0"
+  "devDependencies": {
+
   }
 }

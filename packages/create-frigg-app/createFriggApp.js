@@ -46,6 +46,7 @@ const tmp = require('tmp');
 const unpack = require('tar-pack').unpack;
 const url = require('url');
 const validateProjectName = require('validate-npm-package-name');
+const friggInit = require('./friggInit')
 
 const packageJson = require('./package.json');
 
@@ -217,8 +218,6 @@ function createApp(name, verbose, version, template, useYarn, usePnp) {
           `Please update to Node 14 or higher for a better, fully supported experience.\n`
       )
     );
-    // Fall back to latest supported frigg-scripts on Node 4
-    version = 'frigg-scripts@0.9.x';
   }
 
   const root = path.resolve(name);
@@ -238,6 +237,14 @@ function createApp(name, verbose, version, template, useYarn, usePnp) {
     name: appName,
     version: '0.1.0',
     private: true,
+    workspaces: [
+        "backend",
+        "frontend"
+    ],
+    scripts: {
+      start: 'npm start -workspaces',
+      test: 'npm test -workspaces'
+    }
   };
   fs.writeFileSync(
     path.join(root, 'package.json'),
@@ -295,7 +302,7 @@ function createApp(name, verbose, version, template, useYarn, usePnp) {
     originalDirectory,
     template,
     useYarn,
-    usePnp
+    usePnp,
   );
 }
 
@@ -370,58 +377,31 @@ function run(
   originalDirectory,
   template,
   useYarn,
-  usePnp
+  usePnp,
 ) {
   Promise.all([
-    getInstallPackage(version, originalDirectory),
     getTemplateInstallPackage(template, originalDirectory),
-  ]).then(([packageToInstall, templateToInstall]) => {
-    const allDependencies = [packageToInstall];
+  ]).then(([ templateToInstall]) => {
 
+    const allDependencies = [];
+
+    console.log('Original directory: ',originalDirectory)
     console.log('Installing packages. This might take a couple of minutes.');
 
     Promise.all([
-      getPackageInfo(packageToInstall),
       getPackageInfo(templateToInstall),
     ])
-      .then(([packageInfo, templateInfo]) =>
+      .then(([ templateInfo]) =>
         checkIfOnline(useYarn).then(isOnline => ({
           isOnline,
-          packageInfo,
           templateInfo,
         }))
       )
-      .then(({ isOnline, packageInfo, templateInfo }) => {
-        let packageVersion = semver.coerce(packageInfo.version);
-
-        const templatesVersionMinimum = '1.0.0';
-
-        // Assume compatibility if we can't test the version.
-        if (!semver.valid(packageVersion)) {
-          packageVersion = templatesVersionMinimum;
-        }
-
-        // Only support templates when used alongside new react-scripts versions.
-        const supportsTemplates = semver.gte(
-          packageVersion,
-          templatesVersionMinimum
-        );
-        if (supportsTemplates) {
-          allDependencies.push(templateToInstall);
-        } else if (template) {
-          console.log('');
-          console.log(
-            `The ${chalk.cyan(packageInfo.name)} version you're using ${
-              packageInfo.name === 'react-scripts' ? 'is not' : 'may not be'
-            } compatible with the ${chalk.cyan('--template')} option.`
-          );
-          console.log('');
-        }
+      .then(({ isOnline, templateInfo }) => {
+        allDependencies.push(templateToInstall);
 
         console.log(
-          `Installing ${chalk.cyan(packageInfo.name)}${
-            supportsTemplates ? ` with ${chalk.cyan(templateInfo.name)}` : ''
-          }...`
+          `Installing ${chalk.cyan(templateInfo.name)}...`
         );
         console.log();
 
@@ -433,32 +413,19 @@ function run(
           verbose,
           isOnline
         ).then(() => ({
-          packageInfo,
-          supportsTemplates,
           templateInfo,
         }));
       })
-      .then(async ({ packageInfo, supportsTemplates, templateInfo }) => {
-        const packageName = packageInfo.name;
-        const templateName = supportsTemplates ? templateInfo.name : undefined;
-        checkNodeVersion(packageName);
-        setCaretRangeForRuntimeDeps(packageName);
+      .then(async ({ templateInfo }) => {
+        const templateName = templateInfo.name;
 
         const pnpPath = path.resolve(process.cwd(), '.pnp.js');
 
         const nodeArgs = fs.existsSync(pnpPath) ? ['--require', pnpPath] : [];
 
-        await executeNodeScript(
-          {
-            cwd: process.cwd(),
-            args: nodeArgs,
-          },
-          [root, appName, verbose, originalDirectory, templateName],
-          `
-        const init = require('./init.js');
-        init.apply(null, JSON.parse(process.argv[1]));
-      `
-        );
+        // Run friggInit, which does the gitting and npm installing
+        await friggInit.apply(null, [root, appName, verbose, originalDirectory, templateName])
+
       })
       .catch(reason => {
         console.log();
@@ -474,7 +441,7 @@ function run(
         console.log();
 
         // On 'exit' we will delete these files from target directory.
-        const knownGeneratedFiles = ['package.json', 'node_modules'];
+        const knownGeneratedFiles = ['package.json', 'node_modules', 'package-lock.json'];
         const currentFiles = fs.readdirSync(path.join(root));
         currentFiles.forEach(file => {
           knownGeneratedFiles.forEach(fileToMatch => {
@@ -500,56 +467,6 @@ function run(
         process.exit(1);
       });
   });
-}
-
-function getInstallPackage(version, originalDirectory) {
-  let packageToInstall = 'react-scripts';
-  const validSemver = semver.valid(version);
-  if (validSemver) {
-    packageToInstall += `@${validSemver}`;
-  } else if (version) {
-    if (version[0] === '@' && !version.includes('/')) {
-      packageToInstall += version;
-    } else if (version.match(/^file:/)) {
-      packageToInstall = `file:${path.resolve(
-        originalDirectory,
-        version.match(/^file:(.*)?$/)[1]
-      )}`;
-    } else {
-      // for tar.gz or alternative paths
-      packageToInstall = version;
-    }
-  }
-
-  const scriptsToWarn = [
-    {
-      name: 'react-scripts-ts',
-      message: chalk.yellow(
-        `The react-scripts-ts package is deprecated. TypeScript is now supported natively in Create Frigg App. You can use the ${chalk.green(
-          '--template typescript'
-        )} option instead when generating your app to include TypeScript support. Would you like to continue using react-scripts-ts?`
-      ),
-    },
-  ];
-
-  for (const script of scriptsToWarn) {
-    if (packageToInstall.startsWith(script.name)) {
-      return prompts({
-        type: 'confirm',
-        name: 'useScript',
-        message: script.message,
-        initial: false,
-      }).then(answer => {
-        if (!answer.useScript) {
-          process.exit(0);
-        }
-
-        return packageToInstall;
-      });
-    }
-  }
-
-  return Promise.resolve(packageToInstall);
 }
 
 function getTemplateInstallPackage(template, originalDirectory) {
@@ -795,22 +712,6 @@ function checkAppName(appName) {
     console.error(chalk.red('\nPlease choose a different project name.'));
     process.exit(1);
   }
-
-  // TODO: there should be a single place that holds the dependencies
-  const dependencies = ['react-scripts'].sort();
-  if (dependencies.includes(appName)) {
-    console.error(
-      chalk.red(
-        `Cannot create a project named ${chalk.green(
-          `"${appName}"`
-        )} because a dependency with the same name exists.\n` +
-          `Due to the way npm works, the following names are not allowed:\n\n`
-      ) +
-        chalk.cyan(dependencies.map(depName => `  ${depName}`).join('\n')) +
-        chalk.red('\n\nPlease choose a different project name.')
-    );
-    process.exit(1);
-  }
 }
 
 function makeCaretRange(dependencies, name) {
@@ -1036,6 +937,19 @@ function executeNodeScript({ cwd, args }, data, source) {
       [...args, '-e', source, '--', JSON.stringify(data)],
       { cwd, stdio: 'inherit' }
     );
+    console.log(process.execPath)
+    const child2 = spawn('which',['create-frigg-app'])
+    const child3 = spawn('npm', ['get', 'prefix'])
+
+    child.on('close', code => {
+      if (code !== 0) {
+        reject({
+          command: `node ${args.join(' ')}`,
+        });
+        return;
+      }
+      resolve();
+    });
 
     child.on('close', code => {
       if (code !== 0) {
