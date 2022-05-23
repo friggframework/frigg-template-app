@@ -937,9 +937,6 @@ function executeNodeScript({ cwd, args }, data, source) {
       [...args, '-e', source, '--', JSON.stringify(data)],
       { cwd, stdio: 'inherit' }
     );
-    console.log(process.execPath)
-    const child2 = spawn('which',['create-frigg-app'])
-    const child3 = spawn('npm', ['get', 'prefix'])
 
     child.on('close', code => {
       if (code !== 0) {

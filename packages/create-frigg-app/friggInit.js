@@ -86,7 +86,6 @@ module.exports = function (
   originalDirectory,
   templateName
 ) {
-  console.log(fs)
   const appPackage = require(path.join(appPath, 'package.json'));
   const useYarn = fs.existsSync(path.join(appPath, 'yarn.lock'));
 
