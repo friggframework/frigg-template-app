@@ -1,4 +1,4 @@
-import { React, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
@@ -9,15 +9,6 @@ import history from './utils/history';
 
 const App = ({ authToken }) => {
 	const loggedIn = authToken;
-
-	useEffect(async () => {
-		const script = document.createElement('script');
-
-		script.src = '//fast.appcues.com/110531.js';
-		script.async = false;
-
-		document.head.appendChild(script);
-	}, []);
 
 	return (
 		<div className={loggedIn ? 'flex h-screen bg-gray-50' : 'bg-gray-50'}>

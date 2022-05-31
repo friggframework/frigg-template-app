@@ -60,6 +60,11 @@ functions:
                   path: /api/authorize
                   method: ANY
                   cors: true
+
+    user:
+        handler: ./src/handlers/http/user.handler
+        environment: ${file(./src/configs/${self:provider.stage}.json)}
+        events:
             - http:
                   path: /user/{proxy+}
                   method: ANY

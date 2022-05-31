@@ -237,14 +237,6 @@ function createApp(name, verbose, version, template, useYarn, usePnp) {
     name: appName,
     version: '0.1.0',
     private: true,
-    workspaces: [
-        "backend",
-        "frontend"
-    ],
-    scripts: {
-      start: 'npm start -workspaces',
-      test: 'npm test -workspaces'
-    }
   };
   fs.writeFileSync(
     path.join(root, 'package.json'),

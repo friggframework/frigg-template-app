@@ -1,5 +1,6 @@
 # dependencies
-/node_modules
+node_modules
+.webpack
 
 # testing
 /coverage
@@ -19,7 +20,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # webstorm local config
-.idea/
+.idea
 
 .env
 *.vscode
