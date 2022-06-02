@@ -1,31 +1,30 @@
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const { get } = require('@friggframework/assertions');
-const Token = require('../models/Token');
-const User = require('../models/User');
-const IndividualUser = require('../models/IndividualUser');
-const OrganizationUser = require('../models/OrganizationUser');
+const {Token} = require('../models/Token');
+const {IndividualUser} = require('../models/IndividualUser');
+const {OrganizationUser} = require('../models/OrganizationUser');
 const Boom = require('@hapi/boom');
 
 class UserManager {
+    static IndividualUser = IndividualUser;
+    static OrganizationUser = OrganizationUser;
+    static Token = Token;
+
     constructor(params) {
         this.user = null;
-        this.userMO = new User();
-        this.tokenMO = new Token();
-        this.individualUserMO = new IndividualUser();
-        this.organizationUserMO = new OrganizationUser();
 
         return (async () => {
             const token = get(params, 'token', null);
 
             if (token) {
                 const jsonToken =
-                    Token.getJSONTokenFromBase64BufferToken(token);
+                    UserManager.Token.getJSONTokenFromBase64BufferToken(token);
                 const sessionToken =
-                    await this.tokenMO.validateAndGetTokenFromJSONToken(
+                    await UserManager.Token.validateAndGetTokenFromJSONToken(
                         jsonToken
                     );
-                this.individualUser = await this.individualUserMO.get(
+                this.individualUser = await UserManager.IndividualUser.findById(
                     sessionToken.user
                 );
             }
@@ -49,7 +48,7 @@ class UserManager {
         if (!email && !username) {
             throw Boom.badRequest('email or username is required');
         }
-        const password = get(params, 'password');
+        const hashword = get(params, 'password');
         const appUserId = get(params, 'appUserId', null);
         const organizationUserId = get(
             params,
@@ -57,10 +56,10 @@ class UserManager {
             null
         );
 
-        const user = await userManager.individualUserMO.create({
+        const user = await this.IndividualUser.create({
             email,
             username,
-            password,
+            hashword,
             appUserId,
             organizationUser: organizationUserId,
         });
@@ -73,7 +72,7 @@ class UserManager {
         const name = get(params, 'name');
         const appOrgId = get(params, 'appOrgId');
 
-        const user = await userManager.organizationUserMO.create({
+        const user = await this.OrganizationUser.create({
             name,
             appOrgId,
         });
@@ -87,17 +86,17 @@ class UserManager {
         const username = get(params, 'username');
         const password = get(params, 'password');
 
-        const user = await userManager.individualUserMO.getUserByUsername(
+        const user = await this.IndividualUser.getUserByUsername(
             username
         );
 
         if (!user) {
-            throw Boom.unauthorized('username does not exist');
+            throw Boom.unauthorized('incorrect username or password');
         }
 
         const isValid = await bcrypt.compareSync(password, user.hashword);
         if (!isValid) {
-            throw Boom.unauthorized('incorrect password');
+            throw Boom.unauthorized('incorrect username or password');
         }
 
         userManager.individualUser = user;
@@ -106,7 +105,7 @@ class UserManager {
 
     async createUserToken(minutes) {
         const rawToken = crypto.randomBytes(20).toString('hex');
-        const createdToken = await this.tokenMO.createTokenWithExpire(
+        const createdToken = await Token.createTokenWithExpire(
             this.individualUser.id,
             rawToken,
             120
