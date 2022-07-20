@@ -1,10 +1,10 @@
 const moment = require('moment');
-const Worker = require('@friggframework/core/Worker.js');
-const { Integration } = require('@friggframework/models');
+const { Worker }  = require('@friggframework/core');
+const { Integration } = require('@friggframework/integrations');
 const QueuerUtil = require('../../utils/QueuerUtil');
 const { debug } = require('@friggframework/logs');
 
-class MondayQueuer extends Worker {
+class ExampleQueuer extends Worker {
     constructor(params) {
         super(params);
         this.integrationMO = new Integration();
@@ -82,4 +82,4 @@ class MondayQueuer extends Worker {
     async _validateParams(params) {}
 }
 
-module.exports = MondayQueuer;
+module.exports = ExampleQueuer;

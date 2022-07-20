@@ -1,14 +1,14 @@
 const moment = require('moment');
-const Worker = require('@friggframework/core/Worker');
+const { Worker } = require('@friggframework/core');
 const IntegrationFactory = require('../../managers/integrations/IntegrationManager.js');
-const { HaltError } = require('@friggframework/errors/HaltError');
+const { HaltError } = require('@friggframework/errors');
 
 const events = {
     newPartnerData: 'NEW_PARTNER_DATA', // Partner Records
     newReportData: 'NEW_REPORT_DATA', // Report Data
 };
 
-class CrossbeamPollWorker extends Worker {
+class ExamplePollWorker extends Worker {
     constructor(params) {
         super(params);
     }
@@ -80,4 +80,4 @@ class CrossbeamPollWorker extends Worker {
     }
 }
 
-module.exports = CrossbeamPollWorker;
+module.exports = ExamplePollWorker;

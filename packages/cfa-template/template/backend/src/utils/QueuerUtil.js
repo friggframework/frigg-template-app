@@ -1,4 +1,4 @@
-const Worker = require('@friggframework/core/worker');
+const { Worker } = require('@friggframework/core');
 const { debug } = require('@friggframework/logs');
 
 class QueuerUtil extends Worker {

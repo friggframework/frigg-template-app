@@ -1,20 +1,7 @@
 const mongoose = require('mongoose');
-const { Base, createModel } = require('@friggframework/models');
 
-const collectionName = 'User';
+const schema = new mongoose.Schema({}, {timestamps: true})
 
-const _schema = Base.Schema.clone();
+const User = mongoose.models.User || mongoose.model('User',schema)
 
-const _model = createModel(collectionName, _schema);
-
-class User extends Base {
-    static Schema = _schema;
-
-    static Model = _model;
-
-    constructor(model = _model, schema = _schema) {
-        super(model, schema);
-    }
-}
-
-module.exports = User;
+module.exports = { User };

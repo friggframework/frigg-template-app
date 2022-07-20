@@ -9,6 +9,7 @@ import IntegrationDropdown from '../Integration/IntegrationDropdown';
 
 function IntegrationVertical(props) {
 	const { name, description, category, icon } = props.data.display;
+	const { hasUserConfig, type } = props.data;
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [isProcessing, setIsProcessing] = useState(false);
@@ -16,6 +17,7 @@ function IntegrationVertical(props) {
 	const [installed, setInstalled] = useState([]);
 
 	const api = new Api();
+	api.setJwt(props.authToken)
 
 	const getAuthorizeRequirements = async () => {
 		setIsProcessing(true);
@@ -58,6 +60,8 @@ function IntegrationVertical(props) {
 		if (!integrations.error) {
 			props.dispatch(setIntegrations(integrations));
 		}
+		setInstalled([]);
+		setStatus('');
 	};
 
 	const authorizeMock = () => {
@@ -90,7 +94,7 @@ function IntegrationVertical(props) {
 					<div className="inline-flex relative justify-end ml-auto">
 						{(status && status === 'ENABLED') ||
 							(status === 'NEEDS_CONFIG' && (
-								<IntegrationDropdown getSampleData={getSampleData} disconnectIntegration={disconnectMock} name={name} />
+								<IntegrationDropdown getSampleData={getSampleData} disconnectIntegration={disconnectIntegration} name={name} hasUserConfig={hasUserConfig} />
 							))}
 					</div>
 				</div>
@@ -104,7 +108,7 @@ function IntegrationVertical(props) {
 						{(status && status === 'ENABLED') ||
 							(status === 'NEEDS_CONFIG' && (
 								<button
-									onClick={disconnectMock}
+									onClick={disconnectIntegration}
 									className="w-full px-5 py-3 font-medium leading-5 text-center text-purple-600 transition-colors duration-150 rounded-lg border-2 border-purple-400 hover:border-purple-600 hover:bg-purple-600 hover:text-white focus:outline-none focus:shadow-outline-purple"
 								>
 									Disconnect
@@ -112,7 +116,7 @@ function IntegrationVertical(props) {
 							))}
 						{!status && (
 							<button
-								onClick={authorizeMock}
+								onClick={getAuthorizeRequirements}
 								className="w-full px-5 py-3 font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
 							>
 								{isProcessing ? (

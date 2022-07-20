@@ -1,9 +1,9 @@
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const { get } = require('@friggframework/assertions');
-const {Token} = require('../models/Token');
-const {IndividualUser} = require('../models/IndividualUser');
-const {OrganizationUser} = require('../models/OrganizationUser');
+const { Token } = require('../models/Token');
+const { IndividualUser } = require('../models/IndividualUser');
+const { OrganizationUser } = require('../models/OrganizationUser');
 const Boom = require('@hapi/boom');
 
 class UserManager {
