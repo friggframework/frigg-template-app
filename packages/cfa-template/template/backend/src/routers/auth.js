@@ -56,8 +56,7 @@ router.route('/api/integrations').get(
 router.route('/api/authorize').get(
     catchAsyncError(async (req, res) => {
         const params = RouterUtil.checkRequiredParams(req.query, [
-            'entityType',
-            'connectingEntityType',
+            'entityType'
         ]);
         const instance = await getEntityFromType(req, params.entityType);
 

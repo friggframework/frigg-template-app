@@ -39,7 +39,7 @@
         "validator": "^13.6.0"
     },
     "scripts": {
-        "test": "NODE_ENV=test mocha src/test/*/*.test.js",
+        "test": "NODE_ENV=test jest",
         "start": "react-scripts start",
         "build": "react-scripts build",
         "eject": "react-scripts eject",

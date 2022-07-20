@@ -1,56 +1,47 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const Parent = require('./User');
-const { createModel } = require('@friggframework/models');
+const { User: Parent } = require('./User');
 
-const decimals = 10;
-
-const collectionName = 'IndividualUser';
-const parentModelObject = new Parent();
-
-const _schema = new mongoose.Schema({
+const schema = new mongoose.Schema({
     email: { type: String },
-    username: { type: String },
+    username: { type: String, unique: true },
     hashword: { type: String },
     appUserId: { type: String },
     organizationUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 });
 
-const _model = createModel(collectionName, _schema, parentModelObject);
-
-class IndividualUser extends Parent {
-    static Schema = _schema;
-
-    static Model = _model;
-
-    constructor(model = _model) {
-        super(model);
+schema.pre('save', async function () {
+    if ('hashword' in this) {
+        this.hashword = await bcrypt.hashSync(
+            this.hashword,
+            parseInt(this.schema.statics.decimals)
+        )
     }
+})
 
-    async create(obj) {
-        if ('password' in obj) {
-            obj.hashword = await bcrypt.hashSync(
-                obj.password,
-                parseInt(decimals)
-            );
-            delete obj.password;
-        }
-        return super.create(obj);
-    }
-
-    async update(id, options) {
+schema.static({
+    decimals: 10,
+    update: async function (id, options) {
         if ('password' in options) {
             options.hashword = await bcrypt.hashSync(
                 options.password,
-                parseInt(decimals)
+                parseInt(this.decimals)
             );
             delete options.password;
         }
-        return super.update(id, options);
-    }
-
-    async getUserByUsername(username) {
-        const getByUser = await this.list({ username });
+        return this.findOneAndUpdate(
+            {_id: id},
+            options,
+            {new: true, useFindAndModify: true}
+        );
+    },
+    getUserByUsername: async function (username) {
+        let getByUser;
+        try{
+            getByUser = await this.find({username});
+        } catch (e) {
+            console.log('oops')
+        }
 
         if (getByUser.length > 1) {
             throw new Error(
@@ -61,10 +52,9 @@ class IndividualUser extends Parent {
         if (getByUser.length === 1) {
             return getByUser[0];
         }
-    }
-
-    async getUserByAppUserId(appUserId) {
-        const getByUser = await this.list({ appUserId });
+    },
+    getUserByAppUserId: async function (appUserId) {
+        const getByUser = await this.find({ appUserId });
 
         if (getByUser.length > 1) {
             throw new Error(
@@ -76,6 +66,8 @@ class IndividualUser extends Parent {
             return getByUser[0];
         }
     }
-}
+})
 
-module.exports = IndividualUser;
+const IndividualUser = Parent.discriminators?.IndividualUser || Parent.discriminator('IndividualUser', schema);
+
+module.exports = {IndividualUser};

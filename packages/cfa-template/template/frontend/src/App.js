@@ -8,7 +8,7 @@ import Auth from './components/Auth';
 import history from './utils/history';
 
 const App = ({ authToken }) => {
-	const loggedIn = authToken;
+	const loggedIn = authToken || sessionStorage.getItem('jwt');
 
 	return (
 		<div className={loggedIn ? 'flex h-screen bg-gray-50' : 'bg-gray-50'}>

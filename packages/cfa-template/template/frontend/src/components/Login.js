@@ -48,7 +48,7 @@ class Login extends Component {
 		const jwt = sessionStorage.getItem('jwt');
 		if (jwt) {
 			this.props.dispatch(setAuthToken(jwt)); // dispatch the auth token to the store
-			this.props.history.push('/dashboard');
+			this.props.history.push('/integrations');
 		}
 	}
 
@@ -88,6 +88,7 @@ class Login extends Component {
 		}
 	};
 
+
 	// form submission method, ultimately unpacks form values and calls login method
 	handleFormSubmit = async (event) => {
 		event.preventDefault();
@@ -118,6 +119,23 @@ class Login extends Component {
 		this.state.submitted = true;
 
 		await this.login(this.state.defaultUsername, this.state.defaultPassword);
+	};
+	createDemoUser = async () => {
+		// handle actual form submission here
+
+		const api = new API();
+
+		try {
+			const data = await api.createUser('demo@lefthook.com', 'demo');
+
+			if (data.token) {
+				return toast.success('New user created! please login.');
+			} else {
+				return toast.error('Creating a user failed. (its possible this user already exists...)');
+			}
+		} catch (e) {
+			return toast.error('Login failed. Incorrect username or password');
+		}
 	};
 
 	render() {
@@ -198,8 +216,8 @@ class Login extends Component {
 								{/* <Link className="text-sm font-medium text-purple-800 hover:underline cursor-pointer" to="/register">
 									Create account
 								</Link> */}
-								<span className="text-sm font-medium text-purple-800 hover:underline cursor-pointer">
-									Create account
+								<span className="text-sm font-medium text-purple-800 hover:underline cursor-pointer" onClick={this.createDemoUser}>
+									Create account (demo user)
 								</span>
 							</p>
 						</div>

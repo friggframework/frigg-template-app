@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DotsVerticalIcon } from '@heroicons/react/outline';
 
-function IntegrationDropdown({ getSampleData, disconnectIntegration, name }) {
+function IntegrationDropdown({ getSampleData, disconnectIntegration, name, hasUserConfig }) {
 	const [dropdown, setDropdown] = useState(false);
 
 	return (
@@ -20,14 +20,14 @@ function IntegrationDropdown({ getSampleData, disconnectIntegration, name }) {
 					tabIndex="-1"
 				>
 					<div className="py-1" role="none">
-						<span
+						{hasUserConfig ? (<span
 							className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-200"
 							role="menuitem"
 							tabIndex="-1"
 							id="menu-item-1"
 						>
 							Configure
-						</span>
+						</span>) : null}
 						<span
 							className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-200"
 							role="menuitem"

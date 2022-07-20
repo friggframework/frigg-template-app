@@ -1,4 +1,5 @@
-const IntegrationManager = require('@friggframework/core/managers/IntegrationManager');
+const { IntegrationManager } = require('@friggframework/integrations');
+const { get } = require('@friggframework/assertions');
 
 class SalesforceIntegrationManager extends IntegrationManager {
     static Config = {
@@ -20,13 +21,16 @@ class SalesforceIntegrationManager extends IntegrationManager {
         this.targetInstance = notifier.targetInstance;
         this.integration = notifier.integration;
         if (event === 'EXAMPLE_EVENT') {
-            return this.processReportData(object);
+            return this.handleExampleEvent(object);
         }
     }
 
     /**
      * ALL CUSTOM/OPTIONAL METHODS FOR AN INTEGRATION MANAGER
      */
+    async handleExampleEvent(object) {
+        return object
+    }
 
     /**
      * ALL REQUIRED METHODS FOR AN INTEGRATION MANAGER

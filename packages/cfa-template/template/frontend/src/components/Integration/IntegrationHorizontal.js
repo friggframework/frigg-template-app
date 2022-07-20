@@ -9,16 +9,18 @@ import ToggleSwitch from './ToggleSwitch';
 
 function IntegrationHorizontal(props) {
 	const { name, description, category, icon } = props.data.display;
+	const { hasUserConfig, type } = props.data;
 
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [status, setStatus] = useState(false);
 	const [installed, setInstalled] = useState([]);
 
 	const api = new Api();
+	api.setJwt(props.authToken)
 
 	const getAuthorizeRequirements = async () => {
 		setIsProcessing(true);
-		const authorizeData = await api.getAuthorizeRequirements(type, '');
+		const authorizeData = await api.getAuthorizeRequirements(type, 'connectwise');
 		if (authorizeData.type === 'oauth2') {
 			window.location.href = authorizeData.url;
 		}
@@ -57,6 +59,8 @@ function IntegrationHorizontal(props) {
 		if (!integrations.error) {
 			props.dispatch(setIntegrations(integrations));
 		}
+		setInstalled([]);
+		setStatus('');
 	};
 
 	const authorizeMock = () => {
@@ -92,11 +96,11 @@ function IntegrationHorizontal(props) {
 					<div className="relative">
 						{(status && status === 'ENABLED') ||
 							(status === 'NEEDS_CONFIG' && (
-								<ToggleSwitch getSampleData={getSampleData} disconnectIntegration={disconnectMock} name={name} />
+								<ToggleSwitch getSampleData={getSampleData} disconnectIntegration={disconnectIntegration} name={name} hasUserConfig={hasUserConfig} />
 							))}
 						{!status && (
 							<button
-								onClick={authorizeMock}
+								onClick={getAuthorizeRequirements}
 								className="px-3 py-2 text-xs font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
 							>
 								{isProcessing ? (

@@ -4,6 +4,7 @@
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const should = chai.should();
 
 chai.use(chaiHttp);
 
@@ -19,21 +20,30 @@ const app = createApp((app) => {
 const Authenticator = require('../utils/Authenticator');
 const UserManager = require('../../src/managers/UserManager');
 const User = require('../../src/models/User');
+const {connectToDatabase} = require("@friggframework/database/mongo");
 
 const loginCredentials = { username: 'test' + Date.now(), password: 'test' };
-
+const primaryDetails = {
+    entityType: 'connectwise',
+    data: {
+        site: process.env.CWISE_SITE,
+        company_id: process.env.CWISE_COMPANY_ID,
+        public_key: process.env.CWISE_PUBLIC_KEY,
+        private_key: process.env.CWISE_SECRET_KEY
+    }
+}
 const EntityPairs = [
-    // { entityType: 'crossbeam', connectingEntityType: 'crossbeam' },
+    { entityType: 'salesforce'}
 ];
 
 describe('auth router', () => {
     let testContext;
 
-    beforeAll(() => {
+    beforeAll(async () => {
+        await connectToDatabase()
         testContext = {};
     });
 
-    this.timeout(35_000);
     beforeAll(async () => {
         // await (new User()).model.deleteMany();
         // this.userManager = await UserManager.createUser(loginCredentials);
@@ -53,6 +63,17 @@ describe('auth router', () => {
             .set('Content-Type', 'application/json')
             .send(loginCredentials);
         testContext.token = res.body.token;
+
+        const options = await chai
+            .request(app)
+            .get('/api/authorize')
+            .query({
+                entityType: primaryDetails.entityType
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', `Bearer ${testContext.token}`);
+
+
     });
 
     it('should get the integration options', async () => {
@@ -74,19 +95,32 @@ describe('auth router', () => {
     it('test auth redirect/callback', async () => {
         for (const pair of EntityPairs) {
             // Oauth/oauth2 approach
-            const response = await Authenticator.oauth2(pair.auth_url);
-            const baseArr = response.base.split('/');
-            response.entityType = baseArr[baseArr.length - 1];
-            delete response.base;
-            // Will need to figure out how to add other credential types
-            // such as API keys on this step.
-
+            const authOptions = await chai
+                .request(app)
+                .get('/api/authorize')
+                .query({
+                    entityType: pair.entityType,
+                    connectingEntityType: pair.connectingEntityType
+                })
+                .set('Content-Type', 'application/json')
+                .set('Authorization', `Bearer ${testContext.token}`);
+            let authBody;
+            if(authOptions.body.type === 'oauth2') {
+                const response = await Authenticator.oauth2(authOptions.body.url);
+                const baseArr = response.base.split('/');
+                response.entityType = baseArr[baseArr.length - 1];
+                delete response.base;
+                authBody = response
+            } else {
+                // Assume dev has provided a valid set of auth keys needed for the given integration and pass it in
+                authBody = pair
+            }
             const res = await chai
                 .request(app)
                 .post('/api/authorize')
                 .set('Content-Type', 'application/json')
                 .set('Authorization', `Bearer ${testContext.token}`)
-                .send(response);
+                .send(authBody);
 
             chai.assert.hasAnyKeys(res.body, ['credential', 'entity', 'type']);
             pair.credential = res.body.credential_id;

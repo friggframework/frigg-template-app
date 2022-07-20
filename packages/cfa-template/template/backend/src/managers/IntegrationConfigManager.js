@@ -1,19 +1,15 @@
-const Parent = require('@friggframework/core/managers/IntegrationConfigManager');
-const Options = require('@friggframework/core/objects/integration/Options');
-
-// Entities that we are going to use for integration for this particular app
-const ConnectWiseManager = require('./entities/ConnectWiseManager');
+const { Options } = require('@friggframework/integrations');
 const SalesforceManager = require('./entities/SalesforceManager');
 
-class IntegrationConfigManager extends Parent {
+// Entities that we are going to use for integration for this particular app
+class IntegrationConfigManager {
     constructor(params) {
-        super(params);
-        this.primary = ConnectWiseManager;
+        this.primary = SalesforceManager;
         this.options = [
 
             new Options({
                 module: SalesforceManager,
-                integrations: [ConnectWiseManager],
+                integrations: [SalesforceManager],
                 display: {
                     name: 'Salesforce',
                     description: 'Sales & CRM',
@@ -23,6 +19,17 @@ class IntegrationConfigManager extends Parent {
                 },
             }),
         ];
+    }
+
+    async getIntegrationOptions() {
+        return {
+            entities: {
+                primary: this.primary.getName(),
+                options: this.options.map((val) => val.get()),
+                authorized: [],
+            },
+            integrations: [],
+        };
     }
 }
 

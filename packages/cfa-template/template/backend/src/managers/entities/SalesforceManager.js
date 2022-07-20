@@ -1,6 +1,6 @@
-const ParentManager = require('../../modules/Salesforce/Manager.js');
+const { ModuleManager } = require('@friggframework/api-module-salesforce');
 
-class SalesforceManager extends ParentManager {
+class SalesforceManager extends ModuleManager {
     constructor(params) {
         return super(params);
     }
