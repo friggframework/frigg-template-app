@@ -1,5 +1,4 @@
 const { IntegrationManager } = require('@friggframework/integrations');
-const { get } = require('@friggframework/assertions');
 
 class SalesforceIntegrationManager extends IntegrationManager {
     static Config = {
@@ -21,15 +20,44 @@ class SalesforceIntegrationManager extends IntegrationManager {
         this.targetInstance = notifier.targetInstance;
         this.integration = notifier.integration;
         if (event === 'EXAMPLE_EVENT') {
-            return this.handleExampleEvent(object);
+            return this.processReportData(object);
         }
     }
 
     /**
      * ALL CUSTOM/OPTIONAL METHODS FOR AN INTEGRATION MANAGER
      */
-    async handleExampleEvent(object) {
-        return object
+    async getSampleData() {
+        const res = await this.targetInstance.api.find(
+            'Opportunity',
+            {
+            },
+            {
+                '*': 1,
+                'Account.Name': 1,
+                'Owner.Name': 1,
+                'Owner.Email': 1,
+            },
+            {
+                autoFetch: true,
+                sort: {
+                    LastModifiedDate: -1,
+                },
+                limit: 500,
+            },
+        );
+        console.log(res.length)
+        const formatted = res.map(item => {
+            const formattedItem = {...item};
+            formattedItem.attributes = 'Opportunity';
+            formattedItem.Owner = item.Owner.Name;
+            formattedItem.OwnerEmail = item.Owner.Email;
+            formattedItem.Account = item.Account.Name;
+
+            return formattedItem
+        })
+        return formatted
+
     }
 
     /**
@@ -127,54 +155,6 @@ class SalesforceIntegrationManager extends IntegrationManager {
 
     async getConfigOptions() {
         const options = [
-            {
-                key: 'useMasterBoards',
-                label: 'Create and Sync Master Data Boards?',
-                required: false,
-                inputType: 'boolean',
-                helperText: `Crossbeam will automatically create and sync data to "Crossbeam Company Data" and "Crossbeam People Data" boards with
-                all available Partner overlap data and populations for use by your internal teams.`,
-                type: 'Boolean',
-            },
-            {
-                key: 'reports',
-                label: 'Report Configuration',
-                required: false,
-                type: 'Array',
-                inputType: 'select',
-                helperText: `Every Report selected will automatically generate
-                and sync data to a monday.com Board that can then be shared and collaborated
-                on with your Partner(s)`,
-                multi: true,
-                items: {
-                    type: 'Object',
-                    label: 'Report',
-                    properties: {
-                        id: {
-                            label: 'Report ID',
-                            type: 'String',
-                            required: true,
-                        },
-                        name: {
-                            label: 'Report Name',
-                            type: 'String',
-                            required: true,
-                        },
-                        mondayBoardName: {
-                            label: 'monday.com Board Name',
-                            type: 'String',
-                            required: false,
-                            hidden: true,
-                        },
-                        mondayBoardId: {
-                            label: 'monday.com Board Id',
-                            type: 'String',
-                            required: false,
-                            hidden: true,
-                        },
-                    },
-                },
-            },
         ];
         return options;
     }

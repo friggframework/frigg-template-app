@@ -55,11 +55,10 @@ class EntityManager {
     }
 
     static async getEntityManagerInstanceFromEntityId(entityId, userId) {
-        const entityMO = new Entity();
-        const entity = await entityMO.get(entityId);
+        const entity = await Entity.findById(entityId);
         let entityManagerClass;
         for (const Manager of this.entityManagerClasses) {
-            if (entity instanceof Manager.Entity.Model) {
+            if (entity instanceof Manager.Entity) {
                 entityManagerClass = Manager;
             }
         }
