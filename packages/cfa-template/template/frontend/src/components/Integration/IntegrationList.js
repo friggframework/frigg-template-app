@@ -40,7 +40,6 @@ class IntegrationList extends Component {
 
 	setInstalled = (data) => {
 		const items = [data, ...this.state.installedIntegrations];
-		console.log(data);
 		this.setState({ installedIntegrations: items });
 	};
 
@@ -72,7 +71,6 @@ class IntegrationList extends Component {
 			return combinedIntegrations.map((integration) => this.integrationComponent(integration));
 		}
 		if (this.props.integrationType == 'Installed') {
-			console.log(this.state.installedIntegrations);
 			return this.state.installedIntegrations.map((integration) => this.integrationComponent(integration));
 		}
 		return combinedIntegrations
@@ -94,7 +92,6 @@ class IntegrationList extends Component {
 
 		if (this.props.integrations) {
 			integrationUtils = new IntegrationUtils(this.props.integrations.integrations);
-			console.log(integrationUtils.getPrimaryType());
 			integrationUtils.getPossibleIntegrations();
 		}
 		if (integrationUtils) {

@@ -94,7 +94,6 @@ class Login extends Component {
 		event.preventDefault();
 
 		const values = serializeForm(event.target, { hash: true });
-		console.log(`values: ${JSON.stringify(values)}`);
 
 		const validation = this.validator.validate(this.state);
 		this.setState({ validation });
@@ -112,7 +111,6 @@ class Login extends Component {
 		event.preventDefault();
 
 		const values = serializeForm(event.target, { hash: true });
-		console.log(`values: ${JSON.stringify(values)}`);
 
 		const validation = this.validator.validate(this.state);
 		this.setState({ validation });

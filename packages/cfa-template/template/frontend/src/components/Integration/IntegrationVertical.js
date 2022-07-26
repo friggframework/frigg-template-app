@@ -148,7 +148,6 @@ function IntegrationVertical(props) {
 }
 
 function mapStateToProps({ auth, integrations }) {
-	console.log(`integrations: ${JSON.stringify(integrations)}`);
 	return {
 		authToken: auth.token,
 		integrations,

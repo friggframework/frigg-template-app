@@ -37,7 +37,6 @@ class RedirectFromAuth extends Component {
 			};
 			// TODO change, for now using the target entity twice
 			const integration = await this.api.createIntegration(targetEntity.entity_id, targetEntity.entity_id, config);
-			console.log(integration)
 
 			if (!integration.error) {
 				this.props.history.push('/integrations');

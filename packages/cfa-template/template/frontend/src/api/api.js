@@ -59,6 +59,8 @@ export default class API {
 
 		try {
 			if (response.headers.get('x-lh-set')) localStorage.setItem('x-lh-set', response.headers.get('x-lh-set'));
+			if (response.status === 204) return // Early return since no content for 204
+
 			return response.json();
 		} catch (exception) {
 			if (response.error === null || response.error === undefined) {

@@ -10,7 +10,6 @@ import { logoutUser } from '../actions/logout';
 class Data extends Component {
 	constructor(props) {
 		super(props);
-		console.log('data props', props);
 		this.state = { headers: [], rows: [] };
 	}
 
@@ -26,15 +25,14 @@ class Data extends Component {
 
 			const { integrationId } = this.props.match.params;
 			let sampleData = await api.getSampleData(integrationId);
-			console.log(sampleData);
 
-			if (sampleData.contructor !== Array) {
-				sampleData = { data: [sampleData.data] };
+			if (sampleData.constructor !== Array) {
+				sampleData = sampleData.data;
 			}
 			if (sampleData.error) this.props.dispatch(logoutUser());
 
-			const headers = sampleData && sampleData.data && sampleData.data.length ? Object.keys(sampleData.data[0]) : [];
-			const rows = headers && headers.length ? sampleData.data : [];
+			const headers = sampleData && sampleData.length ? Object.keys(sampleData[0]) : [];
+			const rows = headers && headers.length ? sampleData : [];
 			this.setState({ headers, rows });
 		}
 	}
@@ -54,7 +52,7 @@ class Data extends Component {
 						{this.state.rows.map((item, idx) => (
 							<tr key={idx}>
 								{Object.values(item).map((val, idxVal) => (
-									<td key={idxVal}>{val}</td>
+									<td key={idxVal}>{`${val}`}</td>
 								))}
 							</tr>
 						))}
