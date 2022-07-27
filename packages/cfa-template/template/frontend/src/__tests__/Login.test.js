@@ -1,7 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-import "@babel/polyfill"; // otherwise referenceError: regeneratorRuntime is not defined
 import path from "path";
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import nock from "nock";
@@ -34,7 +30,7 @@ describe("Login component", () => {
         const scope = nock("http://localhost:3001/dev/user/")
             .post(/create./)
             .reply(200, {
-                token: "eyJpZCI6IjYyZTA0NGM4ZWJhNjgxYjE1MzRkMTNmYSIsInRva2VuIjoiNWM4NTNhNWRhM2I1Yzk2MTA1ZDU5MDlkOGMzYTQzZTUwNWJkMjIwNCJ9",
+                token: "nock nock someothersupertoken2124532131thatgitguardianwontthrowawarningagainst",
             });
 
         const { queryByText, getByText, findByText } = render(
@@ -55,15 +51,15 @@ describe("Login component", () => {
         );
 
         // probably toast exists somewhere outside the login component
-        // const toastAlert = await findByText(/wurst./);
+        // const toastAlert = await findByText(/New user created./);
         // expect(toastAlert).toBeInTheDocument();
     });
 
-    it.skip("creates a demo user - jest mocks fetch", async () => {
+    it("creates a demo user - jest mocks fetch", async () => {
         const promise = Promise.resolve({
             status: 200,
             data: {
-                token: "eyJpZCI6IjYyZTA0NGM4ZWJhNjgxYjE1MzRkMTNmYSIsInRva2VuIjoiNWM4NTNhNWRhM2I1Yzk2MTA1ZDU5MDlkOGMzYTQzZTUwNWJkMjIwNCJ9",
+                token: "fetch mock someothersupertoken2124532131thatgitguardianwontlaunchawarningagainst",
             },
         });
         fetch.mockImplementationOnce(() => promise);
@@ -89,7 +85,32 @@ describe("Login component", () => {
         );
 
         // probably toast exists somewhere outside the login component
-        // const toastAlert = await findByText(/wurst./);
+        // const toastAlert = await findByText(/New user created./);
         // expect(toastAlert).toBeInTheDocument();
+    });
+
+    it.only("logs in as a demo user", async () => {
+        const scope = nock(/.user./)
+            .post(/.login./)
+            .reply(200, {
+                status: 200,
+                body: {
+                    token: "login fetch mock someothersupertoken2124532131thatgitguardianwontlaunchawarningagainst",
+                },
+            });
+
+        const { getByTestId } = render(<Login authToken={null} />);
+
+        await userEvent.click(getByTestId("login-button"));
+
+        expect(fetch).toHaveBeenCalled();
+        scope.isDone();
+
+        expect(fetch).toHaveBeenCalledWith(
+            expect.stringMatching(/user\/login/),
+            expect.objectContaining({
+                body: '{"username":"demo@lefthook.com","password":"demo"}',
+            })
+        );
     });
 });
