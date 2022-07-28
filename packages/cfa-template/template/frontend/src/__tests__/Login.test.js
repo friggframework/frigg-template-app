@@ -1,40 +1,18 @@
 import React from "react";
 import * as redux from "react-redux";
-import * as toastify from "react-toastify";
-import { fireEvent, render, screen, act } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import nock from "nock";
 import userEvent from "@testing-library/user-event";
 import { Login } from "../components/Login";
+import fetch from "node-fetch";
 
-const localStorageMock = (() => {
-    let store = {};
-
-    return {
-        getItem(key) {
-            return store[key] || null;
-        },
-        setItem(key, value) {
-            store[key] = value.toString();
-        },
-        removeItem(key) {
-            delete store[key];
-        },
-        clear() {
-            store = {};
-        },
-    };
-})();
-
-Object.defineProperty(window, "sessionStorage", {
-    value: localStorageMock,
-});
-
-// use for printing the component's HTML
-// screen.debug();
+import "../../__mocks__/sessionStorage";
+const fetchSpy = jest.spyOn(fetch, "default");
 
 describe("Login component", () => {
     beforeAll(() => {
-        process.env.REACT_APP_API_BASE_URL = "http://localhost:3001/dev";
+        if (!process.env.REACT_APP_API_BASE_URL)
+            process.env.REACT_APP_API_BASE_URL = "http://localhost:3001/dev";
     });
 
     it("renders create account option", () => {
@@ -45,8 +23,6 @@ describe("Login component", () => {
     });
 
     it("creates a demo user - nock intercepts", async () => {
-        const toastSpy = jest.spyOn(toastify, "toast");
-
         const scope = nock(process.env.REACT_APP_API_BASE_URL)
             .post(/.create/)
             .reply(200, {
@@ -62,20 +38,22 @@ describe("Login component", () => {
 
         scope.isDone();
 
-        // probably toast exists somewhere outside the login component
-        // const toastAlert = await findByText(/New user created./);
-        // expect(toastSpy).toHaveBeenCalled();
+        expect(fetchSpy).toHaveBeenCalledWith(
+            expect.stringMatching(/user\/create/),
+            expect.objectContaining({
+                body: '{"username":"demo@lefthook.com","password":"demo"}',
+            })
+        );
     });
 
     it("logs in as a demo user", async () => {
-        const setItemSpy = jest.spyOn(window.sessionStorage, "setItem");
-        const useDispatchSpy = jest.spyOn(redux, "useDispatch");
         const mockDispatchFn = jest.fn();
+        const useDispatchSpy = jest.spyOn(redux, "useDispatch");
         useDispatchSpy.mockReturnValue(mockDispatchFn);
-        const historyPushSpy = jest.fn();
-        const history = { push: historyPushSpy };
+        const history = { push: jest.fn() };
         const fakeToken =
             "nock.login.someothersupertoken2124532131thatgitguardianwontlaunchawarningagainst";
+
         const scope = nock(process.env.REACT_APP_API_BASE_URL)
             .post(/.login/)
             .reply(200, {
@@ -94,8 +72,11 @@ describe("Login component", () => {
 
         scope.isDone();
 
-        // expect(setItemSpy).toHaveBeenCalled();
-        // expect(mockDispatchFn).toHaveBeenCalled();
-        // expect(historyPushSpy).toHaveBeenCalled();
+        expect(fetchSpy).toHaveBeenCalledWith(
+            expect.stringMatching(/user\/login/),
+            expect.objectContaining({
+                body: '{"username":"demo@lefthook.com","password":"demo"}',
+            })
+        );
     });
 });
