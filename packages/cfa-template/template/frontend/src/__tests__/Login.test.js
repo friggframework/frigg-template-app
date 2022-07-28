@@ -1,6 +1,7 @@
 import React from "react";
 import * as redux from "react-redux";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { ToastContainer } from "react-toastify";
 import nock from "nock";
 import userEvent from "@testing-library/user-event";
 import { Login } from "../components/Login";
@@ -30,13 +31,18 @@ describe("Login component", () => {
             });
 
         const { queryByText, getByText, findByText } = render(
-            <Login authToken={null} />
+            <>
+                <ToastContainer />
+                <Login authToken={null} />
+            </>
         );
 
         expect(queryByText(/Create account./i)).toBeTruthy();
         await userEvent.click(getByText(/Create account./i));
 
         scope.isDone();
+        const toastAlert = await findByText(/New user created./);
+        expect(toastAlert).toBeTruthy();
 
         expect(fetchSpy).toHaveBeenCalledWith(
             expect.stringMatching(/user\/create/),
