@@ -34,6 +34,7 @@ let getIntegrationsBaselineResponse = {
 describe('Users process tests', () => {
     let credentials = { username: 'yolo', password: 'wololo' };
     let token;
+    let apiExternalAuthorizationUrl; // ??
 
     beforeAll(() => {
         mongoose.connect(process.env.MONGO_URI);
@@ -75,5 +76,44 @@ describe('Users process tests', () => {
                     getIntegrationsBaselineResponse
                 );
             });
+    });
+
+    it('Triggers API authorization process', async () => {
+        await request(app)
+            .get(
+                '/api/authorize?entityType=salesforce&connectingEntityType=connectwise'
+            )
+            .set('Authorization', 'Bearer ' + token)
+            .then((response) => {
+                expect(response.statusCode).toEqual(200);
+                expect(response.body).toHaveProperty('type', 'oauth2');
+                expect(response.body).toHaveProperty('url');
+                apiExternalAuthorizationUrl = response.body.url;
+            });
+    });
+
+    it('Registers API authorization process', async () => {
+        const payload = {
+            entityType: 'salesforce',
+            data: {
+                code: 'token that is not a token',
+            },
+        };
+        await request(app)
+            .post('/api/authorize')
+            .set('Authorization', 'Bearer ' + token)
+            .send(payload)
+            .then((res) => {
+                expect(res.statusCode).toEqual(200);
+            });
+
+        /**
+            Error: Error Authing with Code, try Sandbox. {"name":"invalid_grant"}
+            at Api.getAccessToken (C:\repos\create-frigg-app\packages\cfa-template\template\backend\node_modules\@friggframework\api-module-salesforce\api.js:68:19)
+            at processTicksAndRejections (node:internal/process/task_queues:96:5)
+            at SalesforceManager.processAuthorizationCallback (C:\repos\create-frigg-app\packages\cfa-template\template\backend\node_modules\@friggframework\api-module-salesforce\manager.js:79:13)
+            at C:\repos\create-frigg-app\packages\cfa-template\template\backend\src\routers\auth.js:83:25
+            at SalesforceManager.processAuthorizationCallback (node_modules/@friggframework/api-module-salesforce/manager.js:83:21)
+        **/
     });
 });
