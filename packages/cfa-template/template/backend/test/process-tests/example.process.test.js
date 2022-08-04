@@ -1,17 +1,13 @@
 const request = require('supertest');
 const { createApp } = require('../../app');
 const user = require('../../src/routers/user');
-const UserManager = require('../../src/managers/UserManager')
 
 const app = createApp((app) => {
     app.use(user);
 });
 
 jest.mock('../../src/managers/UserManager', () => {
-    const UserManagerMocked = {
-        createUserToken: jest.fn()
-            .mockResolvedValue('token for testing'),
-    };
+    const UserManagerMocked = { createUserToken: jest.fn().mockResolvedValue('token for testing') };
 
     return {
         loginUser: jest.fn(() => UserManagerMocked)
