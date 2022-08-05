@@ -1,12 +1,15 @@
 const request = require('supertest');
+const nock = require('nock');
 const { createApp } = require('../../app');
 const userRoute = require('../../src/routers/user');
 const authRoute = require('../../src/routers/auth');
+const demoRoute = require('../../src/routers/demo');
 const { default: mongoose } = require('mongoose');
 
 const app = createApp((app) => {
     app.use(userRoute);
     app.use(authRoute);
+    app.use(demoRoute);
 });
 
 let getIntegrationsBaselineResponse = {
@@ -32,7 +35,7 @@ let getIntegrationsBaselineResponse = {
 };
 
 describe('Users process tests', () => {
-    let credentials = { username: 'yolo', password: 'wololo' };
+    let credentials = { username: 'demo@lefthook.com', password: 'demo' };
     let token;
     let apiExternalAuthorizationUrl; // ??
 
@@ -93,6 +96,11 @@ describe('Users process tests', () => {
     });
 
     it('Registers API authorization process', async () => {
+        const scope = nock(/salesforce/).any(/./).reply(200, {
+            id: 'salesforce_user_id',
+            organizationId: 'salesforce_organization_id',
+            url: 'salesforce_org_url',
+        });
         const payload = {
             entityType: 'salesforce',
             data: {
@@ -102,11 +110,12 @@ describe('Users process tests', () => {
         await request(app)
             .post('/api/authorize')
             .set('Authorization', 'Bearer ' + token)
+            .set('Referer', 'http://localhost:3000/')
             .send(payload)
             .then((res) => {
                 expect(res.statusCode).toEqual(200);
             });
-
+        scope.isDone();
         /**
             Error: Error Authing with Code, try Sandbox. {"name":"invalid_grant"}
             at Api.getAccessToken (C:\repos\create-frigg-app\packages\cfa-template\template\backend\node_modules\@friggframework\api-module-salesforce\api.js:68:19)
