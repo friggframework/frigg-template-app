@@ -52,37 +52,6 @@ const app = createApp((app) => {
 //         });
 //     });
 
-// jest.mock('jsforce', () => {
-//     const original = jest.requireActual('jsforce');
-//     class Connection extends original.Connection {
-//         accessToken = 'salesforce_access_token';
-//         authorize() {
-//             return Promise.resolve({
-//                 id: 'salesforce_user_id',
-//                 organizationId: 'salesforce_organization_id',
-//                 url: 'salesforce_org_url',
-//             });
-//         }
-//     }
-//     return {
-//         ...original,
-//         Connection: Connection,
-//     };
-// });
-
-// const mocks = new Map();
-// function mockProperty(object, property, value) {
-//     const descriptor = Object.getOwnPropertyDescriptor(object, property);
-//     const mocksForThisObject = mocks.get(object) || {};
-//     mocksForThisObject[property] = descriptor;
-//     mocks.set(object, mocksForThisObject);
-//     Object.defineProperty(object, property, { get: () => value });
-// }
-
-// const tokenSpy = jest
-//     .spyOn(jsforce.Connection.prototype, 'accessToken', 'get')
-//     .mockReturnValue('salesforce_access_token');
-
 let getIntegrationsBaselineResponse = {
     entities: {
         authorized: [],
