@@ -13,12 +13,6 @@ const app = createApp((app) => {
     app.use(demoRoute);
 });
 
-jest
-    .spyOn(ModuleManager.prototype, 'processAuthorizationCallback')
-    .mockImplementation(() => {
-        return 'Hello this is a token';
-    });
-
 let getIntegrationsBaselineResponse = {
     entities: {
         authorized: [],
@@ -44,7 +38,6 @@ let getIntegrationsBaselineResponse = {
 describe('Users process tests', () => {
     let credentials = { username: 'demo@lefthook.com', password: 'demo' };
     let token;
-    let apiExternalAuthorizationUrl; // ??
 
     beforeAll(() => {
         mongoose.connect(process.env.MONGO_URI);
@@ -104,6 +97,12 @@ describe('Users process tests', () => {
     });
 
     it('Registers API authorization process', async () => {
+        jest
+            .spyOn(ModuleManager.prototype, 'processAuthorizationCallback')
+            .mockImplementation(() => {
+                return 'Hello this is a token';
+            });
+
         const payload = {
             entityType: 'salesforce',
             data: {
