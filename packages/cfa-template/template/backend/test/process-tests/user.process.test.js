@@ -1,5 +1,4 @@
 const request = require('supertest');
-const nock = require('nock');
 const { createApp } = require('../../app');
 const userRoute = require('../../src/routers/user');
 const authRoute = require('../../src/routers/auth');

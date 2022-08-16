@@ -16,12 +16,12 @@
         "start:staging": "sls offline --stage staging"
     },
     "dependencies": {
-        "@friggframework/api-module-salesforce": "^0.8.10",
+        "@friggframework/api-module-salesforce": "^0.8.11",
         "@friggframework/assertions": "^1.0.1",
         "@friggframework/core": "^0.2.2",
         "@friggframework/database": "^1.0.2",
         "@friggframework/errors": "^1.1.0",
-        "@friggframework/integrations": "^1.0.3",
+        "@friggframework/integrations": "^1.0.4",
         "@friggframework/logs": "^1.0.2",
         "@friggframework/module-plugin": "^1.0.7",
         "@hapi/boom": "^7.4.11",
@@ -47,7 +47,6 @@
         "faker": "^5.5.3",
         "jest": "^27.4.7",
         "markdownlint-cli": "^0.28.1",
-        "nock": "^13.2.9",
         "nodemon": "^2.0.12",
         "open": "^7.1.0",
         "prettier": "^2.3.2",
