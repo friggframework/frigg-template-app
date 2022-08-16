@@ -33,7 +33,6 @@ export default class IntegrationUtils {
 	//
 	// get entities primary type (a string, ie: "Freshbooks")
 	getPrimaryType() {
-		// console.log(JSON.stringify(this.integrations));
 		return this.integrations[ENTITIES][PRIMARY];
 	}
 

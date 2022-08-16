@@ -151,7 +151,8 @@ router.route('/api/integrations').post(
             await IntegrationManager.createIntegration(
                 params.entities,
                 req.userManager.getUserId(),
-                params.config
+                params.config,
+                EntityManager
             );
 
         // post integration initialization

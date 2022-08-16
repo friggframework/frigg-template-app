@@ -175,7 +175,6 @@ class ModalForm extends React.Component {
     };
 
     onSubmit = async (form) => {
-        console.log('form submitted with', form);
 
         this.setState(() => ({
             showSpinner: true,
@@ -236,7 +235,7 @@ class ModalForm extends React.Component {
             this.props.requestType === 'INITIAL' ||
             this.props.requestType === 'CONFIGURE'
         ) {
-            console.log(JSON.stringify(form.formData));
+
             const config = {
                 enable: {
                     initial_sync: form.formData.initial_sync,

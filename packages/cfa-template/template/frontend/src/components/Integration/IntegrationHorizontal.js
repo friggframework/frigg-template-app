@@ -12,7 +12,7 @@ function IntegrationHorizontal(props) {
 	const { hasUserConfig, type } = props.data;
 
 	const [isProcessing, setIsProcessing] = useState(false);
-	const [status, setStatus] = useState(false);
+	const [status, setStatus] = useState(props.data.status);
 	const [installed, setInstalled] = useState([]);
 
 	const api = new Api();
@@ -94,10 +94,9 @@ function IntegrationHorizontal(props) {
 				</div>
 				<div className="ml-auto">
 					<div className="relative">
-						{(status && status === 'ENABLED') ||
-							(status === 'NEEDS_CONFIG' && (
+						{((status && status === 'ENABLED') || (status && status === 'NEEDS_CONFIG')) && (
 								<ToggleSwitch getSampleData={getSampleData} disconnectIntegration={disconnectIntegration} name={name} hasUserConfig={hasUserConfig} />
-							))}
+						)}
 						{!status && (
 							<button
 								onClick={getAuthorizeRequirements}
@@ -132,7 +131,6 @@ function IntegrationHorizontal(props) {
 }
 
 function mapStateToProps({ auth, integrations }) {
-	console.log(`integrations: ${JSON.stringify(integrations)}`);
 	return {
 		authToken: auth.token,
 		integrations,
