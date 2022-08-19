@@ -26,11 +26,7 @@ jest.mock('aws-sdk', () => {
 describe('ExampleQueuer unit tests', () => {
     let exampleQueuer;
 
-    it('ExampleQueuer is correctly instantiated', async () => {
-        exampleQueuer = new ExampleQueuer();
-    });
-
-    it('ExampleQueuer is correctly instantiated', async () => {
+    it('Items are successfully enqueued', async () => {
         const mockedIntegration = { id: 775656, config: { useMasterBoards: true } };
         let sentBodies = [];
 
