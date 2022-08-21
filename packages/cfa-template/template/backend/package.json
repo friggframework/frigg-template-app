@@ -5,13 +5,14 @@
     "scripts": {
         "test": "jest --group=-interactive --group=-live-api",
         "test:full": "jest",
+        "test:process": "jest --testPathPattern process-tests process.test",
         "debug": "jest --testTimeout 0",
         "ci": "npm install",
         "lint": "eslint .",
         "lint:fix": "prettier --write --loglevel error . && eslint . --fix",
         "lint:cloudformation": "sls package --stage dev && cfn-lint .serverless/cloudformation-template-*.json",
         "lint:markdown": "markdownlint --fix .",
-        "start": "DEBUG_VERBOSE=1 sls offline --stage dev",
+        "start": "sls offline --stage dev",
         "start:staging": "sls offline --stage staging"
     },
     "dependencies": {
@@ -43,15 +44,10 @@
         "@friggframework/prettier-config": "^1.0.2",
         "@friggframework/test-environment": "^1.0.2",
         "aws-sdk": "^2.959.0",
-        "chai": "^4.2.0",
-        "chai-as-promised": "^7.1.1",
-        "chai-http": "^4.3.0",
-        "chai-url": "^1.0.4",
         "copy-webpack-plugin": "^10.2.4",
         "faker": "^5.5.3",
         "jest": "^27.4.7",
         "markdownlint-cli": "^0.28.1",
-        "nock": "^13.1.1",
         "nodemon": "^2.0.12",
         "open": "^7.1.0",
         "prettier": "^2.3.2",
@@ -63,6 +59,7 @@
         "serverless-webpack": "^5.7.1",
         "sinon": "^10.0.0",
         "sinon-chai": "^3.6.0",
+        "supertest": "^6.2.4",
         "webpack": "^5.58.2"
     }
 }

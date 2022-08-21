@@ -1,6 +1,11 @@
 import { render, screen, cleanup } from '@testing-library/react';
-import renderer from 'react-test-renderer';
+// import renderer from 'react-test-renderer';
 import * as Integration from '../components/Integration';
+
+describe("Integration test", ()=>{
+it.only('pending migration from mocha/chai to jest', ()=>{
+	expect(1+2).toBe(4)
+})
 
 afterEach(() => {
 	cleanup();
@@ -68,3 +73,5 @@ test('matches snapshot: Integration.test.js', () => {
 	const tree = renderer.create(<Integration.Horizontal data={data} key={key} handleInstall={handleInstall} />).toJSON();
 	expect(tree).toMatchSnapshot();
 });
+
+	})

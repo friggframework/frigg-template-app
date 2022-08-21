@@ -8,7 +8,7 @@ import { setAuthToken } from '../actions/auth';
 import config from '../frigg.config';
 
 // login component is a place for a user to enter a username and password
-class Login extends Component {
+export class Login extends Component {
 	constructor(props) {
 		super(props);
 
