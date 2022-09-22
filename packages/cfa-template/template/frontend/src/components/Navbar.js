@@ -42,7 +42,7 @@ function Navbar() {
 							>
 								<img
 									className="object-cover w-8 h-8 rounded-full"
-									src="https://avatars.githubusercontent.com/u/931781?v=4"
+									src="https://friggframework.org/assets/img/favicon.svg"
 									alt=""
 									aria-hidden="true"
 								/>
