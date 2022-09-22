@@ -40,6 +40,7 @@ class IntegrationList extends Component {
 
 	setInstalled = (data) => {
 		const items = [data, ...this.state.installedIntegrations];
+		console.log(data);
 		this.setState({ installedIntegrations: items });
 	};
 
@@ -71,6 +72,7 @@ class IntegrationList extends Component {
 			return combinedIntegrations.map((integration) => this.integrationComponent(integration));
 		}
 		if (this.props.integrationType == 'Installed') {
+			console.log(this.state.installedIntegrations);
 			return this.state.installedIntegrations.map((integration) => this.integrationComponent(integration));
 		}
 		return combinedIntegrations
@@ -92,6 +94,7 @@ class IntegrationList extends Component {
 
 		if (this.props.integrations) {
 			integrationUtils = new IntegrationUtils(this.props.integrations.integrations);
+			console.log(integrationUtils.getPrimaryType());
 			integrationUtils.getPossibleIntegrations();
 		}
 		if (integrationUtils) {
@@ -105,10 +108,7 @@ class IntegrationList extends Component {
 				{integrationUtils !== null ? (
 					displayedIntegrations
 				) : (
-					<div
-						data-testid="skeleton-list"
-						className="grid gap-6 lg:col-span-1 lg:grid-cols-1 xl:col-span-2 xl:grid-cols-2 2xl:col-span-3 2xl:grid-cols-3"
-					>
+					<div className="grid gap-6 lg:col-span-1 lg:grid-cols-1 xl:col-span-2 xl:grid-cols-2 2xl:col-span-3 2xl:grid-cols-3">
 						<IntegrationSkeleton layout={config.componentLayout} />
 						<IntegrationSkeleton layout={config.componentLayout} />
 						<IntegrationSkeleton layout={config.componentLayout} />

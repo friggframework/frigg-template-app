@@ -6,26 +6,44 @@ import { setIntegrations } from '../../actions/integrations';
 import { ExclamationCircleIcon } from '@heroicons/react/outline';
 import Api from '../../api/api';
 import ToggleSwitch from './ToggleSwitch';
+import ModalBasicAuth from './ModalBasicAuth';
+import ModalConfig from './ModalConfig';
 
 function IntegrationHorizontal(props) {
 	const { name, description, category, icon } = props.data.display;
-	const { hasUserConfig, type } = props.data;
+	const { type, hasUserConfig } = props.data;
 
 	const [isProcessing, setIsProcessing] = useState(false);
-	const [status, setStatus] = useState(props.data.status);
+	const [status, setStatus] = useState(false);
 	const [installed, setInstalled] = useState([]);
+	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+	const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
 
 	const api = new Api();
-	api.setJwt(props.authToken)
 
 	const getAuthorizeRequirements = async () => {
 		setIsProcessing(true);
-		const authorizeData = await api.getAuthorizeRequirements(type, 'connectwise');
+		const authorizeData = await api.getAuthorizeRequirements(type, '');
 		if (authorizeData.type === 'oauth2') {
 			window.location.href = authorizeData.url;
 		}
 		if (authorizeData.type !== 'oauth2') enableModalForm();
 	};
+
+	function openAuthModal() {
+		setIsAuthModalOpen(true);
+	}
+	function closeAuthModal() {
+		setIsAuthModalOpen(false);
+		setIsProcessing(false);
+	}
+	function openConfigModal() {
+		setIsConfigModalOpen(true);
+	}
+	function closeConfigModal() {
+		setIsConfigModalOpen(false);
+		setIsProcessing(false);
+	}
 
 	const enableModalForm = () => {
 		const requestType = getRequestType();
@@ -59,15 +77,29 @@ function IntegrationHorizontal(props) {
 		if (!integrations.error) {
 			props.dispatch(setIntegrations(integrations));
 		}
-		setInstalled([]);
-		setStatus('');
 	};
 
-	const authorizeMock = () => {
+	const authorizeMock = async () => {
 		setIsProcessing(true);
+		api.setJwt(sessionStorage.getItem('jwt'));
+		const authorizeData = await api.getAuthorizeRequirements(type, 'demo');
 
+		if (authorizeData.type !== 'oauth2') {
+			openAuthModal();
+		} else {
+			connectMock();
+		}
+	};
+
+	const connectMock = () => {
+		setIsAuthModalOpen(false);
+		setIsProcessing(true);
 		setTimeout(() => {
-			setStatus('NEEDS_CONFIG');
+			if (hasUserConfig) {
+				setStatus('NEEDS_CONFIG');
+			} else {
+				setStatus('ENABLED');
+			}
 			setInstalled([props.data]);
 			props.handleInstall(props.data, props.status);
 			setIsProcessing(false);
@@ -81,7 +113,7 @@ function IntegrationHorizontal(props) {
 
 	return (
 		<>
-			<div data-testid="integration-horizontal" className="flex flex-nowrap p-4 bg-white rounded-lg shadow-xs">
+			<div className="flex flex-nowrap p-4 bg-white rounded-lg shadow-xs">
 				<img className="mr-3 w-[80px] h-[80px] rounded-lg" alt={name} src={icon} />
 				<div className="pr-1 overflow-hidden">
 					<p className="w-full text-lg font-semibold text-gray-700 truncate ...">{name}</p>
@@ -94,12 +126,18 @@ function IntegrationHorizontal(props) {
 				</div>
 				<div className="ml-auto">
 					<div className="relative">
-						{((status && status === 'ENABLED') || (status && status === 'NEEDS_CONFIG')) && (
-								<ToggleSwitch getSampleData={getSampleData} disconnectIntegration={disconnectIntegration} name={name} hasUserConfig={hasUserConfig} />
+						{status && (
+							<ToggleSwitch
+								getSampleData={getSampleData}
+								openConfigModal={openConfigModal}
+								disconnectIntegration={disconnectMock}
+								status={status}
+								name={name}
+							/>
 						)}
 						{!status && (
 							<button
-								onClick={getAuthorizeRequirements}
+								onClick={authorizeMock}
 								className="px-3 py-2 text-xs font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
 							>
 								{isProcessing ? (
@@ -126,11 +164,32 @@ function IntegrationHorizontal(props) {
 					</div>
 				</div>
 			</div>
+
+			{isAuthModalOpen ? (
+				<ModalBasicAuth
+					isAuthModalOpen={isAuthModalOpen}
+					closeAuthModal={closeAuthModal}
+					connectMock={connectMock}
+					name={name}
+					type={type}
+				></ModalBasicAuth>
+			) : null}
+
+			{isConfigModalOpen ? (
+				<ModalConfig
+					isConfigModalOpen={isConfigModalOpen}
+					closeConfigModal={closeConfigModal}
+					connectMock={connectMock}
+					name={name}
+					type={type}
+				></ModalConfig>
+			) : null}
 		</>
 	);
 }
 
 function mapStateToProps({ auth, integrations }) {
+	console.log(`integrations: ${JSON.stringify(integrations)}`);
 	return {
 		authToken: auth.token,
 		integrations,

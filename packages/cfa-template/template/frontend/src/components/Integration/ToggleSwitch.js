@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { DotsVerticalIcon } from '@heroicons/react/outline';
 
-function ToggleSwitch({ getSampleData, disconnectIntegration, name }) {
+function ToggleSwitch({ getSampleData, openConfigModal, disconnectIntegration, status, name }) {
 	const [dropdown, setDropdown] = useState(false);
+
+	const dropDownConfig = () => {
+		setDropdown(false);
+		openConfigModal();
+	};
 
 	return (
 		<>
@@ -26,14 +31,17 @@ function ToggleSwitch({ getSampleData, disconnectIntegration, name }) {
 					tabIndex="-1"
 				>
 					<div className="py-1" role="none">
-						<span
-							className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-200"
-							role="menuitem"
-							tabIndex="-1"
-							id="menu-item-1"
-						>
-							Configure
-						</span>
+						{status === 'NEEDS_CONFIG' && (
+							<span
+								className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-200"
+								role="menuitem"
+								tabIndex="-1"
+								id="menu-item-1"
+								onClick={dropDownConfig}
+							>
+								Configure
+							</span>
+						)}
 						<span
 							className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-200"
 							role="menuitem"
