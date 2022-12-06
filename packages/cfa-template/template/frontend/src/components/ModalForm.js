@@ -9,6 +9,7 @@ import { showModalForm } from '../actions/modalForm';
 import { setIntegrations } from '../actions/integrations';
 import API from '../api/api';
 import 'react-toggle/style.css';
+import _ from 'lodash';
 
 const styles = {
     fontFamily: 'sans-serif',
@@ -91,18 +92,7 @@ class ModalForm extends React.Component {
             let initialFormData;
 
             if (this.props.initialFormData) {
-                initialFormData = {
-                    initial_sync:
-                        this.props.initialFormData?.enable?.initial_sync,
-                    ongoing_sync:
-                        this.props.initialFormData?.enable?.ongoing_sync,
-                    miscellaneous_invoice:
-                        this.props.initialFormData?.enable
-                            ?.miscellaneous_invoice,
-                    sync_direction:
-                        this.props.initialFormData?.settings?.allSyncs
-                            ?.sync_direction,
-                };
+                initialFormData = this.props.initialFormData;
             }
             this.setState({
                 uiSchema,
@@ -236,18 +226,7 @@ class ModalForm extends React.Component {
             this.props.requestType === 'CONFIGURE'
         ) {
 
-            const config = {
-                enable: {
-                    initial_sync: form.formData.initial_sync,
-                    ongoing_sync: form.formData.ongoing_sync,
-                    miscellaneous_invoice: form.formData.miscellaneous_invoice,
-                },
-                settings: {
-                    allSyncs: {
-                        sync_direction: form.formData.sync_direction,
-                    },
-                },
-            };
+            const config = _.merge(form.formData, this.props.initialFormData);
             const res = await this.updateIntegration(config);
 
             if (!res) {
