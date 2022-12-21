@@ -29,7 +29,7 @@ let getIntegrationsBaselineResponse = {
                 type: 'salesforce',
             },
         ],
-        primary: 'salesforce',
+        primary: 'connectwise',
     },
     integrations: [],
 };
