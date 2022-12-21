@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { withRouter, useHistory } from 'react-router-dom';
+import { connect, useSelector } from 'react-redux';
 import { showModalForm } from '../../actions/modalForm';
 import { setIntegrations } from '../../actions/integrations';
 import { ExclamationCircleIcon } from '@heroicons/react/outline';
@@ -8,6 +8,9 @@ import Api from '../../api/api';
 import IntegrationDropdown from '../Integration/IntegrationDropdown';
 
 function IntegrationVertical(props) {
+	const authToken = useSelector((state) => state.auth.token)
+	let history = useHistory();
+
 	const { name, description, category, icon } = props.data.display;
 	const { hasUserConfig, type } = props.data;
 
@@ -17,7 +20,7 @@ function IntegrationVertical(props) {
 	const [installed, setInstalled] = useState([]);
 
 	const api = new Api();
-	api.setJwt(props.authToken)
+	api.setJwt(authToken)
 
 	const getAuthorizeRequirements = async () => {
 		setIsProcessing(true);
@@ -50,7 +53,7 @@ function IntegrationVertical(props) {
 	};
 
 	const getSampleData = async () => {
-		props.history.push(`/data/${props.data.id}`);
+		history.push(`/data/${props.data.id}`);
 	};
 
 	const disconnectIntegration = async () => {
@@ -82,7 +85,7 @@ function IntegrationVertical(props) {
 
 	return (
 		<>
-			<div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-xs">
+			<div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-xs" data-testid="integration-vertical">
 				<div className="flex w-full h-[24px]">
 					<div className="inline-flex relative mr-auto">
 						{status && status === 'NEEDS_CONFIG' && (
@@ -147,11 +150,4 @@ function IntegrationVertical(props) {
 	);
 }
 
-function mapStateToProps({ auth, integrations }) {
-	return {
-		authToken: auth.token,
-		integrations,
-	};
-}
-
-export default withRouter(connect(mapStateToProps)(IntegrationVertical));
+export default IntegrationVertical

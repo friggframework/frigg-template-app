@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { showModalForm } from '../../actions/modalForm';
 import { setIntegrations } from '../../actions/integrations';
 import { ExclamationCircleIcon } from '@heroicons/react/outline';
@@ -12,6 +11,7 @@ import ModalConfig from './ModalConfig';
 function IntegrationHorizontal(props) {
 	const { name, description, category, icon } = props.data.display;
 	const { type, hasUserConfig } = props.data;
+	let history = useHistory();
 
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [status, setStatus] = useState(false);
@@ -67,7 +67,7 @@ function IntegrationHorizontal(props) {
 	};
 
 	const getSampleData = async () => {
-		props.history.push(`/data/${props.data.id}`);
+		history.push(`/data/${props.data.id}`);
 	};
 
 	const disconnectIntegration = async () => {
@@ -113,7 +113,7 @@ function IntegrationHorizontal(props) {
 
 	return (
 		<>
-			<div className="flex flex-nowrap p-4 bg-white rounded-lg shadow-xs">
+			<div className="flex flex-nowrap p-4 bg-white rounded-lg shadow-xs" data-testid="integration-horizontal">
 				<img className="mr-3 w-[80px] h-[80px] rounded-lg" alt={name} src={icon} />
 				<div className="pr-1 overflow-hidden">
 					<p className="w-full text-lg font-semibold text-gray-700 truncate ...">{name}</p>
@@ -187,13 +187,4 @@ function IntegrationHorizontal(props) {
 		</>
 	);
 }
-
-function mapStateToProps({ auth, integrations }) {
-	console.log(`integrations: ${JSON.stringify(integrations)}`);
-	return {
-		authToken: auth.token,
-		integrations,
-	};
-}
-
-export default withRouter(connect(mapStateToProps)(IntegrationHorizontal));
+export default IntegrationHorizontal;
