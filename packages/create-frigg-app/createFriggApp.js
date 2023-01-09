@@ -147,16 +147,16 @@ function init() {
     if (typeof projectName === 'undefined') {
         console.error('Please specify the project directory:');
         console.log(
-            `  ${chalk.cyan(program.name())} ${chalk.green('<project-directory>')}`
+            `${chalk.cyan(`npx ${program.name()}`)} ${chalk.green('<project-directory>')}`
         );
         console.log();
         console.log('For example:');
         console.log(
-            `  ${chalk.cyan(program.name())} ${chalk.green('my-frigg-app')}`
+            `${chalk.cyan(`npx ${program.name()}`)} ${chalk.green('my-frigg-app')}`
         );
         console.log();
         console.log(
-            `Run ${chalk.cyan(`${program.name()} --help`)} to see all options.`
+            `Run ${chalk.cyan(`npx ${program.name()} --help`)} to see all options.`
         );
         process.exit(1);
     }
