@@ -12,18 +12,23 @@ const loginCredentials = { username: 'admin', password: 'password1' };
 
 describe('UserManager', () => {
     beforeAll(async () => {
-        await connectToDatabase()
-    })
+        await connectToDatabase();
+    });
     beforeEach(async () => {
         this.manager = await UserManager.createIndividualUser(loginCredentials);
     });
     afterEach(async () => {
-        await User.deleteMany()
+        await User.deleteMany();
     });
     test('should create a login token', async () => {
-        console.log('bar')
+        console.log('bar');
         const token = await this.manager.createUserToken();
         await new UserManager({ token });
+    });
+
+    it('should create an individual user', async () => {
+        const user = await UserManager.createIndividualUser(loginCredentials);
+        expect(user).toBeInstanceOf(UserManager);
     });
 
     it('should login a user', async () => {

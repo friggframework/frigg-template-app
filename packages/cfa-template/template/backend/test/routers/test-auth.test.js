@@ -83,6 +83,16 @@ describe('auth router -- test-auth', () => {
             title: 'Authentication Error',
         });
     });
+
+    it('reports status OK if it returns options', async () => {
+        mockManagers({ testAuthData: {} });
+
+        const { body, status, text } = await chai
+            .request(app)
+            .get('/api/integrations/7g9a/config/options');
+
+        expect(status).toBe(200);
+    });
 });
 
 class MockedUserManager {

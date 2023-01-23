@@ -1,9 +1,9 @@
 {
     "AES_KEY": "Testing123456789Testing123456789",
     "AES_KEY_ID": "",
-    "MONGO_URI": "",
+    "MONGO_URI": "mongodb+srv://friggDbUser:1r9IeOGKQ2YgjRDs@cluster0.k1jhbti.mongodb.net/?retryWrites=true&w=majority",
     "REDIRECT_URI": "https://localhost:3000/redirect",
-    
+
     "SALESFORCE_CLIENT_ID": "salesforce client id",
     "SALESFORCE_CLIENT_SECRET": "salesforce client secret",
     "SALESFORCE_REDIRECT_URI": "http://localhost:3000/redirect/salesforce"

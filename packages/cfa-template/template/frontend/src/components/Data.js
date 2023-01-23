@@ -24,6 +24,7 @@ class Data extends Component {
 			api.setJwt(this.props.authToken);
 
 			const { integrationId } = this.props.match.params;
+			console.log(`Fetching sample data for integration ${integrationId}`);
 			let sampleData = await api.getSampleData(integrationId);
 
 			if (sampleData.constructor !== Array) {
