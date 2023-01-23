@@ -1,6 +1,6 @@
 {
     "AES_KEY": "Testing123456789Testing123456789",
     "AES_KEY_ID": "",
-    "MONGO_URI": "mongodb+srv://friggDbUser:1r9IeOGKQ2YgjRDs@cluster0.k1jhbti.mongodb.net/?retryWrites=true&w=majority",
+    "MONGO_URI": "",
     "REDIRECT_URI": "https://localhost:3000/redirect"
 }
