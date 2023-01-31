@@ -26,7 +26,7 @@ describe('UserManager', () => {
         await new UserManager({ token });
     });
 
-    it('should create an individual user', async () => {
+    it('created users should be instance of UserManager', async () => {
         const user = await UserManager.createIndividualUser(loginCredentials);
         expect(user).toBeInstanceOf(UserManager);
     });

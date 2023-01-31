@@ -84,7 +84,7 @@ describe('auth router -- test-auth', () => {
         });
     });
 
-    it('reports status OK if it returns options', async () => {
+    it('get config options request should respond with a 200 OK status', async () => {
         mockManagers({ testAuthData: {} });
 
         const { body, status, text } = await chai
