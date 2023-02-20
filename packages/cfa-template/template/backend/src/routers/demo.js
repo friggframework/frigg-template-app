@@ -3,7 +3,7 @@ const Boom = require('@hapi/boom');
 const catchAsyncError = require('express-async-handler');
 const RouterUtil = require('../utils/RouterUtil');
 const { requireLoggedInUser } = require('./middleware/requireLoggedInUser');
-const IntegrationManager = require('../managers/integrations/IntegrationManager');
+const IntegrationManager = require('../managers/integrations/IntegrationManagerFactory');
 
 const router = express();
 

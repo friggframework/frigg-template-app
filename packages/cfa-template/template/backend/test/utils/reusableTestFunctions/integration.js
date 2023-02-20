@@ -3,7 +3,7 @@ const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
 const Authenticator = require('../Authenticator');
-const IntegrationFactory = require('../../../src/managers/integrations/IntegrationManager');
+const IntegrationFactory = require('../../../src/managers/integrations/IntegrationManagerFactory');
 
 const testCreds = {
     client_id: process.env.CROSSBEAM_TEST_CLIENT_ID,

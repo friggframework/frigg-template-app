@@ -1,6 +1,6 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
-const EntityManager = require('../src/managers/entities/EntityManager');
+const EntityManager = require('../src/managers/entities/EntityManagerFactory');
 const destroyer = require('server-destroy');
 const { createModel } = require('@friggframework/models');
 

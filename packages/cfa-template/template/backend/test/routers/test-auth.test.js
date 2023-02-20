@@ -2,8 +2,8 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const express = require('express');
 const auth = require('../../src/routers/auth');
-const EntityManager = require('../../src/managers/entities/EntityManager');
-const IntegrationManager = require('../../src/managers/integrations/IntegrationManager');
+const EntityManager = require('../../src/managers/entities/EntityManagerFactory');
+const IntegrationManager = require('../../src/managers/integrations/IntegrationManagerFactory');
 
 jest.mock('../../src/managers/entities/EntityManager');
 jest.mock('../../src/managers/integrations/IntegrationManager');

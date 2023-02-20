@@ -1,4 +1,5 @@
 {
+  "name": "create-frigg-app",
   "workspaces": [
     "packages/*"
   ],

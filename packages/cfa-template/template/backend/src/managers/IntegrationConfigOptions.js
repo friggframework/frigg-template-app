@@ -3,11 +3,10 @@ const SalesforceManager = require('./entities/SalesforceManager');
 const ConnectWiseManager = require('./entities/ConnectWiseManager');
 
 // Entities that we are going to use for integration for this particular app
-class IntegrationConfigManager {
+class IntegrationConfigOptions {
     constructor(params) {
         this.primary = ConnectWiseManager;
         this.options = [
-
             new Options({
                 module: SalesforceManager,
                 integrations: [ConnectWiseManager],
@@ -34,4 +33,4 @@ class IntegrationConfigManager {
     }
 }
 
-module.exports = IntegrationConfigManager;
+module.exports = IntegrationConfigOptions;
