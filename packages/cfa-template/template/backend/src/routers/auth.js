@@ -1,9 +1,9 @@
 const express = require('express');
 const RouterUtil = require('../utils/RouterUtil');
-const EntityManager = require('../managers/entities/EntityManager');
-const IntegrationConfigManager = require('../managers/IntegrationConfigManager');
+const EntityManager = require('../managers/entities/EntityManagerFactory');
+const IntegrationConfigOptions = require('../managers/IntegrationConfigOptions');
 const { requireLoggedInUser } = require('./middleware/requireLoggedInUser');
-const IntegrationManager = require('../managers/integrations/IntegrationManager');
+const IntegrationManager = require('../managers/integrations/IntegrationManagerFactory');
 const { get } = require('@friggframework/assertions');
 const Boom = require('@hapi/boom');
 const catchAsyncError = require('express-async-handler');
@@ -33,7 +33,7 @@ router.all('/api/authorize', requireLoggedInUser);
 
 router.route('/api/integrations').get(
     catchAsyncError(async (req, res) => {
-        const configManager = new IntegrationConfigManager();
+        const configManager = new IntegrationConfigOptions();
         const results = await configManager.getIntegrationOptions();
 
         // get the list of entities
@@ -56,7 +56,7 @@ router.route('/api/integrations').get(
 router.route('/api/authorize').get(
     catchAsyncError(async (req, res) => {
         const params = RouterUtil.checkRequiredParams(req.query, [
-            'entityType'
+            'entityType',
         ]);
         const instance = await getEntityFromType(req, params.entityType);
 
