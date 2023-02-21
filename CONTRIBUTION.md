@@ -1,7 +1,6 @@
 # Contribution
 
-In order to test and work on this module, you will need to use npm link.
-
+In order to test and work on this module, you will need to run the binary manually.
 
 ## Step 1: Make some code changes
 
@@ -11,15 +10,10 @@ cd create-frigg-app/packages/create-frigg-app
 // Make your desired code changes in create-frigg-app
 ```
 
-## Step 2: Link your changes for use locally
+## Step 2: Run the binary from the folder you worked on
 ```
-npm link
-
-cd ~/myProjectDirectory
-npx create-frigg-app myApp
+/create-frigg-app/packages/create-frigg-app/index.js my-test-project
 ```
-
-> Note: When you finish this step, run `which create-frigg-app` and you should see the directory you linked.
 
 ## Step 3: Test your changes
 
