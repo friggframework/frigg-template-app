@@ -9,6 +9,12 @@ function ToggleSwitch({ getSampleData, openConfigModal, disconnectIntegration, s
 		openConfigModal();
 	};
 
+	const dropDownDisconnect = async () => {
+		setDropdown(false);
+		await disconnectIntegration();
+	};
+
+
 	return (
 		<>
 			<label htmlFor={name} className="flex items-center cursor-pointer">
@@ -56,7 +62,7 @@ function ToggleSwitch({ getSampleData, openConfigModal, disconnectIntegration, s
 							role="menuitem"
 							tabIndex="-1"
 							id="menu-item-1"
-							onClick={disconnectIntegration}
+							onClick={dropDownDisconnect}
 						>
 							Disconnect
 						</span>

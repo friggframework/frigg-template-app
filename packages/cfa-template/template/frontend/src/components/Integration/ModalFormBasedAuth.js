@@ -2,45 +2,83 @@ import Form from '@rjsf/core';
 import { useEffect, useState } from 'react';
 import API from '../../api/api';
 
-function ModalBasicAuth({ closeAuthModal, connectMock, name, type }) {
-	const [jsonSchema, setJsonSchema] = useState({});
-	const [uiSchema, setUiSchema] = useState({});
+function ModalFormBasedAuth({ closeAuthModal, name, type, refreshIntegrations }) {
 	const [isLoading, setIsLoading] = useState(true);
 
 	const api = new API();
+	async function authorize(data) {
+		// handle actual form submission here
+		let res = null;
+		api.setJwt(sessionStorage.getItem('jwt'));
 
-	useEffect(() => {
-		const authRequirements = async () => {
-			let data = {};
+		try {
+			res = await api.authorize(type, data);
+		} catch (e) {
+			console.error(e);
+			alert('Authorization failed. Incorrect username or password');
+		}
 
-			api.setJwt(sessionStorage.getItem('jwt'));
-			const response = await api.getAuthorizeRequirements(type, 'demo');
-			console.log('test', response);
+		return res;
+	};
 
-			if (!response.data) {
-				data.jsonSchema = response.jsonSchema;
-				data.uiSchema = response.uiSchema;
-			} else {
-				data.jsonSchema = response.data.jsonSchema;
-				data.uiSchema = response.data.uiSchema;
-			}
+	async function onSubmit(form) {
 
-			for (const element of Object.entries(data.uiSchema)) {
-				if (!element['ui:widget']) {
-					element['ui:widget'] = 'text';
-				}
-			}
+		setIsLoading(true)
 
-			setJsonSchema(data.jsonSchema);
-			setUiSchema(data.uiSchema);
-			setIsLoading(false);
+		const res = await authorize(form.formData);
+
+		if (!res) {
+			alert(
+				`failed to POST /api/authorize ${this.props.targetEntityType} `
+			);
+			return; // skip login
+		}
+
+		if (res.error) {
+			alert(
+				`'failed to POST /api/authorize ${
+					type
+				} ...  authorizeData: ${JSON.stringify(res)}`
+			);
+		}
+
+		// Get entity Id for authorized CWise entity from above response
+		// Create the Integration
+		const initialConfig = {
+			type
 		};
 
-		authRequirements();
-	}, []);
+		// const integration = await this.api.createIntegration(
+		//     this.myEntityId,
+		//     res.id, initialConfig,
+		// );
+		// FIXME duplicated code with AuthRedirect.js
+		// TODO change, for now using the target entity twice
+		const integration = await this.api.createIntegration(
+			res.entity_id,
+			res.entity_id,
+			initialConfig
+		);
+		// Get API integrations, dispatch the data into redux same way as
+		// componentDidMount for IntegrationList
+		await refreshIntegrations();
+
+		if (integration.status === 'ENABLED') {
+			// close this modal immediately
+		} else if (integration.status === 'NEEDS_CONFIG') {
+			// Need to do something I think
+		}
+
+		closeAuthModal()
+
+
+		// or hack a timeout to demonstrate the modal
+
+		// setTimeout( () => { this.onCloseModal() }, 2500); // spoof an api call
+	};
 
 	function CustomFieldTemplate(props) {
-		const { id, label, help, required, description, errors, children } = props;
+		const {id, label, help, required, description, errors, children} = props;
 		return (
 			<label htmlFor={id} className="block text-sm mb-4">
 				<span className="text-gray-700">
@@ -131,7 +169,7 @@ function ModalBasicAuth({ closeAuthModal, connectMock, name, type }) {
 									Cancel
 								</button>
 								<button
-									onClick={connectMock}
+									onClick={onSubmit}
 									className="px-3 py-2 text-xs font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
 								>
 									Connect
@@ -144,4 +182,4 @@ function ModalBasicAuth({ closeAuthModal, connectMock, name, type }) {
 		</>
 	);
 }
-export default ModalBasicAuth;
+export default ModalFormBasedAuth;

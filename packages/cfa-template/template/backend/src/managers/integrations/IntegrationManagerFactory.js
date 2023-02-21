@@ -2,13 +2,15 @@ const { IntegrationManager: Parent } = require('@friggframework/integrations');
 const EntityManager = require('../entities/EntityManagerFactory');
 
 const salesforceIntegrationManager = require('./SalesforceIntegrationManager');
+const hubspotIntegrationManager = require('./HubSpotIntegrationManager');
 
-class IntegrationManager extends Parent {
+class IntegrationManagerFactory extends Parent {
     static integrationManagerClasses = [
         salesforceIntegrationManager,
+        hubspotIntegrationManager
     ];
 
-    static integrationTypes = IntegrationManager.integrationManagerClasses.map(
+    static integrationTypes = IntegrationManagerFactory.integrationManagerClasses.map(
         (ManagerClass) => ManagerClass.getName()
     );
 
@@ -17,7 +19,7 @@ class IntegrationManager extends Parent {
     }
 
     static async getInstanceFromIntegrationId(params) {
-        const integration = await IntegrationManager.getIntegrationById(
+        const integration = await IntegrationManagerFactory.getIntegrationById(
             params.integrationId
         );
         let { userId } = params;
@@ -38,11 +40,11 @@ class IntegrationManager extends Parent {
         }
 
         const integrationManagerIndex =
-            IntegrationManager.integrationTypes.indexOf(
+            IntegrationManagerFactory.integrationTypes.indexOf(
                 integration.config.type
             );
         const integrationManagerClass =
-            IntegrationManager.integrationManagerClasses[
+            IntegrationManagerFactory.integrationManagerClasses[
                 integrationManagerIndex
                 ];
 
@@ -69,4 +71,4 @@ class IntegrationManager extends Parent {
     }
 }
 
-module.exports = IntegrationManager;
+module.exports = IntegrationManagerFactory;

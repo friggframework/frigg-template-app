@@ -19,6 +19,18 @@ class IntegrationList extends Component {
 		};
 	}
 
+	async refreshIntegrations(props) {
+		const api = new API();
+
+		const jwt = sessionStorage.getItem('jwt');
+		api.setJwt(jwt);
+
+		const integrations = await api.listIntegrations();
+
+		if (integrations.error) this.props.dispatch(logoutUser());
+
+		await props.dispatch(setIntegrations(integrations));
+	}
 	async componentDidMount() {
 		const jwt = sessionStorage.getItem('jwt');
 		if (jwt !== this.props.authToken) {
@@ -26,15 +38,7 @@ class IntegrationList extends Component {
 		}
 
 		if (this.props.authToken) {
-			const api = new API();
-
-			api.setJwt(this.props.authToken);
-
-			const integrations = await api.listIntegrations();
-
-			if (integrations.error) this.props.dispatch(logoutUser());
-
-			this.props.dispatch(setIntegrations(integrations));
+			await this.refreshIntegrations(this.props);
 		}
 	}
 
@@ -53,6 +57,7 @@ class IntegrationList extends Component {
 					data={integration}
 					key={`combined-integration-${integration.type}`}
 					handleInstall={this.setInstalled}
+					refreshIntegrations={this.refreshIntegrations}
 				/>
 			);
 		}
@@ -62,6 +67,7 @@ class IntegrationList extends Component {
 					data={integration}
 					key={`combined-integration-${integration.type}`}
 					handleInstall={this.setInstalled}
+					refreshIntegrations={this.refreshIntegrations}
 				/>
 			);
 		}
@@ -78,14 +84,6 @@ class IntegrationList extends Component {
 		return combinedIntegrations
 			.filter((integration) => integration.display.description == this.props.integrationType)
 			.map((integration) => this.integrationComponent(integration));
-	};
-
-	renderPossibleIntegrations = (possibleIntegrations) => {
-		return possibleIntegrations.map((integration) => this.integrationComponent(integration));
-	};
-
-	renderActiveIntegrations = (activeIntegrations) => {
-		return activeIntegrations.map((integration) => this.integrationComponent(integration));
 	};
 
 	render() {
