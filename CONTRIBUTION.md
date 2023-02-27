@@ -20,3 +20,4 @@ cd create-frigg-app/packages/create-frigg-app
 1. Tests pass locally `npm test`
 2. Check the generated code to make sure it works manually
 3. Make sure your code changes are in the generated code.
+
