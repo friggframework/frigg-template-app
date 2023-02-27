@@ -1,4 +1,4 @@
-const HubSpotIntegrationManager = require('../../../src/managers/integrations/HubSpotIntegrationManager');
+const SalesforceIntegrationManager = require('../../../src/managers/integrations/SalesforceIntegrationManager');
 const MockAPI = require('../../../src/modules/HubSpot/mocks/apiMock');
 
 const testUserId = 9001;
@@ -31,7 +31,7 @@ jest.mock('@friggframework/models', () => {
     };
 });
 
-HubSpotIntegrationManager.EntityManagerClass = {
+SalesforceIntegrationManager.EntityManagerClass = {
     getEntityManagerInstanceFromEntityId: async () => {
         return {
             getName: () => 'hubspot',
@@ -44,9 +44,9 @@ HubSpotIntegrationManager.EntityManagerClass = {
     },
 };
 
-HubSpotIntegrationManager.integrationTypes = ['hubspot'];
-HubSpotIntegrationManager.integrationManagerClasses = [
-    HubSpotIntegrationManager,
+SalesforceIntegrationManager.integrationTypes = ['hubspot'];
+SalesforceIntegrationManager.integrationManagerClasses = [
+    SalesforceIntegrationManager,
 ];
 
 describe('HubSpot Integration Manager', () => {
@@ -56,7 +56,7 @@ describe('HubSpot Integration Manager', () => {
         const config = {
             type: 'hubspot',
         };
-        integrationManager = await HubSpotIntegrationManager.createIntegration(
+        integrationManager = await SalesforceIntegrationManager.createIntegration(
             entities,
             testUserId,
             config

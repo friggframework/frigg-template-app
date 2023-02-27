@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { showModalForm } from '../../actions/modalForm';
-import { setIntegrations } from '../../actions/integrations';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { ExclamationCircleIcon } from '@heroicons/react/outline';
 import Api from '../../api/api';
 import ToggleSwitch from './ToggleSwitch';
-import ModalBasicAuth from './ModalBasicAuth';
+import ModalFormBasedAuth from './ModalFormBasedAuth';
 import ModalConfig from './ModalConfig';
 
 function IntegrationHorizontal(props) {
 	const { name, description, category, icon } = props.data.display;
-	const { type, hasUserConfig } = props.data;
-	let history = useHistory();
+	const { type, hasUserConfig, status: initialStatus } = props.data;
+	const refreshIntegrations = props.refreshIntegrations;
 
 	const [isProcessing, setIsProcessing] = useState(false);
-	const [status, setStatus] = useState(false);
+	const [status, setStatus] = useState(initialStatus);
+	const [jsonSchema, setJsonSchema] = useState({});
+	const [uiSchema, setUiSchema] = useState({});
 	const [installed, setInstalled] = useState([]);
 	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 	const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
@@ -23,11 +24,22 @@ function IntegrationHorizontal(props) {
 
 	const getAuthorizeRequirements = async () => {
 		setIsProcessing(true);
+		api.setJwt(sessionStorage.getItem('jwt'));
 		const authorizeData = await api.getAuthorizeRequirements(type, '');
 		if (authorizeData.type === 'oauth2') {
 			window.location.href = authorizeData.url;
 		}
-		if (authorizeData.type !== 'oauth2') enableModalForm();
+		if (authorizeData.type !== 'oauth2') {
+			let data = authorizeData.data
+			for (const element of Object.entries(data.uiSchema)) {
+				if (!element['ui:widget']) {
+					element['ui:widget'] = 'text';
+				}
+			}
+			setJsonSchema(data.jsonSchema);
+			setUiSchema(data.uiSchema);
+			openAuthModal();
+		}
 	};
 
 	function openAuthModal() {
@@ -45,72 +57,20 @@ function IntegrationHorizontal(props) {
 		setIsProcessing(false);
 	}
 
-	const enableModalForm = () => {
-		const requestType = getRequestType();
-
-		props.dispatch(showModalForm(true, props.data.id, requestType, props.data.type, props.data.config));
-	};
-
-	const getRequestType = () => {
-		let type;
-		switch (props.data.status) {
-			case 'NEEDS_CONFIG':
-				type = 'INITIAL';
-				break;
-			case 'ENABLED':
-				type = 'CONFIGURE';
-				break;
-			default:
-				type = 'AUTHORIZE';
-		}
-		return type;
-	};
-
 	const getSampleData = async () => {
-		history.push(`/data/${props.data.id}`);
+		props.history.push(`/data/${props.data.id}`);
 	};
 
 	const disconnectIntegration = async () => {
 		console.log('Disconnect Clicked!');
+		const jwt = sessionStorage.getItem('jwt');
+		api.setJwt(jwt)
 		await api.deleteIntegration(props.data.id);
-		const integrations = await api.listIntegrations();
-		if (!integrations.error) {
-			props.dispatch(setIntegrations(integrations));
-		}
-	};
-
-	const authorizeMock = async () => {
 		setIsProcessing(true);
-		api.setJwt(sessionStorage.getItem('jwt'));
-		const authorizeData = await api.getAuthorizeRequirements(type, 'demo');
-
-		if (authorizeData.type !== 'oauth2') {
-			openAuthModal();
-		} else {
-			connectMock();
-		}
+		setStatus(false)
+		await refreshIntegrations(props);
+		setIsProcessing(false);
 	};
-
-	const connectMock = () => {
-		setIsAuthModalOpen(false);
-		setIsProcessing(true);
-		setTimeout(() => {
-			if (hasUserConfig) {
-				setStatus('NEEDS_CONFIG');
-			} else {
-				setStatus('ENABLED');
-			}
-			setInstalled([props.data]);
-			props.handleInstall(props.data, props.status);
-			setIsProcessing(false);
-		}, 3000);
-	};
-
-	const disconnectMock = () => {
-		setInstalled([]);
-		setStatus('');
-	};
-
 	return (
 		<>
 			<div className="flex flex-nowrap p-4 bg-white rounded-lg shadow-xs" data-testid="integration-horizontal">
@@ -130,14 +90,14 @@ function IntegrationHorizontal(props) {
 							<ToggleSwitch
 								getSampleData={getSampleData}
 								openConfigModal={openConfigModal}
-								disconnectIntegration={disconnectMock}
+								disconnectIntegration={disconnectIntegration}
 								status={status}
 								name={name}
 							/>
 						)}
 						{!status && (
 							<button
-								onClick={authorizeMock}
+								onClick={getAuthorizeRequirements}
 								className="px-3 py-2 text-xs font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
 							>
 								{isProcessing ? (
@@ -166,20 +126,20 @@ function IntegrationHorizontal(props) {
 			</div>
 
 			{isAuthModalOpen ? (
-				<ModalBasicAuth
+				<ModalFormBasedAuth
 					isAuthModalOpen={isAuthModalOpen}
 					closeAuthModal={closeAuthModal}
-					connectMock={connectMock}
+					refreshIntegrations={refreshIntegrations}
 					name={name}
 					type={type}
-				></ModalBasicAuth>
+				></ModalFormBasedAuth>
 			) : null}
 
 			{isConfigModalOpen ? (
 				<ModalConfig
 					isConfigModalOpen={isConfigModalOpen}
 					closeConfigModal={closeConfigModal}
-					connectMock={connectMock}
+					connectMock={connect}
 					name={name}
 					type={type}
 				></ModalConfig>
@@ -187,4 +147,13 @@ function IntegrationHorizontal(props) {
 		</>
 	);
 }
-export default IntegrationHorizontal;
+function mapStateToProps({ auth, integrations }) {
+	console.log(`integrations: ${JSON.stringify(integrations)}`);
+	return {
+		authToken: auth.token,
+		integrations,
+	};
+}
+
+export default withRouter(connect(mapStateToProps)(IntegrationHorizontal));
+

@@ -1,17 +1,19 @@
 const { ModuleManager, Entity } = require('@friggframework/module-plugin');
 const primaryEntity = require('./ConnectWiseManager');
 const salesforceEntity = require('./SalesforceManager');
+const hubSpotEntity = require('./HubSpotManager');
 
 
-class EntityManager {
+class EntityManagerFactory {
     static primaryEntityClass = primaryEntity;
 
     static entityManagerClasses = [
         primaryEntity,
         salesforceEntity,
+        hubSpotEntity
     ];
 
-    static entityTypes = EntityManager.entityManagerClasses.map(
+    static entityTypes = EntityManagerFactory.entityManagerClasses.map(
         (ManagerClass) => ManagerClass.getName()
     );
 
@@ -28,7 +30,7 @@ class EntityManager {
     }
 
     static checkIsValidType(entityType) {
-        const indexOfEntity = EntityManager.entityTypes.indexOf(entityType);
+        const indexOfEntity = EntityManagerFactory.entityTypes.indexOf(entityType);
         return indexOfEntity >= 0;
     }
 
@@ -36,17 +38,17 @@ class EntityManager {
         const normalizedType = entityType.toLowerCase();
 
         const indexOfEntityType =
-            EntityManager.entityTypes.indexOf(normalizedType);
-        if (!EntityManager.checkIsValidType(normalizedType)) {
+            EntityManagerFactory.entityTypes.indexOf(normalizedType);
+        if (!EntityManagerFactory.checkIsValidType(normalizedType)) {
             throw new Error(
-                `Error: Invalid entity type of ${normalizedType}, options are ${EntityManager.entityTypes.join(
+                `Error: Invalid entity type of ${normalizedType}, options are ${EntityManagerFactory.entityTypes.join(
                     ', '
                 )}`
             );
         }
 
         const managerClass =
-            EntityManager.entityManagerClasses[indexOfEntityType];
+            EntityManagerFactory.entityManagerClasses[indexOfEntityType];
 
         if (!(managerClass.prototype instanceof ModuleManager)) {
             throw new Error('The Entity is not an instance of ModuleManager');
@@ -71,4 +73,4 @@ class EntityManager {
     }
 }
 
-module.exports = EntityManager;
+module.exports = EntityManagerFactory;
