@@ -56,11 +56,12 @@ describe('HubSpot Integration Manager', () => {
         const config = {
             type: 'hubspot',
         };
-        integrationManager = await SalesforceIntegrationManager.createIntegration(
-            entities,
-            testUserId,
-            config
-        );
+        integrationManager =
+            await SalesforceIntegrationManager.createIntegration(
+                entities,
+                testUserId,
+                config
+            );
 
         expect(integrationManager.delegate).toBe(integrationManager);
         expect(integrationManager.delegateTypes).toHaveLength(1);
