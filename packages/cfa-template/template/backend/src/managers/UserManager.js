@@ -103,7 +103,7 @@ class UserManager {
         return userManager;
     }
 
-    async createUserToken(minutes) {
+    async createUserToken() {
         const rawToken = crypto.randomBytes(20).toString('hex');
         const createdToken = await Token.createTokenWithExpire(
             this.individualUser.id,
