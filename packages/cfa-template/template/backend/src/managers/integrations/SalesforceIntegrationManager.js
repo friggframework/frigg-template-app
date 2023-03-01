@@ -46,7 +46,6 @@ class SalesforceIntegrationManager extends IntegrationManager {
                 limit: 500,
             },
         );
-        console.log('getSampleData', res.length)
         const formatted = res.map(item => {
             const formattedItem = {...item};
             formattedItem.attributes = 'Opportunity';

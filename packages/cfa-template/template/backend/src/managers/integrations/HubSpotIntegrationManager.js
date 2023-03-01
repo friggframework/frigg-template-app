@@ -30,7 +30,6 @@ class HubSpotIntegrationManager extends IntegrationManager {
      */
     async getSampleData() {
         const res = await this.targetInstance.api.searchDeals();
-        console.log('Hubspot get sample data', res.results.length);
         const formatted = res.results.map((deal) => {
             const formattedDeal = {
                 id: deal.id,

@@ -68,7 +68,6 @@ describe('Salesforce Integration Manager', () => {
 
     it('should get sample contact data', async () => {
         const response = await integrationManager.getSampleData();
-        console.log('JON >>> response', response);
         expect(response[0]).toHaveProperty('data');
     });
 });

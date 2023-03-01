@@ -13,7 +13,9 @@ jest.mock('aws-sdk', () => {
     };
 
     const configMocked = {
-        update: (params) => console.log('configMocked', params),
+        update: (params) => {
+            return params;
+        },
     };
 
     return {
