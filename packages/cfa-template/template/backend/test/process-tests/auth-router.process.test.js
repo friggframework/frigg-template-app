@@ -5,7 +5,6 @@ const authRoute = require('../../src/routers/auth');
 const demoRoute = require('../../src/routers/demo');
 const ModuleManager = require('@friggframework/api-module-salesforce/manager');
 const { default: mongoose } = require('mongoose');
-const { dropCollection } = require('../utils/reusableTestFunctions/database');
 
 const app = createApp((app) => {
     app.use(userRoute);
@@ -41,7 +40,6 @@ describe('Users process tests', () => {
 
     beforeAll(async () => {
         mongoose.connect(process.env.MONGO_URI);
-        await dropCollection(mongoose);
     });
 
     afterAll(() => {

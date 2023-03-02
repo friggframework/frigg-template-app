@@ -43,6 +43,7 @@ schema.static({
     getJSONTokenFromBase64BufferToken: function (buffer) {
         let tokenStr = Buffer.from(buffer.trim(), 'base64').toString('ascii');
         try {
+            console.log('JON >>> tokenStr', tokenStr);
             return JSON.parse(tokenStr);
         } catch (error) {
             console.error(error);
