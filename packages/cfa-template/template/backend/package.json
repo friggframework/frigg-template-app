@@ -23,7 +23,7 @@
         "@friggframework/core": "^0.2.11",
         "@friggframework/database": "^1.0.11",
         "@friggframework/errors": "^1.1.6",
-        "@friggframework/integrations": "^1.0.22",
+        "@friggframework/integrations": "^1.1.0",
         "@friggframework/logs": "^1.0.9",
         "@friggframework/models": "^1.0.8",
         "@friggframework/module-plugin": "^1.0.24",
