@@ -16,17 +16,17 @@
         "backend-start:staging": "sls offline --stage staging"
     },
     "dependencies": {
-        "@friggframework/api-module-connectwise": "^0.8.26",
+        "@friggframework/api-module-connectwise": "^0.8.27",
         "@friggframework/api-module-hubspot": "^0.8.24",
         "@friggframework/api-module-salesforce": "^0.8.30",
         "@friggframework/assertions": "^1.0.7",
         "@friggframework/core": "^0.2.11",
-        "@friggframework/database": "^1.0.11",
+        "@friggframework/database": "^1.0.12",
         "@friggframework/errors": "^1.1.6",
-        "@friggframework/integrations": "^1.0.22",
+        "@friggframework/integrations": "^1.1.0",
         "@friggframework/logs": "^1.0.9",
         "@friggframework/models": "^1.0.8",
-        "@friggframework/module-plugin": "^1.0.24",
+        "@friggframework/module-plugin": "^1.0.25",
         "@hapi/boom": "^7.4.11",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.0",
@@ -47,7 +47,7 @@
         "@friggframework/eslint-config": "^1.0.7",
         "@friggframework/prettier-config": "^1.0.5",
         "@friggframework/test-environment": "^1.1.4",
-        "aws-sdk": "^2.959.0",
+        "aws-sdk": "^2.1390.0",
         "copy-webpack-plugin": "^10.2.4",
         "faker": "^5.5.3",
         "jest": "^27.4.7",
@@ -60,11 +60,11 @@
         "puppeteer": "^10.1.0",
         "server-destroy": "^1.0.1",
         "serverless": "^3.17.0",
-        "serverless-offline": "^8.8.0",
+        "serverless-offline": "^12.0.4",
         "serverless-webpack": "^5.7.1",
         "sinon": "^10.0.0",
         "sinon-chai": "^3.6.0",
         "supertest": "^6.2.4",
-        "webpack": "^5.58.2"
+        "webpack": "^5.76.0"
     }
 }
