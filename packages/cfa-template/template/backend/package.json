@@ -26,7 +26,7 @@
         "@friggframework/integrations": "^1.0.22",
         "@friggframework/logs": "^1.0.9",
         "@friggframework/models": "^1.0.8",
-        "@friggframework/module-plugin": "^1.0.24",
+        "@friggframework/module-plugin": "^1.0.25",
         "@hapi/boom": "^7.4.11",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.0",
