@@ -47,7 +47,7 @@
         "@friggframework/eslint-config": "^1.0.7",
         "@friggframework/prettier-config": "^1.0.5",
         "@friggframework/test-environment": "^1.1.4",
-        "aws-sdk": "^2.959.0",
+        "aws-sdk": "^2.1390.0",
         "copy-webpack-plugin": "^10.2.4",
         "faker": "^5.5.3",
         "jest": "^27.4.7",
