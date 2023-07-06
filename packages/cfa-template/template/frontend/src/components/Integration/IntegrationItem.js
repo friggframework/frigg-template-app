@@ -15,7 +15,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, ...props })
   const { name, description, icon } = data.display;
   const { type, hasUserConfig, status: initialStatus } = data;
   const [isProcessing, setIsProcessing] = useState(false);
-  const [status, setStatus] = useState('NEEDS_CONFIG');
+  const [status, setStatus] = useState(initialStatus);
   const [verticalStatus, setVerticalStatus] = useState('');
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
@@ -239,7 +239,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, ...props })
         <p className="w-full text-lg font-semibold text-gray-700 truncate ...">{name}</p>
         <p className="pt-2 text-sm font-medium text-gray-600">{description}</p>
       </div>
-      <div className="ml-auto flex">
+      <div className="ml-auto flex align-items-center">
         {status && status === 'NEEDS_CONFIG' && (
           <p className="inline-flex mr-4 text-xs font-medium text-red-300">
             <ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
@@ -288,7 +288,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, ...props })
   const containerStyle = {
     'default-horizontal': 'flex-nowrap',
     'default-vertical': 'flex-col items-center',
-    'default-row': 'self-start',
+    'default-row': 'align-items-center',
   };
 
   const contentLayout = {
