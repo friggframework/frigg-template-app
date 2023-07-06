@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Item from './IntegrationItem';
 import IntegrationSkeleton from './IntegrationSkeleton';
@@ -7,10 +7,12 @@ import IntegrationUtils from '../../utils/IntegrationUtils';
 import API from '../../api/api';
 import { logoutUser } from '../../actions/logout';
 import { setAuthToken } from '../../actions/auth';
+import { CategoryContext } from '../../contexts/CategoryContext';
 import config from '../../frigg.config';
 
-function IntegrationList({ integrationType }) {
+function IntegrationList() {
   const dispatch = useDispatch();
+  const { selectedCategory } = useContext(CategoryContext);
   const [authToken, integrations] = useSelector(({ auth, integrations }) => [auth.token, integrations]);
   const [displayedIntegrations, setDisplayedIntegrations] = useState(null);
   const [installedIntegrations, setInstalledIntegrations] = useState([]);
@@ -65,14 +67,14 @@ function IntegrationList({ integrationType }) {
   );
 
   const renderCombinedIntegrations = (combinedIntegrations) => {
-    if (integrationType == 'Recently added') {
+    if (selectedCategory === 'Recently added') {
       return combinedIntegrations.map((integration) => integrationComponent(integration));
     }
-    if (integrationType == 'Installed') {
+    if (selectedCategory === 'Installed') {
       return installedIntegrations.map((integration) => integrationComponent(integration));
     }
     return combinedIntegrations
-      .filter((integration) => integration.display.description == integrationType)
+      .filter((integration) => integration.display.description === selectedCategory)
       .map((integration) => integrationComponent(integration));
   };
 
@@ -86,7 +88,7 @@ function IntegrationList({ integrationType }) {
         </div>
       )}
       {displayedIntegrations?.length == 0 && (
-        <p>No {integrationType} integrations found.</p>
+        <p>No {selectedCategory} integrations found.</p>
       )}
     </>
   );
