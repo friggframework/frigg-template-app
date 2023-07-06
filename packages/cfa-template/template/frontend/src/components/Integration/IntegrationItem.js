@@ -11,22 +11,18 @@ import { ExclamationCircleIcon } from '@heroicons/react/outline';
 import IntegrationDropdown from '../Integration/IntegrationDropdown';
 import config from '../../frigg.config';
 
-function IntegrationItem({ data, handleInstall, refreshIntegrations, layoutStyle, ...props }) {
+function IntegrationItem({ data, handleInstall, refreshIntegrations, ...props }) {
   const { name, description, icon } = data.display;
   const { type, hasUserConfig, status: initialStatus } = data;
   const [isProcessing, setIsProcessing] = useState(false);
-  const [status, setStatus] = useState(initialStatus);
+  const [status, setStatus] = useState('NEEDS_CONFIG');
   const [verticalStatus, setVerticalStatus] = useState('');
-  // j
-  const [jsonSchema, setJsonSchema] = useState({});
-  const [uiSchema, setUiSchema] = useState({});
-  const [installed, setInstalled] = useState([]);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
 
   const api = new Api();
-  const authToken = useSelector((state) => state.auth.token)
-  api.setJwt(authToken)
+  const authToken = useSelector((state) => state.auth.token);
+  api.setJwt(authToken);
   let history = useHistory();
 
   const getAuthorizeRequirements = async () => {
@@ -43,38 +39,29 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layoutStyle
           element['ui:widget'] = 'text';
         }
       }
-      setJsonSchema(data.jsonSchema);
-      setUiSchema(data.uiSchema);
-      openAuthModal();
+      setIsAuthModalOpen(true);
     }
   };
-  // removed unused declerations and functions 
-  // removed files Such as IntegrationHorizontal and IntegrationVertical 
-  // made sure the code is working in both 
-  // for the row layout it's integration was done however can't see in which case should it be rendered in the List component
-  // Created CategoryFilter file and rendered it in the IntegrationPage (Still working on making it filter)
 
-  function openAuthModal() {
-    setIsAuthModalOpen(true);
-  }
   function closeAuthModal() {
     setIsAuthModalOpen(false);
     setIsProcessing(false);
-  }
+  };
+
   function openConfigModal() {
     setIsConfigModalOpen(true);
-  }
+  };
+
   function closeConfigModal() {
     setIsConfigModalOpen(false);
     setIsProcessing(false);
-  }
+  };
 
   const getSampleData = async () => {
     props.history.push(`/data/${data.id}`);
   };
 
   const disconnectIntegration = async () => {
-    console.log('Disconnect Clicked!');
     const jwt = sessionStorage.getItem('jwt');
     api.setJwt(jwt)
     await api.deleteIntegration(data.id);
@@ -118,161 +105,226 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layoutStyle
   };
 
   const disconnectVerticalIntegration = async () => {
-    console.log('Disconnect Clicked!');
     await api.deleteIntegration(data.id);
     const integrations = await api.listIntegrations();
     if (!integrations.error) {
       props.dispatch(setIntegrations(integrations));
     }
-    setInstalled([]);
     setVerticalStatus('');
   };
+
+  const HorizontalLayout = () => (
+    <>
+      <img className="mr-3 w-[80px] h-[80px] rounded-lg" alt={name} src={icon} />
+      <div className="pr-1 overflow-hidden">
+        <p className="w-full text-lg font-semibold text-gray-700 truncate ...">{name}</p>
+        <p className="pt-2 text-sm font-medium text-gray-600">{description}</p>
+        {status && status === 'NEEDS_CONFIG' && (
+          <p className="inline-flex pt-2 text-xs font-medium text-red-300">
+            <ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
+          </p>
+        )}
+      </div>
+      <div className="ml-auto">
+        <div className="relative">
+          {status && (
+            <ToggleSwitch
+              name={name}
+              status={status}
+              customDotsStyle="mt-4 ml-auto"
+              getSampleData={getSampleData}
+              openConfigModal={openConfigModal}
+              disconnectIntegration={disconnectIntegration}
+            />
+          )}
+          {!status && (
+            <button
+              onClick={getAuthorizeRequirements}
+              className="px-3 py-2 text-xs font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+            >
+              {isProcessing ? (
+                <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              ) : (
+                'Connect'
+              )}
+            </button>
+          )}
+        </div>
+      </div>
+    </>
+  );
+
+  const VerticalLayout = () => (
+    <>
+      <div className="flex w-full h-[24px]">
+        <div className="inline-flex relative mr-auto">
+          {verticalStatus && verticalStatus === 'NEEDS_CONFIG' && (
+            <p className="inline-flex text-xs font-medium text-red-300 text-center">
+              <ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
+            </p>
+          )}
+        </div>
+        <div className="inline-flex relative justify-end ml-auto">
+          {(verticalStatus && verticalStatus === 'ENABLED') ||
+            (verticalStatus === 'NEEDS_CONFIG' && (
+              <IntegrationDropdown getVerticalSampleData={getVerticalSampleData} disconnectVerticalIntegration={disconnectVerticalIntegration} name={name} hasUserConfig={hasUserConfig} />
+            ))}
+        </div>
+      </div>
+      <img className="w-[120px] h-[120px] rounded-full" alt={name} src={icon} />
+      <div className="pr-1 pt-4 pb-4 overflow-hidden">
+        <p className="w-full text-2xl font-semibold text-gray-700 text-center truncate ...">{name}</p>
+        <p className="w-full pt-2 text-md font-medium text-gray-600 text-center">{description}</p>
+      </div>
+      <div className="items-center pb-3">
+        <div className="relative">
+          {(verticalStatus && verticalStatus === 'ENABLED') ||
+            (status === 'NEEDS_CONFIG' && (
+              <button
+                onClick={disconnectVerticalIntegration}
+                className="w-full px-5 py-3 font-medium leading-5 text-center text-purple-600 transition-colors duration-150 rounded-lg border-2 border-purple-400 hover:border-purple-600 hover:bg-purple-600 hover:text-white focus:outline-none focus:shadow-outline-purple"
+              >
+                Disconnect
+              </button>
+            ))}
+          {!verticalStatus && (
+            <button
+              onClick={getVerticalAuthorizeRequirements}
+              className="w-full px-5 py-3 font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+            >
+              {isProcessing ? (
+                <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              ) : (
+                'Connect'
+              )}
+            </button>
+          )}
+        </div>
+      </div>
+    </>
+  );
+
+  const RowLayout = () => (
+    <>
+      <img className="mr-3 w-[80px] h-[80px] rounded-lg" alt={name} src={icon} />
+      <div className="pr-1 overflow-hidden">
+        <p className="w-full text-lg font-semibold text-gray-700 truncate ...">{name}</p>
+        <p className="pt-2 text-sm font-medium text-gray-600">{description}</p>
+      </div>
+      <div className="ml-auto flex">
+        {status && status === 'NEEDS_CONFIG' && (
+          <p className="inline-flex mr-4 text-xs font-medium text-red-300">
+            <ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
+          </p>
+        )}
+        {status && (
+          <ToggleSwitch
+            name={name}
+            status={status}
+            customDotsStyle="mt-0 ml-2"
+            getSampleData={getSampleData}
+            openConfigModal={openConfigModal}
+            disconnectIntegration={disconnectIntegration}
+          />
+        )}
+        {!status && (
+          <button
+            onClick={getAuthorizeRequirements}
+            className="px-3 py-2 text-xs font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+          >
+            {isProcessing ? (
+              <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            ) : (
+              'Connect'
+            )}
+          </button>
+        )}
+      </div>
+    </>
+  );
 
   const containerStyle = {
     'default-horizontal': 'flex-nowrap',
     'default-vertical': 'flex-col items-center',
-    'default-row': 'w-full min-w-full'
+    'default-row': 'self-start',
+  };
+
+  const contentLayout = {
+    'default-horizontal': <HorizontalLayout />,
+    'default-vertical': <VerticalLayout />,
+    'default-row': <RowLayout />,
   }
 
   return (
     <>
-      <div className={`${containerStyle[layoutStyle]} ${"flex p-4 bg-white rounded-lg shadow-xs"}`}
+      <div className={`${"flex p-4 bg-white rounded-lg shadow-xs"} ${containerStyle[config.componentLayout]}`}
         data-testid={config.componentLayout === 'default-horizontal' ? "integration-horizontal"
           : config.componentLayout === 'default-vertical' ? "integration-vertical"
             : config.componentLayout === 'default-row' ? "integration-row" : ""}>
-        {layoutStyle === (config.componentLayout === 'default-horizontal') ?
-          <>
-            <img className="mr-3 w-[80px] h-[80px] rounded-lg" alt={name} src={icon} />
-            <div className="pr-1 overflow-hidden">
-              <p className="w-full text-lg font-semibold text-gray-700 truncate ...">{name}</p>
-              <p className="pt-2 text-sm font-medium text-gray-600">{description}</p>
-              {status && status === 'NEEDS_CONFIG' && (
-                <p className="inline-flex pt-2 text-xs font-medium text-red-300">
-                  <ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
-                </p>
-              )}
-            </div>
-            <div className="ml-auto">
-              <div className="relative">
-                {status && (
-                  <ToggleSwitch
-                    getSampleData={getSampleData}
-                    openConfigModal={openConfigModal}
-                    disconnectIntegration={disconnectIntegration}
-                    status={status}
-                    name={name}
-                  />
-                )}
-                {!status && (
-                  <button
-                    onClick={getAuthorizeRequirements}
-                    className="px-3 py-2 text-xs font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                  >
-                    {isProcessing ? (
-                      <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                    ) : (
-                      'Connect'
-                    )}
-                  </button>
-                )}
-              </div>
-            </div>
-            {isAuthModalOpen ? (
-              <ModalFormBasedAuth
-                isAuthModalOpen={isAuthModalOpen}
-                closeAuthModal={closeAuthModal}
-                refreshIntegrations={refreshIntegrations}
-                name={name}
-                type={type}
-              ></ModalFormBasedAuth>
-            ) : null}
 
-            {isConfigModalOpen ? (
-              <ModalConfig
-                isConfigModalOpen={isConfigModalOpen}
-                closeConfigModal={closeConfigModal}
-                connectMock={connect}
-                name={name}
-                type={type}
-              ></ModalConfig>
-            ) : null}
-          </> :
-          <>
-            <div className="flex w-full h-[24px]">
-              <div className="inline-flex relative mr-auto">
-                {verticalStatus && verticalStatus === 'NEEDS_CONFIG' && (
-                  <p className="inline-flex text-xs font-medium text-red-300 text-center">
-                    <ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
-                  </p>
-                )}
-              </div>
-              <div className="inline-flex relative justify-end ml-auto">
-                {(verticalStatus && verticalStatus === 'ENABLED') ||
-                  (verticalStatus === 'NEEDS_CONFIG' && (
-                    <IntegrationDropdown getVerticalSampleData={getVerticalSampleData} disconnectVerticalIntegration={disconnectVerticalIntegration} name={name} hasUserConfig={hasUserConfig} />
-                  ))}
-              </div>
-            </div>
-            <img className="w-[120px] h-[120px] rounded-full" alt={name} src={icon} />
-            <div className="pr-1 pt-4 pb-4 overflow-hidden">
-              <p className="w-full text-2xl font-semibold text-gray-700 text-center truncate ...">{name}</p>
-              <p className="w-full pt-2 text-md font-medium text-gray-600 text-center">{description}</p>
-            </div>
-            <div className="items-center pb-3">
-              <div className="relative">
-                {(verticalStatus && verticalStatus === 'ENABLED') ||
-                  (status === 'NEEDS_CONFIG' && (
-                    <button
-                      onClick={disconnectVerticalIntegration}
-                      className="w-full px-5 py-3 font-medium leading-5 text-center text-purple-600 transition-colors duration-150 rounded-lg border-2 border-purple-400 hover:border-purple-600 hover:bg-purple-600 hover:text-white focus:outline-none focus:shadow-outline-purple"
-                    >
-                      Disconnect
-                    </button>
-                  ))}
-                {!verticalStatus && (
-                  <button
-                    onClick={getVerticalAuthorizeRequirements}
-                    className="w-full px-5 py-3 font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                  >
-                    {isProcessing ? (
-                      <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                    ) : (
-                      'Connect'
-                    )}
-                  </button>
-                )}
-              </div>
-            </div>
-          </>
-        }
+        {contentLayout[config.componentLayout]}
+
+        {isAuthModalOpen ? (
+          <ModalFormBasedAuth
+            name={name}
+            type={type}
+            closeAuthModal={closeAuthModal}
+            isAuthModalOpen={isAuthModalOpen}
+            refreshIntegrations={refreshIntegrations}
+          />
+        ) : null}
+
+        {isConfigModalOpen ? (
+          <ModalConfig
+            name={name}
+            type={type}
+            connectMock={connect}
+            closeConfigModal={closeConfigModal}
+            isConfigModalOpen={isConfigModalOpen}
+          />
+        ) : null}
       </div>
     </>
   );

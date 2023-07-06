@@ -62,8 +62,7 @@ function IntegrationList() {
       data={integration}
       handleInstall={setInstalled}
       refreshIntegrations={refreshIntegrations}
-      key={`combined-integration-${integration.type}`}
-      layoutStyle={'default-row'} />
+      key={`combined-integration-${integration.type}`} />
   );
 
   const renderCombinedIntegrations = (combinedIntegrations) => {
