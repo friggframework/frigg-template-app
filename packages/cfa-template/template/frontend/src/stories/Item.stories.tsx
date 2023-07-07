@@ -1,5 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 import { Item } from '../components/Integration';
 
@@ -39,24 +40,18 @@ export default {
   component: Item,
   title: 'Design System/Item',
   excludeStories: /.*MockedState$/,
-};
-
-export const Horizontal = {
   decorators: [
+    (story) => <BrowserRouter>{story()}</BrowserRouter>,
     (story) => <Mockstore authState={MockedState}>{story()}</Mockstore>,
   ],
 };
+
+export const Horizontal = {};
 
 export const Vertical = {
   args: { ...args, layout: 'vertical' },
-  decorators: [
-    (story) => <Mockstore authState={MockedState}>{story()}</Mockstore>,
-  ],
 };
 
 export const Row = {
   args: { ...args, layout: 'row' },
-  decorators: [
-    (story) => <Mockstore authState={MockedState}>{story()}</Mockstore>,
-  ],
 };
