@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { redirect } from 'react-router-dom';
 import { List } from '../components/Integration';
 import { Filter } from '../components/Integration';
 import { CategoryContext } from '../contexts/CategoryContext';
 import config from '../frigg.config';
 
-function IntegrationsPage({ history }) {
+function IntegrationsPage() {
   const authToken = useSelector(({ auth }) => auth.token);
   const [selectedCategory, setCategory] = useState('Recently added');
 
   useEffect(() => {
     const jwt = authToken || sessionStorage.getItem('jwt');
     if (!jwt) {
-      history.push('/logout');
+      redirect('/logout');
     }
   }, []);
 

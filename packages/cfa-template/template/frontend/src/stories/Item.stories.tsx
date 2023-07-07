@@ -36,8 +36,8 @@ const Mockstore = ({ authState, children }) => (
 
 export default {
   args,
-  title: 'Item',
   component: Item,
+  title: 'Design System/Item',
   excludeStories: /.*MockedState$/,
 };
 

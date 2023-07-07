@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { connect, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Api from '../../api/api';
 import ToggleSwitch from './ToggleSwitch';
 import ModalFormBasedAuth from './ModalFormBasedAuth';
@@ -9,9 +9,9 @@ import { showModalForm } from '../../actions/modalForm';
 import { setIntegrations } from '../../actions/integrations';
 import { ExclamationCircleIcon } from '@heroicons/react/outline';
 import IntegrationDropdown from '../Integration/IntegrationDropdown';
-import config from '../../frigg.config';
 
 function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='horizontal', ...props }) {
+  const navigate = useNavigate();
   const { name, description, icon } = data.display;
   const { type, hasUserConfig, status: initialStatus } = data;
   const [isProcessing, setIsProcessing] = useState(false);
@@ -23,7 +23,6 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
   const api = new Api();
   const authToken = useSelector((state) => state.auth.token);
   api.setJwt(authToken);
-  let history = useHistory();
 
   const getAuthorizeRequirements = async () => {
     setIsProcessing(true);
@@ -58,7 +57,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
   };
 
   const getSampleData = async () => {
-    props.history.push(`/data/${data.id}`);
+    navigate(`/data/${data.id}`);
   };
 
   const disconnectIntegration = async () => {
@@ -98,10 +97,6 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
         type = 'AUTHORIZE';
     }
     return type;
-  };
-
-  const getVerticalSampleData = async () => {
-    history.push(`/data/${data.id}`);
   };
 
   const disconnectVerticalIntegration = async () => {
@@ -181,7 +176,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
         <div className="inline-flex relative justify-end ml-auto">
           {(verticalStatus && verticalStatus === 'ENABLED') ||
             (verticalStatus === 'NEEDS_CONFIG' && (
-              <IntegrationDropdown getVerticalSampleData={getVerticalSampleData} disconnectVerticalIntegration={disconnectVerticalIntegration} name={name} hasUserConfig={hasUserConfig} />
+              <IntegrationDropdown getSampleData={getSampleData} disconnectVerticalIntegration={disconnectVerticalIntegration} name={name} hasUserConfig={hasUserConfig} />
             ))}
         </div>
       </div>
