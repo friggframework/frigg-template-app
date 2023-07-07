@@ -41,7 +41,7 @@ function IntegrationList() {
         ));
       }
     }
-  }, [integrations]);
+  }, [integrations, selectedCategory]);
 
   const refreshIntegrations = async () => {
     const api = new API();
