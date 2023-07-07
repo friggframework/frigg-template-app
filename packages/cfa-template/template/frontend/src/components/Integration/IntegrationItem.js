@@ -11,7 +11,7 @@ import { ExclamationCircleIcon } from '@heroicons/react/outline';
 import IntegrationDropdown from '../Integration/IntegrationDropdown';
 import config from '../../frigg.config';
 
-function IntegrationItem({ data, handleInstall, refreshIntegrations, ...props }) {
+function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='horizontal', ...props }) {
   const { name, description, icon } = data.display;
   const { type, hasUserConfig, status: initialStatus } = data;
   const [isProcessing, setIsProcessing] = useState(false);
@@ -286,25 +286,25 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, ...props })
   );
 
   const containerStyle = {
-    'default-horizontal': 'flex-nowrap',
-    'default-vertical': 'flex-col items-center',
-    'default-row': 'align-items-center',
+    'horizontal': 'flex-nowrap',
+    'vertical': 'flex-col items-center',
+    'row': 'align-items-center',
   };
 
   const contentLayout = {
-    'default-horizontal': <HorizontalLayout />,
-    'default-vertical': <VerticalLayout />,
-    'default-row': <RowLayout />,
+    'horizontal': <HorizontalLayout />,
+    'vertical': <VerticalLayout />,
+    'row': <RowLayout />,
   }
 
   return (
     <>
-      <div className={`${"flex p-4 bg-white rounded-lg shadow-xs"} ${containerStyle[config.componentLayout]}`}
-        data-testid={config.componentLayout === 'default-horizontal' ? "integration-horizontal"
-          : config.componentLayout === 'default-vertical' ? "integration-vertical"
-            : config.componentLayout === 'default-row' ? "integration-row" : ""}>
+      <div className={`${"flex p-4 bg-white rounded-lg shadow-xs"} ${containerStyle[layout]}`}
+        data-testid={layout === 'horizontal' ? "integration-horizontal"
+          : layout === 'vertical' ? "integration-vertical"
+            : layout === 'row' ? "integration-row" : ""}>
 
-        {contentLayout[config.componentLayout]}
+        {contentLayout[layout]}
 
         {isAuthModalOpen ? (
           <ModalFormBasedAuth
@@ -316,15 +316,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, ...props })
           />
         ) : null}
 
-        {isConfigModalOpen ? (
-          <ModalConfig
-            name={name}
-            type={type}
-            connectMock={connect}
-            closeConfigModal={closeConfigModal}
-            isConfigModalOpen={isConfigModalOpen}
-          />
-        ) : null}
+        {isConfigModalOpen && <ModalConfig name={name} type={type} closeConfigModal={closeConfigModal} />}
       </div>
     </>
   );
