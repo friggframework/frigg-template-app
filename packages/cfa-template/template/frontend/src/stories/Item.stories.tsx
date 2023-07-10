@@ -39,7 +39,7 @@ export default {
   args,
   component: Item,
   title: 'Design System/Item',
-  excludeStories: /.*MockedState$/,
+  excludeStories: "MockedState",
   decorators: [
     (story) => <BrowserRouter>{story()}</BrowserRouter>,
     (story) => <Mockstore authState={MockedState}>{story()}</Mockstore>,
