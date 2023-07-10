@@ -1,10 +1,9 @@
 {
-  "name": "@friggframework/ui-library",
-  "version": "0.0.9",
+  "name": "@friggframework/ui-base-template",
+  "version": "0.0.1",
   "author": "",
   "license": "MIT",
-  "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "main": "dist/bundle.js",
   "files": [
     "dist"
   ],
