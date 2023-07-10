@@ -12,12 +12,12 @@ export default {
     {
       file: 'dist/index.js',
       format: "amd",
-      name: '@josec59/ui-library',
+      name: '@friggframework/ui-library',
       sourcemap: true
     },
     {
       file: 'dist/index.esm.js',
-      name: '@josec59/ui-library',
+      name: '@friggframework/ui-library',
       format: "esm",
       sourcemap: true
     }
