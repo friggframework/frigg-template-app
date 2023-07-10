@@ -10,6 +10,17 @@ import { setIntegrations } from '../../actions/integrations';
 import { ExclamationCircleIcon } from '@heroicons/react/outline';
 import IntegrationDropdown from '../Integration/IntegrationDropdown';
 
+const authorizeType = 'oauth2';
+const statuses = {
+  enabled: 'ENABLED',
+  needs_config: 'NEEDS_CONFIG',
+};
+const layouts = {
+  horizontal: 'horizontal',
+  vertical: 'vertical',
+  row: 'row',
+};
+
 function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='horizontal', ...props }) {
   const navigate = useNavigate();
   const { name, description, icon } = data.display;
@@ -28,10 +39,10 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
     setIsProcessing(true);
     api.setJwt(sessionStorage.getItem('jwt'));
     const authorizeData = await api.getAuthorizeRequirements(type, '');
-    if (authorizeData.type === 'oauth2') {
+    if (authorizeData.type === authorizeType) {
       window.location.href = authorizeData.url;
     }
-    if (authorizeData.type !== 'oauth2') {
+    if (authorizeData.type !== authorizeType) {
       let data = authorizeData.data
       for (const element of Object.entries(data.uiSchema)) {
         if (!element['ui:widget']) {
@@ -73,10 +84,10 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
   const getVerticalAuthorizeRequirements = async () => {
     setIsProcessing(true);
     const authorizeData = await api.getAuthorizeRequirements(type, '');
-    if (authorizeData.type === 'oauth2') {
+    if (authorizeData.type === authorizeType) {
       window.location.href = authorizeData.url;
     }
-    if (authorizeData.type !== 'oauth2') enableModalForm();
+    if (authorizeData.type !== authorizeType) enableModalForm();
   };
 
   const enableModalForm = () => {
@@ -114,7 +125,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
       <div className="pr-1 overflow-hidden">
         <p className="w-full text-lg font-semibold text-gray-700 truncate ...">{name}</p>
         <p className="pt-2 text-sm font-medium text-gray-600">{description}</p>
-        {status && status === 'NEEDS_CONFIG' && (
+        {status && status === statuses.needs_config && (
           <p className="inline-flex pt-2 text-xs font-medium text-red-300">
             <ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
           </p>
@@ -167,15 +178,15 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
     <>
       <div className="flex w-full h-[24px]">
         <div className="inline-flex relative mr-auto">
-          {verticalStatus && verticalStatus === 'NEEDS_CONFIG' && (
+          {verticalStatus && verticalStatus === statuses.needs_config && (
             <p className="inline-flex text-xs font-medium text-red-300 text-center">
               <ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
             </p>
           )}
         </div>
         <div className="inline-flex relative justify-end ml-auto">
-          {(verticalStatus && verticalStatus === 'ENABLED') ||
-            (verticalStatus === 'NEEDS_CONFIG' && (
+          {(verticalStatus && verticalStatus === statuses.enabled) ||
+            (verticalStatus === statuses.needs_config && (
               <IntegrationDropdown getSampleData={getSampleData} disconnectVerticalIntegration={disconnectVerticalIntegration} name={name} hasUserConfig={hasUserConfig} />
             ))}
         </div>
@@ -187,8 +198,8 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
       </div>
       <div className="items-center pb-3">
         <div className="relative">
-          {(verticalStatus && verticalStatus === 'ENABLED') ||
-            (status === 'NEEDS_CONFIG' && (
+          {(verticalStatus && verticalStatus === statuses.enabled) ||
+            (status === statuses.needs_config && (
               <button
                 onClick={disconnectVerticalIntegration}
                 className="w-full px-5 py-3 font-medium leading-5 text-center text-purple-600 transition-colors duration-150 rounded-lg border-2 border-purple-400 hover:border-purple-600 hover:bg-purple-600 hover:text-white focus:outline-none focus:shadow-outline-purple"
@@ -235,7 +246,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
         <p className="pt-2 text-sm font-medium text-gray-600">{description}</p>
       </div>
       <div className="ml-auto flex align-items-center">
-        {status && status === 'NEEDS_CONFIG' && (
+        {status && status === statuses.needs_config && (
           <p className="inline-flex mr-4 text-xs font-medium text-red-300">
             <ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
           </p>
@@ -295,9 +306,9 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
   return (
     <>
       <div className={`${"flex p-4 bg-white rounded-lg shadow-xs"} ${containerStyle[layout]}`}
-        data-testid={layout === 'horizontal' ? "integration-horizontal"
-          : layout === 'vertical' ? "integration-vertical"
-            : layout === 'row' ? "integration-row" : ""}>
+        data-testid={layout === layouts.horizontal ? "integration-horizontal"
+          : layout === layouts.vertical ? "integration-vertical"
+            : layout === layouts.row ? "integration-row" : ""}>
 
         {contentLayout[layout]}
 

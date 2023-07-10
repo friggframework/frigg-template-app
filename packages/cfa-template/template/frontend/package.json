@@ -2,7 +2,7 @@
   "name": "@josec59/ui-library",
   "version": "0.0.9",
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "files": [
