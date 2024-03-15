@@ -1,8 +1,6 @@
+const { debug, Integration, Worker } = require('@friggframework/core');
 const moment = require('moment');
-const { Worker }  = require('@friggframework/core');
-const { Integration } = require('@friggframework/integrations');
 const QueuerUtil = require('../../utils/QueuerUtil');
-const { debug } = require('@friggframework/logs');
 
 class ExampleQueuer extends Worker {
     constructor(params) {

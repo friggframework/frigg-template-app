@@ -1,5 +1,4 @@
-const { IntegrationManager } = require('@friggframework/integrations');
-const {get} = require("@friggframework/assertions");
+const { get, IntegrationManager } = require('@friggframework/core');
 
 class HubSpotIntegrationManager extends IntegrationManager {
     static Config = {

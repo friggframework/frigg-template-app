@@ -1,4 +1,4 @@
-const { get } = require('@friggframework/assertions');
+const { get } = require('@friggframework/core');
 const Boom = require('@hapi/boom');
 
 class RouterUtil {

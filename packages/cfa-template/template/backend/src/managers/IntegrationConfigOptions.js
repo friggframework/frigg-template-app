@@ -1,5 +1,4 @@
-const { Options } = require('@friggframework/integrations');
-const { loadInstalledModules } = require('@friggframework/core');
+const { loadInstalledModules, Options } = require('@friggframework/core');
 const SalesforceManager = require('./entities/SalesforceManager');
 const ConnectWiseManager = require('./entities/ConnectWiseManager');
 const HubSpotManager = require('./entities/HubSpotManager');

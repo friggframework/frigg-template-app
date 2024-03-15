@@ -1,9 +1,9 @@
+const { flushDebugLog } = require('@friggframework/core');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const Boom = require('@hapi/boom');
 const loadUserManager = require('./src/routers/middleware/loadUserManager');
-const { flushDebugLog } = require('@friggframework/logs');
 
 const createApp = (applyMiddleware) => {
     const app = express();

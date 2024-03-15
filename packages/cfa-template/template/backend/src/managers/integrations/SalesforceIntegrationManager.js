@@ -1,4 +1,4 @@
-const { IntegrationManager } = require('@friggframework/integrations');
+const { IntegrationManager } = require('@friggframework/core');
 
 class SalesforceIntegrationManager extends IntegrationManager {
     static Config = {

@@ -1,4 +1,4 @@
-const { ModuleManager, Entity } = require('@friggframework/module-plugin');
+const { ModuleManager, Entity } = require('@friggframework/core');
 const primaryEntity = require('./ConnectWiseManager');
 const salesforceEntity = require('./SalesforceManager');
 const hubSpotEntity = require('./HubSpotManager');

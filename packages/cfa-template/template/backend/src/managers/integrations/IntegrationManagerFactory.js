@@ -1,4 +1,4 @@
-const { IntegrationManager: Parent } = require('@friggframework/integrations');
+const { IntegrationManager: Parent } = require('@friggframework/core');
 const EntityManager = require('../entities/EntityManagerFactory');
 
 const salesforceIntegrationManager = require('./SalesforceIntegrationManager');

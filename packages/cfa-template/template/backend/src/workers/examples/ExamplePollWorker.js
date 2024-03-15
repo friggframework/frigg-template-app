@@ -1,7 +1,6 @@
+const { HaltError, Worker } = require('@friggframework/core');
 const moment = require('moment');
-const { Worker } = require('@friggframework/core');
 const IntegrationFactory = require('../../managers/integrations/IntegrationManagerFactory');
-const { HaltError } = require('@friggframework/errors');
 
 const events = {
     newPartnerData: 'NEW_PARTNER_DATA', // Partner Records
