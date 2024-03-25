@@ -21,16 +21,5 @@
   },
   "files": [
     "template"
-  ],
-  "workspaces": [
-    "backend",
-    "frontend"
-  ],
-  "devDependencies": {
-    "concurrently": "^8.2.2"
-  },
-  "scripts": {
-    "start": "concurrently \"cd backend && npm run backend-start\" \"cd frontend && npm run frontend-start\"",
-    "test": "npm test -workspaces"
-  }
+  ]
 }
