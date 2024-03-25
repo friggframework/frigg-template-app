@@ -1,6 +1,6 @@
 {
   "name": "cfa-template",
-  "version": "0.5.9",
+  "version": "1.0.0",
   "keywords": [
     "frigg",
     "create-frigg-app",
@@ -27,10 +27,10 @@
     "frontend"
   ],
   "devDependencies": {
-    "concurrently": "^7.2.1"
+    "concurrently": "^8.2.2"
   },
   "scripts": {
-    "start": "concurrently \"cd template/backend && npm run backend-start\" \"cd template/frontend && npm run frontend-start\"",
+    "start": "concurrently \"cd backend && npm run backend-start\" \"cd frontend && npm run frontend-start\"",
     "test": "npm test -workspaces"
   }
 }
