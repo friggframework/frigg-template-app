@@ -6,7 +6,7 @@ class HubSpotIntegration extends IntegrationBase {
         name: 'hubspot',
         version: '1.0.0',
         supportedVersions: ['1.0.0'],
-        events: ['EXAMPLE_EVENT'],
+        events: ['SEARCH_DEALS'],
     };
 
     static Options =
@@ -31,8 +31,8 @@ class HubSpotIntegration extends IntegrationBase {
      * HANDLE EVENTS
      */
     async receiveNotification(notifier, event, object = null) {
-        if (event === 'EXAMPLE_EVENT') {
-            return this.processReportData(object);
+        if (event === 'SEARCH_DEALS') {
+            return this.target.api.searchDeals(object);
         }
     }
 
@@ -66,8 +66,9 @@ class HubSpotIntegration extends IntegrationBase {
         // Validate that we have all of the data we need
         // Set integration status as makes sense. Default ENABLED
         // TODO turn this into a validateConfig method/function
-        this.integration.status = 'NEEDS_CONFIG';
+        this.record.status = 'ENABLED';
         await this.record.save();
+        return this.record;
     }
 
     async onUpdate(params) {

@@ -1,11 +1,11 @@
 const { createFriggBackend } = require('@friggframework/core');
 const HubSpotIntegration = require('./src/integrations/HubSpotIntegration');
-const SalesforceIntegration = require('./src/integrations/LinearIntegration');
+const LinearIntegration = require('./src/integrations/LinearIntegration');
 
 const appDefinition = {
     integrations:[
+        LinearIntegration,
         HubSpotIntegration,
-        SalesforceIntegration
     ],
     user: {
         password: true

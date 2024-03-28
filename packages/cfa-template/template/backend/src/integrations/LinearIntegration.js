@@ -7,7 +7,7 @@ class LinearIntegration extends IntegrationBase {
         name: 'linear',
         version: '1.0.0',
         supportedVersions: ['1.0.0'],
-        events: ['EXAMPLE_EVENT'],
+        events: ['GET_PROJECTS'],
     };
 
     static Options =
@@ -39,7 +39,9 @@ class LinearIntegration extends IntegrationBase {
      * HANDLE EVENTS
      */
     async receiveNotification(notifier, event, object = null) {
-
+        if (event === 'GET_PROJECTS') {
+            return this.target.api.getProjects();
+        }
     }
 
     /**
