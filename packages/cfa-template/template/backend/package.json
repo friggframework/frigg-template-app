@@ -13,7 +13,9 @@
         "lint:cloudformation": "sls package --stage dev && cfn-lint .serverless/cloudformation-template-*.json",
         "lint:markdown": "markdownlint --fix .",
         "backend-start": "sls offline --stage dev",
-        "backend-start:staging": "sls offline --stage staging"
+        "backend-start:staging": "sls offline --stage staging",
+        "docker:start": "docker-compose up -d",
+        "docker:stop": "docker-compose down"
     },
     "dependencies": {
         "@friggframework/api-module-linear": "^1.0.0",
