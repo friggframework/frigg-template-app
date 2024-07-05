@@ -1,4 +1,5 @@
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
+import FormType from "../enums/FormType";
 
 export default class API {
 	constructor() {
@@ -6,15 +7,20 @@ export default class API {
 
 		this.jwt = null;
 
-		this.endpointLogin = '/user/login';
-		this.endpointCreateUser = '/user/create';
+		this.endpointLogin = "/user/login";
+		this.endpointCreateUser = "/user/create";
 
-		this.endpointAuthorize = '/api/authorize';
+		this.endpointAuthorize = "/api/authorize";
 		this.endpointIntegration = (id) => `/api/integrations/${id}`;
-		this.endpointIntegrationConfigOptions = (id) => `${this.endpointIntegration(id)}/config/options`;
-		this.endpointIntegrations = '/api/integrations';
+		this.endpointIntegrationConfigOptions = (id) =>
+			`${this.endpointIntegration(id)}/config/options`;
+		this.endpointIntegrations = "/api/integrations";
 		this.endpointIntegration = (id) => `/api/integrations/${id}`;
 		this.endpointSampleData = (id) => `/api/demo/sample/${id}`;
+		this.endpointIntegrationUserActionOptions = (id, action) =>
+			`/api/integrations/${id}/actions/${action}/options`;
+		this.endpointIntegrationUserActionSubmit = (id, action) =>
+			`/api/integrations/${id}/actions/${action}`;
 	}
 
 	setJwt(jwt) {
@@ -40,7 +46,7 @@ export default class API {
 	// injects the access token into an object and returns the headers for most api calls
 	getHeaders() {
 		const headers = {
-			'Content-Type': 'application/json',
+			"Content-Type": "application/json",
 		};
 
 		if (this.jwt) {
@@ -54,12 +60,15 @@ export default class API {
 	// may throw an exception if the response.status corresponds to an error
 	async _checkResponse(response, url) {
 		if (response.status >= 400) {
-			console.error(`Error: http [${response.status}] ${url}: ${JSON.stringify(response)}`);
+			console.error(
+				`Error: http [${response.status}] ${url}: ${JSON.stringify(response)}`
+			);
 		}
 
 		try {
-			if (response.headers.get('x-lh-set')) localStorage.setItem('x-lh-set', response.headers.get('x-lh-set'));
-			if (response.status === 204) return // Early return since no content for 204
+			if (response.headers.get("x-lh-set"))
+				localStorage.setItem("x-lh-set", response.headers.get("x-lh-set"));
+			if (response.status === 204) return; // Early return since no content for 204
 
 			return response.json();
 		} catch (exception) {
@@ -76,7 +85,7 @@ export default class API {
 		const url = `${this.baseURL}${endpoint}`;
 		const headers = this.getHeaders();
 		const response = await fetch(url, {
-			method: 'GET',
+			method: "GET",
 			headers,
 		});
 		return this._checkResponse(response, url);
@@ -87,7 +96,7 @@ export default class API {
 	async _post(endpoint, data) {
 		const url = `${this.baseURL}${endpoint}`;
 		const response = await fetch(url, {
-			method: 'POST',
+			method: "POST",
 			headers: this.getHeaders(),
 			body: JSON.stringify(data),
 		});
@@ -98,7 +107,7 @@ export default class API {
 	async _patch(endpoint, data) {
 		const url = `${this.baseURL}${endpoint}`;
 		const response = await fetch(url, {
-			method: 'PATCH',
+			method: "PATCH",
 			headers: this.getHeaders(),
 			body: JSON.stringify(data),
 		});
@@ -109,7 +118,7 @@ export default class API {
 	async _delete(endpoint, data) {
 		const url = `${this.baseURL}${endpoint}`;
 		const response = await fetch(url, {
-			method: 'DELETE',
+			method: "DELETE",
 			headers: this.getHeaders(),
 			body: JSON.stringify(data),
 		});
@@ -153,7 +162,7 @@ export default class API {
 			entities: [entity1, entity2],
 			config,
 		};
-		return this._post(url, params);
+		return this._post(url, params); // todo: to improve dev experience, return a clear response, with this current implementation one does not now what returns from this request.
 	}
 
 	// update integration (aka, update the settings or the configuration for it).
@@ -201,4 +210,65 @@ export default class API {
 		const url = this.endpointSampleData(integrationId);
 		return this._get(url);
 	}
+
+	async deleteAll(integrationId) {
+		const url = this.endpointIntegrationUserActionOptions(
+			integrationId,
+			"DELETE_ALL_CUSTOM_OBJECTS"
+		);
+		return this._post(url);
+	}
+
+	async getUserActionOptions(integrationId, selectedUserAction) {
+		const url = this.endpointIntegrationUserActionOptions(
+			integrationId,
+			selectedUserAction
+		);
+		return this._get(url);
+	}
+
+	async submitUserAction(integrationId, selectedUserAction, data) {
+		const url = this.endpointIntegrationUserActionSubmit(
+			integrationId,
+			selectedUserAction
+		);
+		return this._post(url, data);
+	}
+
+	async refreshOptions({
+							 formType,
+							 integrationId,
+							 userAction,
+							 entityId,
+							 data,
+						 }) {
+		const refreshEndpoint = buildRefreshProperties({
+			formType,
+			integrationId,
+			userAction,
+			entityId,
+		});
+
+		console.log(">>> endpoint: ", refreshEndpoint);
+		return this._post(refreshEndpoint, data);
+	}
 }
+
+const buildRefreshProperties = ({
+									formType,
+									integrationId,
+									userAction,
+									entityId,
+									searchValue,
+								}) => {
+	switch (formType) {
+		case FormType.USER_ACTION:
+			return `/api/integrations/${integrationId}/actions/${userAction}/options/refresh`;
+		case FormType.INTEGRATION_CONFIG_OPTIONS:
+			return `/api/integrations/${integrationId}/options/refresh`;
+		case FormType.AUTHENTICATION_OPTIONS:
+			return `/api/entities/${entityId}/options/refresh`;
+		default:
+			return "";
+	}
+};

@@ -1,5 +1,5 @@
 module.exports = {
-	appDisplayName: 'Create Frigg App Template Site',
+	appDisplayName: 'SaaSAssure Frigg Demo Site',
 	appVersion: '1.0.0' || require('../package.json').version,
 	componentLayout: 'default-horizontal',
 	componentFilter: {
