@@ -1,15 +1,15 @@
-import IntegrationDropdown from './IntegrationDropdown';
-import IntegrationList from './IntegrationList';
-import IntegrationSkeleton from './IntegrationSkeleton';
-import IntegrationItem from './IntegrationItem';
-import CategoryFilter from './CategoryFilter';
-import ToggleSwitch from './ToggleSwitch';
+import IntegrationDropdown from "./IntegrationDropdown";
+import IntegrationHorizontal from "./IntegrationHorizontal";
+import IntegrationList from "./IntegrationList";
+import IntegrationSkeleton from "./IntegrationSkeleton";
+import IntegrationVertical from "./IntegrationVertical";
+import QuickActionsMenu from "./QuickActionsMenu";
 
 export {
-	IntegrationDropdown as Dropdown,
- 	IntegrationList as List,
-	IntegrationSkeleton as Skeleton,
-	IntegrationItem as Item,
-	CategoryFilter as Filter,
-	ToggleSwitch as Switch,
+  IntegrationDropdown as Dropdown,
+  IntegrationHorizontal as Horizontal,
+  IntegrationList as List,
+  IntegrationSkeleton as Skeleton,
+  IntegrationVertical as Vertical,
+  QuickActionsMenu as Switch,
 };

@@ -17,6 +17,7 @@ export default class IntegrationUtils {
 	// new integrations you may connect
 	getPossibleIntegrations() {
 		const options = this.integrations[ENTITIES][OPTIONS];
+		return options;
 
 		// exclude the primary
 		const possibleOptions = [];
@@ -26,7 +27,6 @@ export default class IntegrationUtils {
 				possibleOptions.push(opt);
 			}
 		});
-
 		return possibleOptions;
 	}
 

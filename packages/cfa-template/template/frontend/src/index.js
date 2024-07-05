@@ -1,14 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import App from './App';
 import store from './store';
 
-// provide the redux store to our entire app (if they choose to connect() to it)
-ReactDOM.render(
-	<Provider store={store}>
-		<App />
-	</Provider>,
-	document.getElementById('root')
-);
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+root.render(<Provider store={store}>
+	<App />
+</Provider>,);

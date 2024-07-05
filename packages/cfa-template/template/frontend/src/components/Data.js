@@ -4,13 +4,9 @@ import { Table } from 'react-bootstrap';
 import API from '../api/api';
 import { setAuthToken } from '../actions/auth';
 import { logoutUser } from '../actions/logout';
-import {useNavigate, useParams} from "react-router-dom";
 
 // Render sample data (objects of any type) into a data table.
 // Use first row's object keys as headers.
-function withParams(Component) {
-	return props => <Component {...props} params={useParams()} navigate={useNavigate()} />;
-}
 class Data extends Component {
 	constructor(props) {
 		super(props);
@@ -27,7 +23,7 @@ class Data extends Component {
 			const api = new API();
 			api.setJwt(this.props.authToken);
 
-			const { integrationId } = this.props.params;
+			const { integrationId } = this.props.match.params;
 			let sampleData = await api.getSampleData(integrationId);
 
 			if (sampleData.constructor !== Array) {
@@ -46,20 +42,20 @@ class Data extends Component {
 			<div>
 				<Table striped bordered hover>
 					<thead>
-					<tr>
-						{this.state.headers.map((h, idx) => (
-							<th key={idx}>{h}</th>
-						))}
-					</tr>
-					</thead>
-					<tbody>
-					{this.state.rows.map((item, idx) => (
-						<tr key={idx}>
-							{Object.values(item).map((val, idxVal) => (
-								<td key={idxVal}>{`${val}`}</td>
+						<tr>
+							{this.state.headers.map((h, idx) => (
+								<th key={idx}>{h}</th>
 							))}
 						</tr>
-					))}
+					</thead>
+					<tbody>
+						{this.state.rows.map((item, idx) => (
+							<tr key={idx}>
+								{Object.values(item).map((val, idxVal) => (
+									<td key={idxVal}>{`${val}`}</td>
+								))}
+							</tr>
+						))}
 					</tbody>
 				</Table>
 			</div>
@@ -76,4 +72,4 @@ function mapStateToProps({ auth }) {
 }
 
 // connects this component to the redux store.
-export default connect(mapStateToProps)(withParams(Data));
+export default connect(mapStateToProps)(Data);
