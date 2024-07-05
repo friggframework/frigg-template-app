@@ -165,35 +165,35 @@ export class Login extends Component {
               <label className="block text-sm">
                 <span className="text-gray-700">Email</span>
                 <Input
-                  data-testid="email-input"
-                  className="block  mt-1 w-full text-sm form-input rounded-lg"
-                  defaultValue={this.state.defaultUsername}
-                  type="text"
-                  id="username"
-                  name="username"
-                  placeholder="Email"
-                  onChange={this.handleInputChange}
+                    data-testid="email-input"
+                    className="block  mt-1 w-full text-sm form-input rounded-lg"
+                    defaultValue={this.state.defaultUsername}
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Email"
+                    onChange={this.handleInputChange}
                 />
               </label>
               <label className="block text-sm">
                 <span className="text-gray-700">Password</span>
                 <Input
-                  data-testid="password-input"
-                  className="block w-full mt-1 text-sm form-input rounded-lg"
-                  defaultValue={this.state.defaultPassword}
-                  type="password"
-                  name="password"
-                  placeholder="***************"
-                  onChange={this.handleInputChange}
+                    data-testid="password-input"
+                    className="block w-full mt-1 text-sm form-input rounded-lg"
+                    defaultValue={this.state.defaultPassword}
+                    type="password"
+                    name="password"
+                    placeholder="***************"
+                    onChange={this.handleInputChange}
                 />
               </label>
 
               <Button
-                data-testid="login-button"
-                type="submit"
-                className="w-full"
+                  data-testid="login-button"
+                  type="submit"
+                  className="w-full"
               >
-                {this.state.submitted && <LoadingSpinner />}
+                {this.state.submitted && <LoadingSpinner/>}
                 Log In
               </Button>
 
@@ -201,7 +201,18 @@ export class Login extends Component {
                 <span className="text-sm font-medium text-primary hover:underline cursor-pointer">
                   Forgot your password?
                 </span>
+                <p className="mt-1">
+                  {/* <Link className="text-sm font-medium text-purple-800 hover:underline cursor-pointer" to="/register">
+									Create account
+								</Link> */}
+                  <span className="text-sm font-medium text-primary hover:underline cursor-pointer"
+                        onClick={this.createDemoUser}>
+									Create account (demo user)
+								</span>
+                </p>
+
               </p>
+
             </div>
           </form>
         </div>
@@ -212,7 +223,7 @@ export class Login extends Component {
 
 // this function defines which of the redux store items we want,
 // and the return value returns them as props to our component
-function mapStateToProps({ auth }) {
+function mapStateToProps({auth}) {
   return {
     authToken: auth.token,
   };
