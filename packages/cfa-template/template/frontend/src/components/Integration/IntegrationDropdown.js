@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { DotsVerticalIcon } from '@heroicons/react/outline';
+import { EllipsisVertical } from 'lucide-react';
 
 function IntegrationDropdown({ getSampleData, disconnectIntegration, name, hasUserConfig }) {
 	const [dropdown, setDropdown] = useState(false);
 
 	return (
 		<>
-			<DotsVerticalIcon
+			<EllipsisVertical
 				onClick={() => setDropdown(!dropdown)}
 				className="h-6 w-6 ml-auto text-gray-500 cursor-pointer"
 			/>

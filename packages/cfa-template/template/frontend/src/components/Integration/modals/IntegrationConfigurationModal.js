@@ -68,7 +68,7 @@ function IntegrationConfigurationModal({
           ) : (
             <div className="flex flex-col h-full gap-3">
               <div className="flex-1">
-                {Object.keys(jsonSchema).length === 0 ? (
+                { !jsonSchema || Object.keys(jsonSchema).length === 0 ? (
                   <p>There is no configuration available!</p>
                 ) : (
                   <Form
@@ -84,7 +84,7 @@ function IntegrationConfigurationModal({
                 <Button onClick={closeConfigModal} variant="secondary">
                   Cancel
                 </Button>
-                {Object.keys(jsonSchema).length > 0 && (
+                {jsonSchema && Object.keys(jsonSchema).length > 0 && (
                   <Button onClick={onSubmit}>Save</Button>
                 )}
               </footer>

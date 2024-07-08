@@ -5,7 +5,6 @@ import serializeForm from "form-serialize";
 import FormValidator from "./FormValidator";
 import API from "../api/api";
 import { setAuthToken } from "../actions/auth";
-import config from "../frigg.config";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { LoadingSpinner } from "./LoadingSpinner";
@@ -150,9 +149,9 @@ export class Login extends Component {
         <div className="bg-white rounded-lg shadow-xl p-12 w-[420px]">
           <div className="flex w-full justify-center">
             <img
-              src="https://9061955.fs1.hubspotusercontent-na1.net/hubfs/9061955/Asigra%20logos%20and%20favicons/SaaSAssure%20Logos/SaasAssure_Final_Logo_primary_tagline.png"
+              src={`${process.env.PUBLIC_URL}/FriggLogo.svg`}
               alt="Logo"
-              style={{ width: 250 }}
+              style={{ width: 150 }}
             />
           </div>
 

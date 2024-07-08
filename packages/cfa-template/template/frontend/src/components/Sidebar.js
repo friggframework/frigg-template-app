@@ -1,11 +1,8 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import {
-  PuzzleIcon,
-  AdjustmentsIcon,
-  LogoutIcon,
-} from "@heroicons/react/outline";
+
+import {PuzzleIcon, LogOutIcon, SlidersVertical} from "lucide-react"
 import { logoutUser } from "../actions/logout";
 
 function Sidebar({ logoutUser }) {
@@ -18,9 +15,9 @@ function Sidebar({ logoutUser }) {
         >
           <span className="ml-2">
             <img
-              src="https://9061955.fs1.hubspotusercontent-na1.net/hubfs/9061955/Asigra%20logos%20and%20favicons/SaaSAssure%20Logos/SaasAssure_Final_Logo_primary_tagline.png"
+              src={`${process.env.PUBLIC_URL}/FriggLogo.svg`}
               alt="Logo"
-              style={{ width: 200 }}
+              style={{ width: 90}}
             />
           </span>
         </Link>
@@ -41,7 +38,7 @@ function Sidebar({ logoutUser }) {
               className="px-6 py-3 inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800"
               activeClassName="text-gray-800 border-l-8 border-primary"
             >
-              <AdjustmentsIcon className="w-5 h-5" />
+              <SlidersVertical className="w-5 h-5" />
               <span className="ml-4">Settings</span>
             </NavLink>
           </li>
@@ -50,7 +47,7 @@ function Sidebar({ logoutUser }) {
               to="/logout"
               className="px-6 py-3 inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800"
             >
-              <LogoutIcon className="w-5 h-5" />
+              <LogOutIcon className="w-5 h-5" />
               <span className="ml-4">Logout</span>
             </NavLink>
           </li>

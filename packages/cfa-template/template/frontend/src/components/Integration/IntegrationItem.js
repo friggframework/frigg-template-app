@@ -7,8 +7,9 @@ import ModalFormBasedAuth from './ModalFormBasedAuth';
 import ModalConfig from './ModalConfig';
 import { showModalForm } from '../../actions/modalForm';
 import { setIntegrations } from '../../actions/integrations';
-import { ExclamationCircleIcon } from '@heroicons/react/outline';
+import { CircleAlert } from "lucide-react"
 import IntegrationDropdown from '../Integration/IntegrationDropdown';
+import {Button} from "../ui/button";
 
 const authorizeType = 'oauth2';
 const statuses = {
@@ -127,7 +128,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
         <p className="pt-2 text-sm font-medium text-gray-600">{description}</p>
         {status && status === statuses.needs_config && (
           <p className="inline-flex pt-2 text-xs font-medium text-red-300">
-            <ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
+            <CircleAlert className="w-4 h-4 mr-1" /> Configure
           </p>
         )}
       </div>
@@ -144,7 +145,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
             />
           )}
           {!status && (
-            <button
+            <Button
               onClick={getAuthorizeRequirements}
               className="px-3 py-2 text-xs font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
             >
@@ -167,7 +168,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
               ) : (
                 'Connect'
               )}
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -180,7 +181,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
         <div className="inline-flex relative mr-auto">
           {verticalStatus && verticalStatus === statuses.needs_config && (
             <p className="inline-flex text-xs font-medium text-red-300 text-center">
-              <ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
+              <CircleAlert className="w-4 h-4 mr-1" /> Configure
             </p>
           )}
         </div>
@@ -248,7 +249,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
       <div className="ml-auto flex align-items-center">
         {status && status === statuses.needs_config && (
           <p className="inline-flex mr-4 text-xs font-medium text-red-300">
-            <ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
+            <CircleAlert className="w-4 h-4 mr-1" /> Configure
           </p>
         )}
         {status && (

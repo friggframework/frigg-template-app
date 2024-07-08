@@ -2,7 +2,6 @@ import React from 'react';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import { connect } from 'react-redux';
-import Loader from 'react-loader-spinner';
 import Form from '@rjsf/bootstrap-4';
 import Toggle from 'react-toggle';
 import { showModalForm } from '../actions/modalForm';
@@ -10,6 +9,7 @@ import { setIntegrations } from '../actions/integrations';
 import API from '../api/api';
 import 'react-toggle/style.css';
 import _ from 'lodash';
+import {LoadingSpinner} from "./LoadingSpinner";
 
 const styles = {
     fontFamily: 'sans-serif',
@@ -273,13 +273,7 @@ class ModalForm extends React.Component {
                 <Modal open={isShowing} onClose={this.onCloseModal}>
                     {this.state.showSpinner && (
                         <h2>
-                            <Loader
-                                type="Oval"
-                                color="#7149ab"
-                                height={50}
-                                width={50}
-                                timeout={1000 * 999}
-                            />
+                            <LoadingSpinner />
                         </h2>
                     )}
                     <br />
