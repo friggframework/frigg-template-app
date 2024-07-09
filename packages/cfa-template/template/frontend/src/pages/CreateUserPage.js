@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import API from '../api/api';
 import config from '../frigg.config';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
+import { Input } from '../components';
+import { Button } from '../components';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,10 +14,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/form';
-import { useToast } from './ui/use-toast';
+} from '../components';
+import { useToast } from '../components';
 
-const CreateUser = () => {
+const CreateUserPage = () => {
   const { toast } = useToast();
 
   const formSchema = z
@@ -147,4 +147,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default CreateUserPage;

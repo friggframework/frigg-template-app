@@ -1,14 +1,14 @@
 import React from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
-import Login from './Login';
-import CreateUser from './CreateUser';
+import LoginPage from '../pages/LoginPage';
+import CreateUserPage from '../pages/CreateUserPage';
 
 const Auth = () => (
-	<Switch>
-		<Route path="/" exact component={Login} />
-		<Route path="/register" exact component={CreateUser} />
-		<Redirect to="/" />
-	</Switch>
+  <Switch>
+    <Route path="/" exact component={LoginPage} />
+    <Route path="/register" exact component={CreateUserPage} />
+    <Redirect to="/" />
+  </Switch>
 );
 
 export default Auth;

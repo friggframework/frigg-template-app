@@ -4,8 +4,8 @@ import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
+import { Input } from '../components';
+import { Button } from '../components';
 import {
   Form,
   FormControl,
@@ -13,13 +13,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/form';
-import { useToast } from './ui/use-toast';
+} from '../components';
+import { useToast } from '../components';
 import API from '../api/api';
 import { setAuthToken } from '../actions/auth';
-import { LoadingSpinner } from './LoadingSpinner';
+import { LoadingSpinner } from '../components';
 
-const Login = () => {
+const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
@@ -185,4 +185,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;

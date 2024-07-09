@@ -3,7 +3,7 @@ import * as redux from 'react-redux';
 import { render } from '@testing-library/react';
 import nock from 'nock';
 import userEvent from '@testing-library/user-event';
-import Login from '../components/Login';
+import LoginPage from '../pages/LoginPage';
 import fetch from 'node-fetch';
 
 import '../../__mocks__/sessionStorage';
@@ -24,7 +24,7 @@ describe('Login component', () => {
       });
 
     const { queryByText, getByText, findByText } = render(
-      <Login authToken={null} />
+      <LoginPage authToken={null} />
     );
 
     expect(queryByText(/Create account./i)).toBeTruthy();
@@ -56,7 +56,7 @@ describe('Login component', () => {
       });
 
     const { getByTestId } = render(
-      <Login authToken={null} dispatch={useDispatchSpy} history={history} />
+      <LoginPage authToken={null} dispatch={useDispatchSpy} history={history} />
     );
 
     await userEvent.click(getByTestId('login-button'));
