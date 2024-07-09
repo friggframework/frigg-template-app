@@ -7,9 +7,9 @@ import ModalFormBasedAuth from './ModalFormBasedAuth';
 import ModalConfig from './ModalConfig';
 import { showModalForm } from '../../actions/modalForm';
 import { setIntegrations } from '../../actions/integrations';
-import { CircleAlert } from "lucide-react"
+import { CircleAlert } from 'lucide-react';
 import IntegrationDropdown from '../Integration/IntegrationDropdown';
-import {Button} from "../ui/button";
+import { Button } from '../ui/button';
 
 const authorizeType = 'oauth2';
 const statuses = {
@@ -22,7 +22,13 @@ const layouts = {
   row: 'row',
 };
 
-function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='horizontal', ...props }) {
+function IntegrationItem({
+  data,
+  handleInstall,
+  refreshIntegrations,
+  layout = 'horizontal',
+  ...props
+}) {
   const navigate = useNavigate();
   const { name, description, icon } = data.display;
   const { type, hasUserConfig, status: initialStatus } = data;
@@ -30,7 +36,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
   const [status, setStatus] = useState(initialStatus);
   const [verticalStatus, setVerticalStatus] = useState('');
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
+  const [isConfigModalOpen, setIsConfigModalOpen] = useState(true);
 
   const api = new Api();
   const authToken = useSelector((state) => state.auth.token);
@@ -44,7 +50,7 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
       window.location.href = authorizeData.url;
     }
     if (authorizeData.type !== authorizeType) {
-      let data = authorizeData.data
+      let data = authorizeData.data;
       for (const element of Object.entries(data.uiSchema)) {
         if (!element['ui:widget']) {
           element['ui:widget'] = 'text';
@@ -57,16 +63,16 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
   function closeAuthModal() {
     setIsAuthModalOpen(false);
     setIsProcessing(false);
-  };
+  }
 
   function openConfigModal() {
     setIsConfigModalOpen(true);
-  };
+  }
 
   function closeConfigModal() {
     setIsConfigModalOpen(false);
     setIsProcessing(false);
-  };
+  }
 
   const getSampleData = async () => {
     navigate(`/data/${data.id}`);
@@ -74,10 +80,10 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
 
   const disconnectIntegration = async () => {
     const jwt = sessionStorage.getItem('jwt');
-    api.setJwt(jwt)
+    api.setJwt(jwt);
     await api.deleteIntegration(data.id);
     setIsProcessing(true);
-    setStatus(false)
+    setStatus(false);
     await refreshIntegrations(props);
     setIsProcessing(false);
   };
@@ -93,7 +99,9 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
 
   const enableModalForm = () => {
     const requestType = getRequestType();
-    props.dispatch(showModalForm(true, data.id, requestType, data.type, data.config));
+    props.dispatch(
+      showModalForm(true, data.id, requestType, data.type, data.config)
+    );
   };
 
   const getRequestType = () => {
@@ -122,9 +130,15 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
 
   const HorizontalLayout = () => (
     <>
-      <img className="mr-3 w-[80px] h-[80px] rounded-lg" alt={name} src={icon} />
+      <img
+        className="mr-3 w-[80px] h-[80px] rounded-lg"
+        alt={name}
+        src={icon}
+      />
       <div className="pr-1 overflow-hidden">
-        <p className="w-full text-lg font-semibold text-gray-700 truncate ...">{name}</p>
+        <p className="w-full text-lg font-semibold text-gray-700 truncate ...">
+          {name}
+        </p>
         <p className="pt-2 text-sm font-medium text-gray-600">{description}</p>
         {status && status === statuses.needs_config && (
           <p className="inline-flex pt-2 text-xs font-medium text-red-300">
@@ -150,7 +164,11 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
               className="px-3 py-2 text-xs font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
             >
               {isProcessing ? (
-                <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
                   <circle
                     className="opacity-25"
                     cx="12"
@@ -188,14 +206,23 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
         <div className="inline-flex relative justify-end ml-auto">
           {(verticalStatus && verticalStatus === statuses.enabled) ||
             (verticalStatus === statuses.needs_config && (
-              <IntegrationDropdown getSampleData={getSampleData} disconnectVerticalIntegration={disconnectVerticalIntegration} name={name} hasUserConfig={hasUserConfig} />
+              <IntegrationDropdown
+                getSampleData={getSampleData}
+                disconnectVerticalIntegration={disconnectVerticalIntegration}
+                name={name}
+                hasUserConfig={hasUserConfig}
+              />
             ))}
         </div>
       </div>
       <img className="w-[120px] h-[120px] rounded-full" alt={name} src={icon} />
       <div className="pr-1 pt-4 pb-4 overflow-hidden">
-        <p className="w-full text-2xl font-semibold text-gray-700 text-center truncate ...">{name}</p>
-        <p className="w-full pt-2 text-md font-medium text-gray-600 text-center">{description}</p>
+        <p className="w-full text-2xl font-semibold text-gray-700 text-center truncate ...">
+          {name}
+        </p>
+        <p className="w-full pt-2 text-md font-medium text-gray-600 text-center">
+          {description}
+        </p>
       </div>
       <div className="items-center pb-3">
         <div className="relative">
@@ -214,7 +241,11 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
               className="w-full px-5 py-3 font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
             >
               {isProcessing ? (
-                <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
                   <circle
                     className="opacity-25"
                     cx="12"
@@ -241,9 +272,15 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
 
   const RowLayout = () => (
     <>
-      <img className="mr-3 w-[80px] h-[80px] rounded-lg" alt={name} src={icon} />
+      <img
+        className="mr-3 w-[80px] h-[80px] rounded-lg"
+        alt={name}
+        src={icon}
+      />
       <div className="pr-1 overflow-hidden">
-        <p className="w-full text-lg font-semibold text-gray-700 truncate ...">{name}</p>
+        <p className="w-full text-lg font-semibold text-gray-700 truncate ...">
+          {name}
+        </p>
         <p className="pt-2 text-sm font-medium text-gray-600">{description}</p>
       </div>
       <div className="ml-auto flex align-items-center">
@@ -268,7 +305,11 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
             className="px-3 py-2 text-xs font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
           >
             {isProcessing ? (
-              <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
                 <circle
                   className="opacity-25"
                   cx="12"
@@ -293,24 +334,33 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
   );
 
   const containerStyle = {
-    'horizontal': 'flex-nowrap',
-    'vertical': 'flex-col items-center',
-    'row': 'align-items-center',
+    horizontal: 'flex-nowrap',
+    vertical: 'flex-col items-center',
+    row: 'align-items-center',
   };
 
   const contentLayout = {
-    'horizontal': <HorizontalLayout />,
-    'vertical': <VerticalLayout />,
-    'row': <RowLayout />,
-  }
+    horizontal: <HorizontalLayout />,
+    vertical: <VerticalLayout />,
+    row: <RowLayout />,
+  };
 
   return (
     <>
-      <div className={`${"flex p-4 bg-white rounded-lg shadow-xs"} ${containerStyle[layout]}`}
-        data-testid={layout === layouts.horizontal ? "integration-horizontal"
-          : layout === layouts.vertical ? "integration-vertical"
-            : layout === layouts.row ? "integration-row" : ""}>
-
+      <div
+        className={`${'flex p-4 bg-white rounded-lg shadow-xs'} ${
+          containerStyle[layout]
+        }`}
+        data-testid={
+          layout === layouts.horizontal
+            ? 'integration-horizontal'
+            : layout === layouts.vertical
+            ? 'integration-vertical'
+            : layout === layouts.row
+            ? 'integration-row'
+            : ''
+        }
+      >
         {contentLayout[layout]}
 
         {isAuthModalOpen ? (
@@ -323,10 +373,16 @@ function IntegrationItem({ data, handleInstall, refreshIntegrations, layout='hor
           />
         ) : null}
 
-        {isConfigModalOpen && <ModalConfig name={name} type={type} closeConfigModal={closeConfigModal} />}
+        {isConfigModalOpen && (
+          <ModalConfig
+            name={name}
+            type={type}
+            closeConfigModal={closeConfigModal}
+          />
+        )}
       </div>
     </>
   );
-};
+}
 
 export default IntegrationItem;

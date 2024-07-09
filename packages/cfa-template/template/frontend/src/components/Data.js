@@ -1,75 +1,102 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Table } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import API from '../api/api';
 import { setAuthToken } from '../actions/auth';
 import { logoutUser } from '../actions/logout';
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './ui/table';
+import { useToast } from './ui/use-toast';
 
-// Render sample data (objects of any type) into a data table.
-// Use first row's object keys as headers.
-class Data extends Component {
-	constructor(props) {
-		super(props);
-		this.state = { headers: [], rows: [] };
-	}
+const Data = () => {
+  const [headers, setHeaders] = useState([]);
+  const [rows, setRows] = useState([]);
+  const authToken = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
+  const { integrationId } = useParams();
+  const { toast } = useToast();
 
-	async componentDidMount() {
-		const jwt = sessionStorage.getItem('jwt');
-		if (jwt !== this.props.authToken) {
-			await this.props.dispatch(setAuthToken(jwt));
-		}
+  useEffect(() => {
+    const fetchData = async () => {
+      const jwt = sessionStorage.getItem('jwt');
+      if (jwt && jwt !== authToken) {
+        dispatch(setAuthToken(jwt));
+      }
 
-		if (this.props.authToken) {
-			const api = new API();
-			api.setJwt(this.props.authToken);
+      if (authToken) {
+        const api = new API();
+        api.setJwt(authToken);
 
-			const { integrationId } = this.props.match.params;
-			let sampleData = await api.getSampleData(integrationId);
+        let sampleData = await api.getSampleData(integrationId);
+        // let sampleData = getFakeData(); // Uncomment if you need fake data
 
-			if (sampleData.constructor !== Array) {
-				sampleData = sampleData.data;
-			}
-			if (sampleData.error) this.props.dispatch(logoutUser());
+        if (sampleData && sampleData.error) {
+          toast({
+            variant: 'destructive',
+            title: 'Oops',
+            description: sampleData.error,
+          });
+          return;
+        }
 
-			const headers = sampleData && sampleData.length ? Object.keys(sampleData[0]) : [];
-			const rows = headers && headers.length ? sampleData : [];
-			this.setState({ headers, rows });
-		}
-	}
+        if (sampleData.constructor !== Array) {
+          sampleData = sampleData.data;
+        }
 
-	render() {
-		return (
-			<div>
-				<Table striped bordered hover>
-					<thead>
-						<tr>
-							{this.state.headers.map((h, idx) => (
-								<th key={idx}>{h}</th>
-							))}
-						</tr>
-					</thead>
-					<tbody>
-						{this.state.rows.map((item, idx) => (
-							<tr key={idx}>
-								{Object.values(item).map((val, idxVal) => (
-									<td key={idxVal}>{`${val}`}</td>
-								))}
-							</tr>
-						))}
-					</tbody>
-				</Table>
-			</div>
-		);
-	}
-}
+        const headers =
+          sampleData && sampleData.length ? Object.keys(sampleData[0]) : [];
+        const rows = headers && headers.length ? sampleData : [];
+        setHeaders(headers);
+        setRows(rows);
+      }
+    };
 
-// this function defines which of the redux store items we want,
-// and the return value returns them as props to our component
-function mapStateToProps({ auth }) {
-	return {
-		authToken: auth.token,
-	};
-}
+    fetchData();
+  }, [authToken, dispatch, integrationId]);
 
-// connects this component to the redux store.
-export default connect(mapStateToProps)(Data);
+  // Fake data for testing
+  const getFakeData = () => {
+    return [
+      { name: 'John Doe', age: 25, city: 'New York' },
+      { name: 'Jane Doe', age: 22, city: 'Los Angeles' },
+      { name: 'John Smith', age: 30, city: 'Chicago' },
+      { name: 'Jane Smith', age: 28, city: 'Houston' },
+    ];
+  };
+
+  return headers.length > 0 ? (
+    <div className="m-3 border rounded">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            {headers.map((h, idx) => (
+              <TableHead key={idx}>{h}</TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {rows.map((item, idx) => (
+            <TableRow key={idx}>
+              {Object.values(item).map((val, idxVal) => (
+                <TableCell key={idxVal}>{`${val}`}</TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  ) : (
+    <div className="flex w-full justify-center m-5">
+      <h1 className="text-lg">No data available</h1>
+    </div>
+  );
+};
+
+export default Data;

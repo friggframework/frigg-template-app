@@ -1,8 +1,8 @@
-import { Form } from "../../Form";
-import { useEffect, useState } from "react";
-import API from "../../../api/api";
-import { LoadingSpinner } from "../../LoadingSpinner";
-import { toast } from "react-toastify";
+import { Form } from '../../Form';
+import { useEffect, useState } from 'react';
+import API from '../../../api/api';
+import { LoadingSpinner } from '../../LoadingSpinner';
+import { useToast } from '../../ui/use-toast';
 
 function FormBasedAuthModal({
   closeAuthModal,
@@ -15,6 +15,7 @@ function FormBasedAuthModal({
   const [uiSchema, setUiSchema] = useState({});
   const [jsonSchema, setJsonSchema] = useState({});
   const [formData, setFormData] = useState({});
+  const { toast } = useToast();
 
   useEffect(() => {
     getAuthorizationRequirements({
@@ -64,11 +65,15 @@ function FormBasedAuthModal({
     );
 
     await refreshIntegrations();
-    toast.success("Authroization successful!");
+    toast({
+      variant: 'success',
+      title: 'Success!',
+      description: 'Authorization successful!',
+    });
 
-    if (integration.status === "ENABLED") {
+    if (integration.status === 'ENABLED') {
       closeAuthModal();
-    } else if (integration.status === "NEEDS_CONFIG") {
+    } else if (integration.status === 'NEEDS_CONFIG') {
       closeAuthModal();
       //todo: an alternative here is to open the config modal right after the auth modal closes
     }
@@ -131,19 +136,19 @@ async function getAuthorizationRequirements({
   api,
   closeAuthModal,
 }) {
-  api.setJwt(sessionStorage.getItem("jwt"));
+  api.setJwt(sessionStorage.getItem('jwt'));
   const authorizeData = await api.getAuthorizeRequirements(entityType, name);
 
-  if (authorizeData.type === "oauth2") {
-    window.open(authorizeData.url, "_blank");
+  if (authorizeData.type === 'oauth2') {
+    window.open(authorizeData.url, '_blank');
     closeAuthModal();
     return;
   }
 
   const data = authorizeData.data;
   for (const element of Object.entries(data.uiSchema)) {
-    if (!element["ui:widget"]) {
-      element["ui:widget"] = "text";
+    if (!element['ui:widget']) {
+      element['ui:widget'] = 'text';
     }
   }
 
@@ -154,13 +159,13 @@ async function getAuthorizationRequirements({
 }
 
 async function authorize({ api, entityType, authData }) {
-  api.setJwt(sessionStorage.getItem("jwt"));
+  api.setJwt(sessionStorage.getItem('jwt'));
 
   try {
     return await api.authorize(entityType, authData);
   } catch (e) {
     console.error(e);
-    alert("Authorization failed. Incorrect username or password");
-    throw Error("Authorization failed", e);
+    alert('Authorization failed. Incorrect username or password');
+    throw Error('Authorization failed', e);
   }
 }

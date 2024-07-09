@@ -1,232 +1,188 @@
-import React, { Component } from "react";
-import { toast } from "react-toastify";
-import { connect } from "react-redux";
-import serializeForm from "form-serialize";
-import FormValidator from "./FormValidator";
-import API from "../api/api";
-import { setAuthToken } from "../actions/auth";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { LoadingSpinner } from "./LoadingSpinner";
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from './ui/form';
+import { useToast } from './ui/use-toast';
+import API from '../api/api';
+import { setAuthToken } from '../actions/auth';
+import { LoadingSpinner } from './LoadingSpinner';
 
-// login component is a place for a user to enter a username and password
-export class Login extends Component {
-  constructor(props) {
-    super(props);
+const Login = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const { toast } = useToast();
 
-    this.validator = new FormValidator([
-      {
-        field: "username",
-        method: "isEmpty",
-        validWhen: false,
-        message: "Username is required.",
-      },
-      {
-        field: "password",
-        method: "isEmpty",
-        validWhen: false,
-        message: "Password is required.",
-      },
-      {
-        field: "password",
-        method: "isLength",
-        args: [{ min: 4 }],
-        validWhen: true,
-        message: "Password must be at least 4 characters",
-      },
-    ]);
+  const formSchema = z.object({
+    username: z
+      .string({ required_error: 'Email is required' })
+      .min(1, { message: 'Email is required' })
+      .max(50),
+    password: z
+      .string()
+      .min(3, { message: 'Password must be at least 3 characters' })
+      .max(20, { message: 'Password must be at most 20 characters' }),
+  });
 
-    this.state = {
-      password: "",
-      username: "",
-      validation: this.validator.valid(),
-      defaultUsername: "demo@lefthook.com",
-      defaultPassword: "demo",
-      submitted: false,
-    };
-  }
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: 'demo@lefthook.com',
+      password: 'demo',
+    },
+  });
 
-  componentDidMount() {
-    const jwt = sessionStorage.getItem("jwt");
+  useEffect(() => {
+    const jwt = sessionStorage.getItem('jwt');
     if (jwt) {
-      this.props.dispatch(setAuthToken(jwt)); // dispatch the auth token to the store
-      this.props.history.push("/integrations");
+      dispatch(setAuthToken(jwt));
+      history.push('/integrations');
     }
-  }
+  }, [dispatch, history]);
 
-  passwordMatch = (confirmation, state) => state.password === confirmation;
-
-  // when form inputs change, this method handles validating them
-  handleInputChange = (event) => {
-    event.preventDefault();
-
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  // call the api to login with the credentials
-  login = async (username, password) => {
-    // handle actual form submission here
-    if (!username || !password) {
-      return toast.error("Please fill in all the fields");
-    }
-
+  const login = async (username, password) => {
+    setIsLoading(true);
     const api = new API();
-
     try {
       const data = await api.login(username, password);
-
-      if (data.token) {
-        const { token } = data;
-        sessionStorage.setItem("jwt", token);
-        this.props.dispatch(setAuthToken(token)); // dispatch the auth token to the store
-        this.props.history.push("/dashboard");
-      } else {
-        return toast.error(
-          `Failed to login using this base url: ${process.env.REACT_APP_API_BASE_URL}`
-        );
+      if (!data.token) {
+        toast({
+          variant: 'destructive',
+          title: 'Oops',
+          description: `Failed to login using this base url: ${process.env.REACT_APP_API_BASE_URL}`,
+        });
+        return;
       }
+
+      const { token } = data;
+      sessionStorage.setItem('jwt', token);
+      dispatch(setAuthToken(token));
+      history.push('/dashboard');
     } catch (e) {
-      return toast.error("Login failed. Incorrect username or password");
+      toast({
+        variant: 'destructive',
+        title: 'Oops',
+        description: `Login failed. Incorrect username or password`,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // form submission method, ultimately unpacks form values and calls login method
-  handleFormSubmit = async (event) => {
-    event.preventDefault();
-
-    const values = serializeForm(event.target, { hash: true });
-
-    const validation = this.validator.validate(this.state);
-    this.setState({ validation });
-    this.state.submitted = true;
-
-    if (validation.isValid) {
-      // TODO .. idk if this works
-    }
-
-    // attempt login
-    await this.login(values.username, values.password);
+  const handleFormSubmit = async (formValues) => {
+    await login(formValues.username, formValues.password);
   };
 
-  handleDemoSubmit = async (event) => {
-    event.preventDefault();
-
-    const values = serializeForm(event.target, { hash: true });
-
-    const validation = this.validator.validate(this.state);
-    this.setState({ validation });
-    this.state.submitted = true;
-
-    await this.login(this.state.defaultUsername, this.state.defaultPassword);
-  };
-  createDemoUser = async () => {
-    // handle actual form submission here
-
+  const createDemoUser = async () => {
     const api = new API();
-
     try {
-      const data = await api.createUser("demo@lefthook.com", "demo");
-
+      const data = await api.createUser('demo@lefthook.com', 'demo');
       if (data.token) {
-        return toast.success("New user created! please login.");
+        toast({
+          variant: 'success',
+          title: 'Success!',
+          description: 'New user created! Please login!',
+        });
       } else {
-        return toast.error(
-          "Creating a user failed. (its possible this user already exists...)"
-        );
+        toast({
+          variant: 'destructive',
+          title: 'Oops',
+          description: `Creating a user failed. (It's possible this user already exists...)`,
+        });
       }
     } catch (e) {
-      return toast.error("Login failed. Incorrect username or password");
+      toast({
+        variant: 'destructive',
+        title: 'Oops',
+        description: `Login failed. Incorrect username or password`,
+      });
     }
   };
 
-  render() {
-    const validation = this.validator.validate(this.state);
+  return (
+    <div className="h-screen flex flex-col justify-center items-center">
+      <div className="flex flex-col gap-4 bg-white rounded-lg shadow-xl p-12 w-[420px]">
+        <div className="flex w-full justify-center">
+          <img
+            src={`${process.env.PUBLIC_URL}/FriggLogo.svg`}
+            alt="Logo"
+            style={{ width: 150 }}
+          />
+        </div>
 
-    return (
-      <div className="h-screen relative flex flex-col justify-center items-center">
-        <div className="bg-white rounded-lg shadow-xl p-12 w-[420px]">
-          <div className="flex w-full justify-center">
-            <img
-              src={`${process.env.PUBLIC_URL}/FriggLogo.svg`}
-              alt="Logo"
-              style={{ width: 150 }}
-            />
-          </div>
-
-          <form className="my-10" onSubmit={this.handleFormSubmit}>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleFormSubmit)} className="my-3">
             <h3 className="text-xl mb-4 text-l font-semibold text-gray-700">
               Login
             </h3>
-
-            <div className="flex flex-col mb-2 gap-5">
-              <label className="block text-sm">
-                <span className="text-gray-700">Email</span>
-                <Input
-                    data-testid="email-input"
-                    className="block  mt-1 w-full text-sm form-input rounded-lg"
-                    defaultValue={this.state.defaultUsername}
-                    type="text"
-                    id="username"
-                    name="username"
-                    placeholder="Email"
-                    onChange={this.handleInputChange}
-                />
-              </label>
-              <label className="block text-sm">
-                <span className="text-gray-700">Password</span>
-                <Input
-                    data-testid="password-input"
-                    className="block w-full mt-1 text-sm form-input rounded-lg"
-                    defaultValue={this.state.defaultPassword}
-                    type="password"
-                    name="password"
-                    placeholder="***************"
-                    onChange={this.handleInputChange}
-                />
-              </label>
-
-              <Button
-                  data-testid="login-button"
-                  type="submit"
-                  className="w-full"
-              >
-                {this.state.submitted && <LoadingSpinner/>}
+            <div className="flex flex-col gap-4">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        data-testid="email-input"
+                        placeholder="Email"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        data-testid="password-input"
+                        type="password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button data-testid="login-button" type="submit">
+                {isLoading && <LoadingSpinner />}
                 Log In
               </Button>
-
-              <p className="mt-8">
-                <span className="text-sm font-medium text-primary hover:underline cursor-pointer">
-                  Forgot your password?
-                </span>
-                <p className="mt-1">
-                  {/* <Link className="text-sm font-medium text-purple-800 hover:underline cursor-pointer" to="/register">
-									Create account
-								</Link> */}
-                  <span className="text-sm font-medium text-primary hover:underline cursor-pointer"
-                        onClick={this.createDemoUser}>
-									Create account (demo user)
-								</span>
-                </p>
-
-              </p>
-
             </div>
           </form>
+        </Form>
+        <div className="flex flex-col gap-3">
+          <span className="text-sm font-medium text-primary hover:underline cursor-pointer">
+            Forgot your password?
+          </span>
+          <span
+            className="text-sm font-medium text-primary hover:underline cursor-pointer"
+            onClick={createDemoUser}
+          >
+            Create account (demo user)
+          </span>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-// this function defines which of the redux store items we want,
-// and the return value returns them as props to our component
-function mapStateToProps({auth}) {
-  return {
-    authToken: auth.token,
-  };
-}
-
-// connects this component to the redux store.
-export default connect(mapStateToProps)(Login);
+export default Login;
