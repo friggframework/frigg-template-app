@@ -170,15 +170,16 @@ const LoginPage = () => {
           </form>
         </Form>
         <div className="flex flex-col gap-3">
-          <span className="text-sm font-medium text-primary hover:underline cursor-pointer">
+          <Button variant="link" className="text-sm font-medium text-primary">
             Forgot your password?
-          </span>
-          <span
+          </Button>
+          <Button
+            variant="link"
             className="text-sm font-medium text-primary hover:underline cursor-pointer"
             onClick={createDemoUser}
           >
             Create account (demo user)
-          </span>
+          </Button>
         </div>
       </div>
     </div>
