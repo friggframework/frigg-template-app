@@ -1,9 +1,9 @@
-import { Form } from "../../Form";
-import { useEffect, useState } from "react";
-import API from "../../../api/api";
-import { LoadingSpinner } from "../../LoadingSpinner";
-import { toast } from "react-toastify";
-import { Button } from "../../ui/button";
+import { Form } from '../../Form';
+import { useEffect, useState } from 'react';
+import API from '../../../api/api';
+import { LoadingSpinner } from '../../LoadingSpinner';
+import { Button } from '../../ui/button';
+import { useToast } from '../../ui/use-toast';
 
 function IntegrationConfigurationModal({
   closeConfigModal,
@@ -16,7 +16,7 @@ function IntegrationConfigurationModal({
   const [uiSchema, setUiSchema] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({});
-  console.log("formdata", formData);
+  const { toast } = useToast();
 
   const api = new API();
 
@@ -36,7 +36,7 @@ function IntegrationConfigurationModal({
 
   const onSubmit = async () => {
     setIsLoading(true);
-    api.setJwt(sessionStorage.getItem("jwt"));
+    api.setJwt(sessionStorage.getItem('jwt'));
     const response = await api.updateIntegration(integrationId, formData);
 
     if (!response || response.error) {
@@ -44,7 +44,11 @@ function IntegrationConfigurationModal({
       setIsLoading(false);
       return;
     }
-    toast.success("Configuration updated successfully!");
+    toast({
+      variant: 'success',
+      title: 'Success!',
+      description: 'Configuration updated successfully!',
+    });
     await refreshIntegrations(props);
     closeConfigModal();
   };
@@ -68,7 +72,7 @@ function IntegrationConfigurationModal({
           ) : (
             <div className="flex flex-col h-full gap-3">
               <div className="flex-1">
-                {Object.keys(jsonSchema).length === 0 ? (
+                {!jsonSchema || Object.keys(jsonSchema).length === 0 ? (
                   <p>There is no configuration available!</p>
                 ) : (
                   <Form
@@ -84,7 +88,7 @@ function IntegrationConfigurationModal({
                 <Button onClick={closeConfigModal} variant="secondary">
                   Cancel
                 </Button>
-                {Object.keys(jsonSchema).length > 0 && (
+                {jsonSchema && Object.keys(jsonSchema).length > 0 && (
                   <Button onClick={onSubmit}>Save</Button>
                 )}
               </footer>
@@ -99,7 +103,7 @@ function IntegrationConfigurationModal({
 export default IntegrationConfigurationModal;
 
 const getIntegrationConfigOptions = async ({ api, integrationId }) => {
-  api.setJwt(sessionStorage.getItem("jwt"));
+  api.setJwt(sessionStorage.getItem('jwt'));
   const response = await api.getIntegrationConfigOptions(integrationId);
 
   return {

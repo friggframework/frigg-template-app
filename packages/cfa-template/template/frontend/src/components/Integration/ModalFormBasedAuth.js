@@ -1,5 +1,5 @@
 import Form from '@rjsf/core';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import API from '../../api/api';
 
 function ModalFormBasedAuth({ closeAuthModal, name, type, refreshIntegrations }) {

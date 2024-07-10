@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { withRouter, useHistory } from "react-router-dom";
-import { connect, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { showModalForm } from "../../actions/modalForm";
 import { setIntegrations } from "../../actions/integrations";
-import { ExclamationCircleIcon } from "@heroicons/react/outline";
+import { CircleAlert } from "lucide-react"
+
 import Api from "../../api/api";
 import IntegrationDropdown from "../Integration/IntegrationDropdown";
+import {Button} from "../ui/button";
 
 function IntegrationVertical(props) {
   const authToken = useSelector((state) => state.auth.token);
@@ -14,7 +16,6 @@ function IntegrationVertical(props) {
   const { name, description, category, icon } = props.data.display;
   const { hasUserConfig, type } = props.data;
 
-  const [isLoading, setIsLoading] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [status, setStatus] = useState("");
   const [installed, setInstalled] = useState([]);
@@ -101,7 +102,7 @@ function IntegrationVertical(props) {
           <div className="inline-flex relative mr-auto">
             {status && status === "NEEDS_CONFIG" && (
               <p className="inline-flex text-xs font-medium text-red-300 text-center">
-                <ExclamationCircleIcon className="w-4 h-4 mr-1" /> Configure
+                <CircleAlert className="w-4 h-4 mr-1" /> Configure
               </p>
             )}
           </div>
@@ -142,7 +143,7 @@ function IntegrationVertical(props) {
                 </button>
               ))}
             {!status && (
-              <button
+              <Button
                 onClick={getAuthorizeRequirements}
                 className="w-full px-5 py-3 font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
               >
@@ -169,7 +170,7 @@ function IntegrationVertical(props) {
                 ) : (
                   "Connect"
                 )}
-              </button>
+              </Button>
             )}
           </div>
         </div>

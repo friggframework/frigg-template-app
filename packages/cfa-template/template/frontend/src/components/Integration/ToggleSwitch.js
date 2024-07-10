@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { DotsVerticalIcon } from '@heroicons/react/outline';
+import { EllipsisVertical } from 'lucide-react';
+
 
 function ToggleSwitch({ getSampleData, openConfigModal, disconnectIntegration, status, name, customDotsStyle }) {
   const [dropdown, setDropdown] = useState(false);
@@ -24,7 +25,7 @@ function ToggleSwitch({ getSampleData, openConfigModal, disconnectIntegration, s
         </label>
       </div>
 
-      <DotsVerticalIcon
+      <EllipsisVertical
         onClick={() => setDropdown(!dropdown)}
         className={`h-6 w-6 text-gray-500 cursor-pointer ${customDotsStyle}`}
       />
