@@ -53,7 +53,7 @@
     "clsx": "^2.1.1",
     "dotenv-expand": "^8.0.1",
     "lodash": "^4.17.15",
-    "lucide-react": "^0.368.0",
+    "lucide-react": "^0.395.0",
     "node-fetch": "^2.6.1",
     "query-string": "^4.3.4",
     "react": "18.3.1",
