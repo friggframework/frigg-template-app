@@ -7,6 +7,10 @@ provider:
     runtime: nodejs16.x
     region: us-east-1
     stage: ${opt:stage}
+    # Change for your desired environment
+    # https://docs.aws.amazon.com/systems-manager/latest/userguide/ps-integration-lambda-extensions.html#ps-integration-lambda-extensions-add
+    layers:
+        - arn:aws:lambda:<AWS_REGION>:<AWS_ACCOUNT_ID>:layer:AWS-Parameters-and-Secrets-Lambda-Extension:<VERSION>
     environment:
         STAGE: ${opt:stage}
         AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
