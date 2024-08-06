@@ -1,7 +1,15 @@
-# create-frigg-app
+# Frigg App Template
 
-This package includes the global command for [Create Frigg App](https://github.com/friggframework/create-frigg-app).<br>
-Please refer to its documentation:
+Welcome to the Frigg App Template! This template helps you quickly set up a new application using the Frigg framework. For the source code and additional resources, visit our [GitHub Repository](https://github.com/friggframework/create-frigg-app).
 
-- [Getting Started](https://docs.friggframework.org/getting-started) – How to create a new app.
-- [User Guide](https://docs.friggframework.org/create-frigg-app/) – How to develop apps bootstrapped with Create Frigg App.
+## Quick Start
+
+To get started with your new Frigg app, follow the [Quick Start Guide](https://docs.friggframework.org/tutorials/quick-start) in our documentation.
+
+## Documentation
+
+For detailed instructions on running, configuring, and troubleshooting your Frigg app, refer to the [Frigg Framework Documentation](https://docs.friggframework.org/).
+
+## Getting Help
+
+For additional help, visit our [GitHub Repository](https://github.com/friggframework/create-frigg-app) or refer to the [Frigg Framework Documentation](https://docs.friggframework.org/).
