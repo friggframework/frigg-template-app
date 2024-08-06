@@ -21,6 +21,12 @@ provider:
             - sns:Publish
           Resource:
             Ref: InternalErrorBridgeTopic
+        - Effect: Allow
+          Action:
+            - secretsmanager:GetSecretValue
+          Resource:
+            - ${self:provider.environment.SECRET_ARN}
+
 
 plugins:
     - serverless-webpack
