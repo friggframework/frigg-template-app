@@ -6,39 +6,21 @@ The primary purpose of this template is to provide a structured starting point f
 
 ## Editing and Running the Template Locally
 
-If you need to make changes to the template and test them locally, follow these steps:
+If you need to make changes to the template and test them locally, you can use the `--template` flag with the `create-frigg-app` CLI to specify the local path to the template.
 
-1. **Navigate to the `create-frigg-app` package directory:**
-
-   ```sh
-   cd ./packages/create-frigg-app
-   ```
-
-2. **Link the package locally:**
-
-   ```sh
-   npm link
-   ```
-
-3. **Navigate to the directory where you want to create a test app:**
+1. **Navigate to the folder where you will create the new test app:**
 
    ```sh
    cd /path/to/your/test/app
    ```
 
-4. **Link the `create-frigg-app` package in your test app directory:**
+2. **Run `create-frigg-app` with the `--template` flag:**
 
    ```sh
-   npm link create-frigg-app
+   npx create-frigg-app --template=file:/path/to/create-frigg-app/packages/cfa-template
    ```
 
-5. **Create a new Frigg app using the CLI:**
-
-   ```sh
-   npx create-frigg-app <app-name>
-   ```
-
-Replace `<app-name>` with the desired name of your test application.
+   > **_NOTE:_** this will use latest published version of `create-frigg-app` with the local template. If you want to use the local version of `create-frigg-app` as well, check the README in the `create-frigg-app` package for instructions on how to run with your local changes.
 
 ## Contributing
 

@@ -1,15 +1,21 @@
-# Frigg App Template
+# create-frigg-app
 
-Welcome to the Frigg App Template! This template helps you quickly set up a new application using the Frigg framework. For the source code and additional resources, visit our [GitHub Repository](https://github.com/friggframework/create-frigg-app).
+This is a CLI tool for generating new Frigg applications.
 
-## Quick Start
+## Editing and Running the create command Locally
 
-To get started with your new Frigg app, follow the [Quick Start Guide](https://docs.friggframework.org/tutorials/quick-start) in our documentation.
+If you need to make changes to the create command and test them locally, you can use run the same script that is exposed on `package.json > bin > create-frigg-app`:
 
-## Documentation
+- If you're in the root of the `create-frigg-app` package, you can run the following command:
 
-For detailed instructions on running, configuring, and troubleshooting your Frigg app, refer to the [Frigg Framework Documentation](https://docs.friggframework.org/).
+  ```sh
+  ./packages/create-frigg-app/index.js <app-name>
+  ```
 
-## Getting Help
+- If you want to create the test app on a folder outside of the `create-frigg-app` package, you can run the following command:
 
-For additional help, visit our [GitHub Repository](https://github.com/friggframework/create-frigg-app) or refer to the [Frigg Framework Documentation](https://docs.friggframework.org/).
+  ```sh
+  /path/to/create-frigg-app/packages/create-frigg-app/index.js <app-name>
+  ```
+
+> Make sure to replace `<app-name>` with the name of the app you want to create.
