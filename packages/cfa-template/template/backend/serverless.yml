@@ -4,7 +4,8 @@ package:
     individually: true
 provider:
     name: aws
-    runtime: nodejs16.x
+    runtime: nodejs20.x
+    timeout: 30
     region: us-east-1
     stage: ${opt:stage}
     # Change for your desired environment
