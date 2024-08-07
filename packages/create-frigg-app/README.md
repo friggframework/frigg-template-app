@@ -8,13 +8,13 @@ This package includes the global command for [Create Frigg App](https://github.c
 
 If you need to make changes to the create command and test them locally, you can use run the same script that is exposed on `package.json > bin > create-frigg-app`:
 
-- If you're in the root of the `create-frigg-app` package, you can run the following command:
+- If you're in the root of the `create-frigg-app` package, you can run the `index.js` file with the following command:
 
   ```sh
   ./packages/create-frigg-app/index.js <app-name>
   ```
 
-- If you want to create the test app on a folder outside of the `create-frigg-app` package, you can run the following command:
+- If you want to create the test app on a folder outside of the `create-frigg-app` directory, you just need to adjust the path to the `index.js` file:
 
   ```sh
   /path/to/create-frigg-app/packages/create-frigg-app/index.js <app-name>
