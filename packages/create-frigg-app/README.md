@@ -1,6 +1,8 @@
 # create-frigg-app
 
-This is a CLI tool for generating new Frigg applications.
+CLI tool for leveraging ready-made templates to help you quickly set up new applications using the Frigg framework.
+
+This package includes the global command for [Create Frigg App](https://github.com/friggframework/create-frigg-app). Please refer to its [documentation](https://docs.friggframework.org/).
 
 ## Editing and Running the create command Locally
 
