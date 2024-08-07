@@ -1,82 +1,44 @@
 import Form from '@rjsf/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import API from '../../api/api';
+import { Switch } from '../ui/switch';
 
-function ModalFormBasedAuth({
-  closeAuthModal,
-  name,
-  type,
-  refreshIntegrations,
-}) {
+function ModalConfig({ closeConfigModal, name, type }) {
+  const [jsonSchema, setJsonSchema] = useState({});
+  const [uiSchema, setUiSchema] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   const api = new API();
-  async function authorize(data) {
-    // handle actual form submission here
-    let res = null;
-    api.setJwt(sessionStorage.getItem('jwt'));
 
-    try {
-      res = await api.authorize(type, data);
-    } catch (e) {
-      console.error(e);
-      alert('Authorization failed. Incorrect username or password');
-    }
+  useEffect(() => {
+    const authRequirements = async () => {
+      let data = {};
 
-    return res;
-  }
+      api.setJwt(sessionStorage.getItem('jwt'));
+      const response = await api.getAuthorizeRequirements(type, 'demo');
+      console.log('test', response);
 
-  async function onSubmit(form) {
-    setIsLoading(true);
+      if (!response.data) {
+        data.jsonSchema = response.jsonSchema;
+        data.uiSchema = response.uiSchema;
+      } else {
+        data.jsonSchema = response.data.jsonSchema;
+        data.uiSchema = response.data.uiSchema;
+      }
 
-    const res = await authorize(form.formData);
+      for (const element of Object.entries(data.uiSchema)) {
+        if (!element['ui:widget']) {
+          element['ui:widget'] = 'text';
+        }
+      }
 
-    if (!res) {
-      alert(`failed to POST /api/authorize ${this.props.targetEntityType} `);
-      return; // skip login
-    }
-
-    if (res.error) {
-      alert(
-        `'failed to POST /api/authorize ${type} ...  authorizeData: ${JSON.stringify(
-          res
-        )}`
-      );
-    }
-
-    // Get entity Id for authorized CWise entity from above response
-    // Create the Integration
-    const initialConfig = {
-      type,
+      setJsonSchema(data.jsonSchema);
+      setUiSchema(data.uiSchema);
+      setIsLoading(false);
     };
 
-    // const integration = await this.api.createIntegration(
-    //     this.myEntityId,
-    //     res.id, initialConfig,
-    // );
-    // FIXME duplicated code with AuthRedirect.jsx
-    // TODO change, for now using the target entity twice
-    const integration = await this.api.createIntegration(
-      res.entity_id,
-      res.entity_id,
-      initialConfig
-    );
-    // Get API integrations, dispatch the data into redux same way as
-    // componentDidMount for IntegrationList
-    await refreshIntegrations();
-
-    if (integration.status === 'ENABLED') {
-      // close this modal immediately
-    } else if (integration.status === 'NEEDS_CONFIG') {
-      // Need to do something I think
-    }
-
-    closeAuthModal();
-
-    // or hack a timeout to demonstrate the modal
-
-    // setTimeout( () => { this.onCloseModal() }, 2500); // spoof an api call
-  }
+    authRequirements();
+  }, []);
 
   function CustomFieldTemplate(props) {
     const { id, label, help, required, description, errors, children } = props;
@@ -125,7 +87,7 @@ function ModalFormBasedAuth({
     return (
       <>
         <label htmlFor="custom-checkbox">{props.label}</label>
-        <Toggle
+        <Switch
           id="custom-checkbox"
           className={props.value ? 'checked' : 'unchecked'}
           onClick={() => props.onChange(!props.value)}
@@ -151,7 +113,7 @@ function ModalFormBasedAuth({
         >
           <div className="mt-4 mb-6">
             <p className="text-lg font-semibold text-gray-700 mb-6">
-              Authorize {name}
+              Configure {name}
             </p>
 
             {isLoading ? (
@@ -186,16 +148,16 @@ function ModalFormBasedAuth({
             >
               <footer className="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 -mt-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row">
                 <button
-                  onClick={closeAuthModal}
+                  onClick={closeConfigModal}
                   className="px-3 py-2 text-xs font-medium leading-5 text-center text-gray-700 transition-colors duration-150 bg-white border border-gray-300 rounded-lg hover:bg-purple-600 focus:outline-none focus:shadow-outline-gray"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={onSubmit}
+                  onClick={closeConfigModal}
                   className="px-3 py-2 text-xs font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
                 >
-                  Connect
+                  Save
                 </button>
               </footer>
             </Form>
@@ -205,4 +167,4 @@ function ModalFormBasedAuth({
     </>
   );
 }
-export default ModalFormBasedAuth;
+export default ModalConfig;

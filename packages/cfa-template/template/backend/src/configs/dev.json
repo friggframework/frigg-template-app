@@ -4,9 +4,9 @@
     "MONGO_URI": "mongodb://root:rootpassword@localhost:27017?retryWrites=true&w=majority",
     "REDIRECT_URI": "http://localhost:3000/redirect",
 
-    "HUBSPOT_CLIENT_ID": "",
-    "HUBSPOT_CLIENT_SECRET": "",
-    "HUBSPOT_SCOPE": "crm.objects.contacts.read crm.objects.companies.read crm.objects.companies.write crm.objects.contacts.write crm.schemas.deals.read crm.objects.deals.read",
+    "HUBSPOT_CLIENT_ID": "37864c83-856c-42b1-95ad-8a5f681fc8d1",
+    "HUBSPOT_CLIENT_SECRET": "a22a0b28-29fa-4f91-8768-aa381888fb70",
+    "HUBSPOT_SCOPE": "oauth timeline crm.objects.contacts.read crm.objects.contacts.write",
 
     "SALESFORCE_CONSUMER_KEY": "",
     "SALESFORCE_CONSUMER_SECRET": ""
