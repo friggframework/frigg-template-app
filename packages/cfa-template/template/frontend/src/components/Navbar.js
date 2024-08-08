@@ -1,7 +1,7 @@
-import React from "react";
-import { SearchIcon, BellIcon } from "lucide-react";
-import { withRouter } from "react-router";
-import { Input } from "./ui/input";
+import React from 'react';
+import { SearchIcon, BellIcon } from 'lucide-react';
+import { withRouter } from 'react-router-dom';
+import { Input } from './ui/input';
 
 function Navbar() {
   return (

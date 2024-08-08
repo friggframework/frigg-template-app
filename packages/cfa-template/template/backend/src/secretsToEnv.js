@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 const getSecretValue = async () => {
     console.log('Fetching secrets...');
 

@@ -4,7 +4,6 @@ import { render } from '@testing-library/react';
 import nock from 'nock';
 import userEvent from '@testing-library/user-event';
 import LoginPage from '../pages/LoginPage';
-import fetch from 'node-fetch';
 
 import '../../__mocks__/sessionStorage';
 
