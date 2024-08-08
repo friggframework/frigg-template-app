@@ -18,7 +18,7 @@ class HubSpotIntegration extends IntegrationBase {
                 description: 'Sales & CRM, Marketing',
                 category: 'Sales & CRM, Marketing',
                 detailsUrl: 'https://hubspot.com',
-                icon: 'https://friggframework.org/assets/img/hubspot.jpeg',
+                icon: 'https://friggframework.org/assets/img/hubspot-icon.jpeg',
             },
             hasUserConfig: true,
         });

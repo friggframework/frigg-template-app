@@ -15,7 +15,7 @@ function Sidebar({ logoutUser }) {
         >
           <span className="ml-2">
             <img
-              src={`${process.env.PUBLIC_URL}/FriggLogo.svg`}
+              src={`https://friggframework.org/assets/img/frigg-favicon.svg`}
               alt="Logo"
               style={{ width: 90}}
             />
