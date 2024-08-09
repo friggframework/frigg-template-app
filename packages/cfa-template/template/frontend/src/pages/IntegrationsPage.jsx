@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import { IntegrationList } from '@friggframework/ui';
 import config from '../frigg.config';
 
 function IntegrationsPage(props) {
   const [integrationType, setIntegrationType] = useState('Recently added');
+  const [authToken, setAuthToken] = useState(null);
 
   const categories = [
     { _id: 1, slug: 'recently-added', name: 'Recently added' },
@@ -18,10 +18,11 @@ function IntegrationsPage(props) {
   ];
 
   useEffect(() => {
-    const jwt = props.authToken || sessionStorage.getItem('jwt');
+    const jwt = sessionStorage.getItem('jwt');
     if (!jwt) {
       props.history.push('/');
     }
+    setAuthToken(jwt);
   }, []);
 
   const filterIntegration = (type) => {
@@ -46,7 +47,7 @@ function IntegrationsPage(props) {
               >
                 <span
                   className={
-                    integrationType == category.name
+                    integrationType === category.name
                       ? 'border-b-4 border-primary'
                       : ''
                   }
@@ -61,7 +62,8 @@ function IntegrationsPage(props) {
               integrationType={integrationType}
               friggBaseUrl={process.env.REACT_APP_API_BASE_URL}
               componentLayout={config.componentLayout}
-              authToken={sessionStorage.getItem('jwt')}
+              authToken={authToken}
+              sampleDataRoute={`/data`}
             />
           </div>
         </div>
@@ -70,10 +72,4 @@ function IntegrationsPage(props) {
   );
 }
 
-function mapStateToProps({ auth }) {
-  return {
-    authToken: auth.token,
-  };
-}
-
-export default connect(mapStateToProps)(IntegrationsPage);
+export default IntegrationsPage;
