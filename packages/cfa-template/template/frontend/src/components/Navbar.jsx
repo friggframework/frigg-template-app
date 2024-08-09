@@ -1,7 +1,7 @@
-import React from "react";
-import { SearchIcon, BellIcon } from "lucide-react";
-import { withRouter } from "react-router";
-import { Input } from "./ui/input";
+import React from 'react';
+import { SearchIcon, BellIcon } from 'lucide-react';
+import { withRouter } from 'react-router-dom';
+import { Input } from './ui/input';
 
 function Navbar() {
   return (
@@ -43,7 +43,7 @@ function Navbar() {
               >
                 <img
                   className="object-cover w-8 h-8 rounded-full"
-                  src="https://friggframework.org/assets/img/favicon.svg"
+                  src="https://friggframework.org/assets/img/frigg-favicon.svg"
                   alt=""
                   aria-hidden="true"
                 />

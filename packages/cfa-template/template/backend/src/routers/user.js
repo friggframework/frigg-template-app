@@ -1,7 +1,7 @@
 const express = require('express');
 const { createAppHandler } = require('../../app');
-const {checkRequiredParams} = require('@friggframework/core');
-const {User} = require('../../backend');
+const { checkRequiredParams } = require('@friggframework/core');
+const { User } = require('../../backend');
 const catchAsyncError = require('express-async-handler');
 
 const router = express();
@@ -9,10 +9,10 @@ const router = express();
 // define the login endpoint
 router.route('/user/login').post(
     catchAsyncError(async (req, res) => {
-        const { username, password } = checkRequiredParams(
-            req.body,
-            ['username', 'password']
-        );
+        const { username, password } = checkRequiredParams(req.body, [
+            'username',
+            'password',
+        ]);
         const user = await User.loginUser({ username, password });
         const token = await user.createUserToken(120);
         res.status(201);
@@ -22,10 +22,10 @@ router.route('/user/login').post(
 
 router.route('/user/create').post(
     catchAsyncError(async (req, res) => {
-        const { username, password } = checkRequiredParams(
-            req.body,
-            ['username', 'password']
-        );
+        const { username, password } = checkRequiredParams(req.body, [
+            'username',
+            'password',
+        ]);
         const user = await User.createIndividualUser({
             username,
             password,
@@ -36,9 +36,6 @@ router.route('/user/create').post(
     })
 );
 
-const handler = createAppHandler(
-    'HTTP Event: User',
-    router
-);
+const handler = await createAppHandler('HTTP Event: User', router);
 
-module.exports = {handler, router}
+module.exports = { handler, router };
