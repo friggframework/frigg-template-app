@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -10,10 +10,9 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Data from './components/Data';
 import Logout from './components/Logout';
-import AuthRedirect from './components/AuthRedirect';
 import IntegrationsPage from './pages/IntegrationsPage';
 import SettingsPage from './pages/SettingsPage';
-import TestFormContainer from './components/TestFormContainer.jsx';
+import { RedirectFromAuth } from '@friggframework/ui';
 
 const AppRouter = (props) => {
   return (
@@ -30,7 +29,18 @@ const AppRouter = (props) => {
           {/*  exact*/}
           {/*  component={TestFormContainer}*/}
           {/*/>*/}
-          <Route path="/redirect/:app" exact component={AuthRedirect} />
+          <Route
+            path="/redirect/:app"
+            exact
+            render={(routeProps) => (
+              <RedirectFromAuth
+                friggBaseUrl={process.env.REACT_APP_API_BASE_URL}
+                authToken={sessionStorage.getItem('jwt')}
+                app={routeProps.match.params.app}
+                primaryEntityName="hubspot" //todo: replace with actual primary entity name
+              />
+            )}
+          />
           <Route path="/logout" exact component={Logout} />
           <Redirect to="/integrations" />
         </Switch>

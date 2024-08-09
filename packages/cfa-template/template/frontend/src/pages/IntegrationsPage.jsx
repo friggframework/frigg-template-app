@@ -20,7 +20,7 @@ function IntegrationsPage(props) {
   useEffect(() => {
     const jwt = props.authToken || sessionStorage.getItem('jwt');
     if (!jwt) {
-      props.history.push('/logout');
+      props.history.push('/');
     }
   }, []);
 
@@ -61,6 +61,7 @@ function IntegrationsPage(props) {
               integrationType={integrationType}
               friggBaseUrl={process.env.REACT_APP_API_BASE_URL}
               componentLayout={config.componentLayout}
+              authToken={sessionStorage.getItem('jwt')}
             />
           </div>
         </div>
