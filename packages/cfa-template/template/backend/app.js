@@ -5,7 +5,6 @@ const cors = require('cors');
 const Boom = require('@hapi/boom');
 const loadUserManager = require('./src/routers/middleware/loadUser');
 const serverlessHttp = require('serverless-http');
-const { secretsToEnv } = require('./src/utils/secretsToEnv');
 
 const createApp = (applyMiddleware) => {
     const app = express();
@@ -42,7 +41,6 @@ const createApp = (applyMiddleware) => {
 };
 
  function createAppHandler(eventName, router, shouldUseDatabase = true) {
-     secretsToEnv().catch((err) => { console.error('Error fetching secrets:', err);  });
 
     const app = createApp((app) => {
         app.use(router);
