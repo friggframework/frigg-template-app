@@ -2,6 +2,7 @@ frameworkVersion: '>=3.17.0'
 service: create-frigg-app
 package:
     individually: true
+useDotEnv: true
 provider:
     name: aws
     runtime: nodejs20.x
@@ -10,24 +11,26 @@ provider:
     stage: ${opt:stage}
     # Change for your desired environment
     # https://docs.aws.amazon.com/systems-manager/latest/userguide/ps-integration-lambda-extensions.html#ps-integration-lambda-extensions-add
-    layers:
-        - arn:aws:lambda:<AWS_REGION>:<AWS_ACCOUNT_ID>:layer:AWS-Parameters-and-Secrets-Lambda-Extension:<VERSION>
+    # vv Uncomment for leveraging AWS Secrets Manager
+    # layers:
+    #   - arn:aws:lambda:<AWS_REGION>:<AWS_ACCOUNT_ID>:layer:AWS-Parameters-and-Secrets-Lambda-Extension:<VERSION>
     environment:
         STAGE: ${opt:stage}
         AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
-        SECRET_ARN: { Ref: FriggEnvSecret }
+    # vv Uncomment for leveraging AWS Secrets Manager
+        # SECRET_ARN: { Ref: FriggEnvSecret }
     iamRoleStatements:
         - Effect: Allow
           Action:
             - sns:Publish
           Resource:
             Ref: InternalErrorBridgeTopic
-        - Effect: Allow
-          Action:
-            - secretsmanager:GetSecretValue
-          Resource:
-            - ${self:provider.environment.SECRET_ARN}
-
+#            vv Uncomment for leveraging AWS Secrets Manager
+#        - Effect: Allow
+#          Action:
+#            - secretsmanager:GetSecretValue
+#          Resource:
+#            - ${self:provider.environment.SECRET_ARN}
 
 plugins:
     - serverless-webpack
@@ -48,7 +51,6 @@ custom:
 functions:
     auth:
         handler: ./src/routers/auth.handler
-        environment: ${file(./src/configs/${self:provider.stage}.json)}
         #    The following are a few example events you can configure
         #    NOTE: Please make sure to change your handler code to work with those events
         #    Check the event documentation for details
@@ -68,7 +70,6 @@ functions:
 
     user:
         handler: ./src/routers/user.handler
-        environment: ${file(./src/configs/${self:provider.stage}.json)}
         events:
             - http:
                   path: /user/{proxy+}
@@ -77,7 +78,6 @@ functions:
 
     demo:
         handler: ./src/routers/demo.handler
-        environment: ${file(./src/configs/${self:provider.stage}.json)}
         events:
             - http:
                   path: /api/demo/sample/{proxy+}
@@ -127,12 +127,12 @@ resources:
                               ArnEquals:
                                   aws:SourceArn:
                                       Ref: InternalErrorBridgeTopic
-
-        FriggEnvSecret:
-            Type: AWS::SecretsManager::Secret
-            Properties:
-                Description: 'Secrets for ENV loading in the Frigg application'
-                Name: frigg-secrets-${self:provider.stage}
+#        vv Uncomment for leveraging AWS Secrets Manager
+#        FriggEnvSecret:
+#            Type: AWS::SecretsManager::Secret
+#            Properties:
+#                Description: 'Secrets for ENV loading in the Frigg application'
+#                Name: frigg-secrets-${self:provider.stage}
 
         ApiGatewayAlarm5xx:
             Type: AWS::CloudWatch::Alarm

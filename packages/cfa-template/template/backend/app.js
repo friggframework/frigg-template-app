@@ -41,8 +41,8 @@ const createApp = (applyMiddleware) => {
     return app;
 };
 
-async function createAppHandler(eventName, router, shouldUseDatabase = true) {
-    await secretsToEnv();
+ function createAppHandler(eventName, router, shouldUseDatabase = true) {
+     secretsToEnv().catch((err) => { console.error('Error fetching secrets:', err);  });
 
     const app = createApp((app) => {
         app.use(router);

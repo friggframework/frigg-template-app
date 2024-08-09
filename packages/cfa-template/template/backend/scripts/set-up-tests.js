@@ -1,6 +1,5 @@
 const { TestMongo } = require('@friggframework/devtools');
-require('../setupEnv');
-
+require('dotenv');
 module.exports = async () => {
     global.testMongo = new TestMongo();
     await global.testMongo.start();

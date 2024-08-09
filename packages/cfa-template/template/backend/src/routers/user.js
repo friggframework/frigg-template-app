@@ -36,6 +36,6 @@ router.route('/user/create').post(
     })
 );
 
-const handler = await createAppHandler('HTTP Event: User', router);
+const handler = createAppHandler('HTTP Event: User', router);
 
 module.exports = { handler, router };
