@@ -23,6 +23,6 @@ router.route('/api/demo/sample/:integrationId').get(
     })
 );
 
-const handler = await createAppHandler('HTTP Event: Demo', router);
+const handler = createAppHandler('HTTP Event: Demo', router);
 
 module.exports = { handler, router };
