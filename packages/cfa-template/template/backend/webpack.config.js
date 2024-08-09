@@ -13,7 +13,7 @@ module.exports = {
     plugins: [
         // This defines the window global (with value of `undefined`).
         new webpack.ProvidePlugin({
-            window: path.resolve(path.join(__dirname, 'src/webpackFakeWindow')),
+            window: path.resolve(path.join(__dirname, 'src/utils/webpackFakeWindow')),
         }),
     ]
 };

@@ -21,6 +21,6 @@ router.route('/redirect/:appId').get((req, res) => {
     );
 });
 
-const handler = await createAppHandler('HTTP Event: Auth', router);
+const handler = createAppHandler('HTTP Event: Auth', router);
 
 module.exports = { handler, router };
