@@ -5,7 +5,7 @@ const cors = require('cors');
 const Boom = require('@hapi/boom');
 const loadUserManager = require('./src/routers/middleware/loadUser');
 const serverlessHttp = require('serverless-http');
-const { secretsToEnv } = require('./src/secretsToEnv');
+const { secretsToEnv } = require('./src/utils/secretsToEnv');
 
 const createApp = (applyMiddleware) => {
     const app = express();

@@ -2,7 +2,7 @@ frameworkVersion: '>=3.17.0'
 service: create-frigg-app
 package:
     individually: true
-useDotEnv: true
+useDotenv: true
 provider:
     name: aws
     runtime: nodejs20.x
