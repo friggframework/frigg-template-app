@@ -7,7 +7,4 @@
     "HUBSPOT_CLIENT_ID": "",
     "HUBSPOT_CLIENT_SECRET": "",
     "HUBSPOT_SCOPE": "oauth timeline crm.objects.contacts.read crm.objects.contacts.write",
-
-    "SALESFORCE_CONSUMER_KEY": "",
-    "SALESFORCE_CONSUMER_SECRET": ""
 }
