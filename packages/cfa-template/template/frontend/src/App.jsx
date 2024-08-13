@@ -1,27 +1,23 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { connect } from 'react-redux';
-import AppRouter from './AppRouter.jsx';
-import Auth from './components/Auth.jsx';
-import history from './utils/history';
+
 import {
   ApplicationProvider,
   FormProvider,
   IntegrationProvider,
 } from './context';
 import { Toaster } from './components/ui/toaster';
+import { AppLayout } from './AppLayout.jsx';
 
-const App = ({ authToken }) => {
-  const loggedIn = authToken || sessionStorage.getItem('jwt');
-
+const App = () => {
   return (
-    <div className={loggedIn ? 'flex h-screen bg-gray-50' : 'bg-gray-50'}>
+    <div className={'flex h-screen bg-gray-50'}>
       <ApplicationProvider>
         <IntegrationProvider>
           <FormProvider>
             <Toaster position="top-right" />
-            <Router history={history}>
-              {loggedIn ? <AppRouter /> : <Auth />}
+            <Router>
+              <AppLayout />
             </Router>
           </FormProvider>
         </IntegrationProvider>
@@ -30,6 +26,4 @@ const App = ({ authToken }) => {
   );
 };
 
-const mapStateToProps = ({ auth }) => ({ authToken: auth.token });
-
-export default connect(mapStateToProps)(App);
+export default App;

@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { IntegrationList } from '@friggframework/ui';
 import config from '../frigg.config';
+import { useApplicationContext } from '../context/ApplicationContext.jsx';
+import { useNavigate } from 'react-router-dom';
 
-function IntegrationsPage(props) {
+function IntegrationsPage() {
+  const { token } = useApplicationContext();
+  const navigate = useNavigate();
   const [integrationType, setIntegrationType] = useState('Recently added');
-  const [authToken, setAuthToken] = useState(null);
 
   const categories = [
     { _id: 1, slug: 'recently-added', name: 'Recently added' },
@@ -17,16 +20,13 @@ function IntegrationsPage(props) {
     { _id: 8, slug: 'installed', name: 'Installed' },
   ];
 
-  useEffect(() => {
-    const jwt = sessionStorage.getItem('jwt');
-    if (!jwt) {
-      props.history.push('/');
-    }
-    setAuthToken(jwt);
-  }, []);
-
   const filterIntegration = (type) => {
     setIntegrationType(type);
+  };
+
+  const navigateToSampleData = (integrationId) => {
+    console.log('navigating to sample data for integration ID:', integrationId);
+    navigate(`/data/${integrationId}`);
   };
 
   return (
@@ -62,8 +62,8 @@ function IntegrationsPage(props) {
               integrationType={integrationType}
               friggBaseUrl={process.env.REACT_APP_API_BASE_URL}
               componentLayout={config.componentLayout}
-              authToken={authToken}
-              sampleDataRoute={`/data`}
+              authToken={token}
+              navigateToSampleDataFn={navigateToSampleData}
             />
           </div>
         </div>

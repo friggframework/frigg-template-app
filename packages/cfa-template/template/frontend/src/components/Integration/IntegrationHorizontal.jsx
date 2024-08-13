@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Settings } from 'lucide-react';
 import Api from '../../api/api';
@@ -171,4 +170,4 @@ function mapStateToProps({ auth, integrations }) {
   };
 }
 
-export default withRouter(connect(mapStateToProps)(IntegrationHorizontal));
+export default IntegrationHorizontal;

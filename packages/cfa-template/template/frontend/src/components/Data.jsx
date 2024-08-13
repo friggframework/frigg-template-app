@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import API from '../api/api';
-import { setAuthToken } from '../actions/auth';
-import { logoutUser } from '../actions/logout';
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -18,48 +14,43 @@ import { useToast } from './ui/use-toast';
 const Data = () => {
   const [headers, setHeaders] = useState([]);
   const [rows, setRows] = useState([]);
-  const authToken = useSelector((state) => state.auth.token);
-  const dispatch = useDispatch();
   const { integrationId } = useParams();
   const { toast } = useToast();
 
   useEffect(() => {
     const fetchData = async () => {
       const jwt = sessionStorage.getItem('jwt');
-      if (jwt && jwt !== authToken) {
-        dispatch(setAuthToken(jwt));
+      if (!jwt) {
+        history.replace('/logout');
       }
 
-      if (authToken) {
-        const api = new API();
-        api.setJwt(authToken);
+      const api = new API();
+      api.setJwt(jwt);
 
-        let sampleData = await api.getSampleData(integrationId);
-        // let sampleData = getFakeData(); // Uncomment if you need fake data
+      let sampleData = await api.getSampleData(integrationId);
+      // let sampleData = getFakeData(); // Uncomment if you need fake data
 
-        if (sampleData && sampleData.error) {
-          toast({
-            variant: 'destructive',
-            title: 'Oops',
-            description: sampleData.error,
-          });
-          return;
-        }
-
-        if (sampleData.constructor !== Array) {
-          sampleData = sampleData.data;
-        }
-
-        const headers =
-          sampleData && sampleData.length ? Object.keys(sampleData[0]) : [];
-        const rows = headers && headers.length ? sampleData : [];
-        setHeaders(headers);
-        setRows(rows);
+      if (sampleData && sampleData.error) {
+        toast({
+          variant: 'destructive',
+          title: 'Oops',
+          description: sampleData.error,
+        });
+        return;
       }
+
+      if (sampleData.constructor !== Array) {
+        sampleData = sampleData.data;
+      }
+
+      const headers =
+        sampleData && sampleData.length ? Object.keys(sampleData[0]) : [];
+      const rows = headers && headers.length ? sampleData : [];
+      setHeaders(headers);
+      setRows(rows);
     };
-
     fetchData();
-  }, [authToken, dispatch, integrationId]);
+  }, [integrationId]);
 
   // Fake data for testing
   const getFakeData = () => {

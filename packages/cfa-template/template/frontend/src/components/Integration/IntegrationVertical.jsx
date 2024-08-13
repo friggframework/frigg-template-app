@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { showModalForm } from '../../actions/modalForm';
-import { setIntegrations } from '../../actions/integrations';
 import { CircleAlert } from 'lucide-react';
 
 import Api from '../../api/api';
@@ -11,7 +9,7 @@ import { Button } from '../ui/button';
 
 function IntegrationVertical(props) {
   const authToken = useSelector((state) => state.auth.token);
-  let history = useHistory();
+  let navigate = useNavigate();
 
   const { name, description, category, icon } = props.data.display;
   const { hasUserConfig, type } = props.data;
@@ -62,7 +60,7 @@ function IntegrationVertical(props) {
   };
 
   const getSampleData = async () => {
-    history.push(`/data/${props.data.id}`);
+    navigate(`/data/${props.data.id}`);
   };
 
   const disconnectIntegration = async () => {

@@ -1,26 +1,16 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import { logoutUser } from '../actions/logout';
+import React, { useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useApplicationContext } from '../context/ApplicationContext.jsx';
 
-class Logout extends Component {
-  constructor(props) {
-    super(props);
-    this.props.dispatch(logoutUser());
-  }
+function Logout() {
+  const { setToken } = useApplicationContext();
 
-  render() {
-    return <Redirect to={'/'} />;
-  }
+  useEffect(() => {
+    sessionStorage.removeItem('jwt');
+    setToken(undefined);
+  }, []);
+
+  return <Navigate to="/" replace />;
 }
 
-// this function defines which of the redux store items we want,
-// and the return value returns them as props to our component
-function mapStateToProps({ auth }) {
-  return {
-    authToken: auth.token,
-  };
-}
-
-// connects this component to the redux store.
-export default connect(mapStateToProps)(Logout);
+export default Logout;

@@ -10,7 +10,7 @@ import {
 } from '../ui/dropdown-menu';
 import { UserActionModal } from './modals';
 import { useIntegrationContext } from '../../context/IntegrationContext.jsx';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function QuickActionsMenu({
   disconnectIntegration,
@@ -20,7 +20,7 @@ function QuickActionsMenu({
   const [isUserActionModalOpen, setIsUserActionModalOpen] = useState(false);
   const [userActionDetails, setUserActionDetails] = useState({});
   const { integrationId, setUserAction } = useIntegrationContext();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const dropDownDisconnect = async () => {
     await disconnectIntegration();
@@ -40,7 +40,7 @@ function QuickActionsMenu({
   }
 
   const getSampleData = async () => {
-    history.push(`/data/${integrationId}`);
+    navigate(`/data/${integrationId}`);
   };
 
   function openUserActionModal(userAction) {

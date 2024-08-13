@@ -1,29 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '../components';
-import { Button } from '../components';
 import {
+  Button,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
+  Input,
+  LoadingSpinner,
+  useToast,
 } from '../components';
-import { useToast } from '../components';
 import API from '../api/api';
-import { setAuthToken } from '../actions/auth';
-import { LoadingSpinner } from '../components';
+import { useApplicationContext } from '../context/ApplicationContext.jsx';
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const history = useHistory();
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { token, setToken } = useApplicationContext();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (token) {
+      navigate('/integrations');
+    }
+  }, [token, navigate]);
 
   const formSchema = z.object({
     username: z
@@ -44,17 +49,10 @@ const LoginPage = () => {
     },
   });
 
-  useEffect(() => {
-    const jwt = sessionStorage.getItem('jwt');
-    if (jwt) {
-      dispatch(setAuthToken(jwt));
-      history.push('/integrations');
-    }
-  }, [dispatch, history]);
-
   const login = async (username, password) => {
     setIsLoading(true);
     const api = new API();
+    api.setJwt(sessionStorage.getItem('jwt'));
     try {
       const data = await api.login(username, password);
       if (!data.token) {
@@ -68,8 +66,8 @@ const LoginPage = () => {
 
       const { token } = data;
       sessionStorage.setItem('jwt', token);
-      dispatch(setAuthToken(token));
-      history.push('/dashboard');
+      setToken(token);
+      navigate('/integrations');
     } catch (e) {
       toast({
         variant: 'destructive',
@@ -112,7 +110,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center">
+    <div className="h-screen w-screen flex flex-col justify-center items-center">
       <div className="flex flex-col gap-4 bg-white rounded-lg shadow-xl p-12 w-[420px]">
         <div className="flex w-full justify-center">
           <img

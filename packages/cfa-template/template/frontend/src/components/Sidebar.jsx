@@ -1,11 +1,9 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { connect } from 'react-redux';
 
-import { PuzzleIcon, LogOutIcon, SlidersVertical } from 'lucide-react';
-import { logoutUser } from '../actions/logout';
+import { LogOutIcon, PuzzleIcon, SlidersVertical } from 'lucide-react';
 
-function Sidebar({ logoutUser }) {
+function Sidebar() {
   return (
     <aside className="z-20 hidden w-64 overflow-y-auto bg-white md:block flex-shrink-0">
       <div className="py-4 text-gray-500">
@@ -57,4 +55,4 @@ function Sidebar({ logoutUser }) {
   );
 }
 
-export default connect(null, { logoutUser })(Sidebar);
+export default Sidebar;

@@ -1,6 +1,5 @@
 import React from 'react';
 import { SearchIcon, BellIcon } from 'lucide-react';
-import { withRouter } from 'react-router-dom';
 import { Input } from './ui/input';
 
 function Navbar() {
@@ -55,4 +54,4 @@ function Navbar() {
     </>
   );
 }
-export default withRouter(Navbar);
+export default Navbar;
