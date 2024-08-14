@@ -39,13 +39,25 @@ const Data = () => {
         return;
       }
 
-      if (sampleData.constructor !== Array) {
-        sampleData = sampleData.data;
-      }
+      const getContent = () => {
+        if (sampleData?.data) sampleData = sampleData.data;
+        if (Array.isArray(sampleData) && sampleData.length > 0) {
+          return {
+            headers: Object.keys(sampleData[0]),
+            rows: sampleData,
+          };
+        }
+        if (typeof sampleData === 'object') {
+          return {
+            headers: Object.keys(sampleData),
+            rows: [sampleData],
+          };
+        }
+        return { headers: [], rows: [] };
+      };
 
-      const headers =
-        sampleData && sampleData.length ? Object.keys(sampleData[0]) : [];
-      const rows = headers && headers.length ? sampleData : [];
+      const { headers, rows } = getContent();
+
       setHeaders(headers);
       setRows(rows);
     };

@@ -16,7 +16,7 @@ const Redirect = () => {
       authToken={sessionStorage.getItem('jwt')}
       app={app}
       redirectToUrl={redirectToUrl}
-      primaryEntityName="hubspot" //todo: replace with actual primary entity name
+      primaryEntityName={app} // TODO: find more robust way to match primary entity name
     />
   );
 };
