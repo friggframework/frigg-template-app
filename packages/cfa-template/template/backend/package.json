@@ -14,8 +14,8 @@
         "lint:markdown": "markdownlint --fix .",
         "backend-start": "sls offline --stage dev",
         "backend-start:staging": "sls offline --stage staging",
-        "docker:start": "docker-compose up -d",
-        "docker:stop": "docker-compose down",
+        "docker:start": "docker compose up -d",
+        "docker:stop": "docker compose down",
         "knip": "knip"
     },
     "dependencies": {
